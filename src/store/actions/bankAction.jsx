@@ -1,4 +1,4 @@
-
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION} from './actionTypes';
 // export const createQuestion = question => {
 //     return (dispatch, getState, { getFirebase, getFirestore }) => {
 //         // make async call to database
@@ -21,12 +21,30 @@
 //     }
 // };
 
-export const createQuestion = () =>{
+export const createQuestion = (newQuestion) =>{
     return{
-        type:'CREATE_QUESTION_SUCCESS',
-        
-        // payload:{
-        //     question: newQuestion
-        // }
+        type:CREATE_QUESTION,
+        payload:{
+            question: newQuestion
+        }
     }
-}
+};
+
+export const deleteQuestion = index =>{
+    return{
+        type: DELETE_QUESTION,
+        payload:{
+            index
+        }
+    }
+};
+
+export const editQuestion = (index, question) =>{
+    return{
+        type: EDIT_QUESTION,
+        payload:{
+            index,
+            question
+        }
+    }
+};

@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react'
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Link } from '@material-ui/core'
-// import { NavLink } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import { compose } from 'redux'

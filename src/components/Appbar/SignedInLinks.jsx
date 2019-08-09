@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     menuItems: {
         textTransform: 'capitalize',
         fontSize: 16,
-        color: '#fff'
+        color: '#fee'
     },
     shortIndicator: {
         maxWidth: 60,
@@ -52,7 +52,7 @@ const SignedInLinks = (props) => {
                 log out
             </Button>
             {" "}
-            <Typography className={classes.menuItems}>{props.profile.firstName} {props.profile.lastName}</Typography>
+            <Typography variant="caption" className={classes.menuItems} style={{marginLeft:20}} gutterBottom>{props.profile.firstName} {props.profile.lastName}</Typography>
         </Toolbar>
     )
 }

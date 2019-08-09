@@ -1,4 +1,8 @@
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION } from '../actions/actionTypes'
+
 const initState = {
+    index:null,
+    editing: false,
     questions: [
         {
             id: 1,
@@ -28,18 +32,21 @@ const initState = {
             // createdAt: ''
         },
 
-    ]
-
+    ],
+    question:''
 };
 
-const bankReducer = (state = initState, action) => {
-    switch (action.type) { 
-        case 'CREATE_QUESTION_SUCCESS':
-            console.log('created question :)', action.question)
-            return { ...state, questions: [...state.questions, action.question] };
-        case 'CREATE_QUESTION_ERROR':
-            console.log('create question error :(', action.err)
-            return state;
+const bankReducer = (state = initState, {type, payload}) => {
+    switch (type) { 
+        case CREATE_QUESTION:
+            console.log('created question :)', payload.question)
+            return { ...state, questions: [...state.questions, payload.question] };
+        case DELETE_QUESTION:
+            const questions = [...state.questions];
+            questions.splice(payload.index, 1);
+            return{...state, questions: questions};
+        case EDIT_QUESTION:
+            return{...state,editing: true, index: payload.index, question: payload.question}
         default:
             return state;
     }

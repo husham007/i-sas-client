@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import uuidv4 from 'uuid/v4'
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, RadioGroup, FormControlLabel, InputLabel, Input, Select, Fab, Radio, MenuItem, FormHelperText } from '@material-ui/core'
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Fab, Radio, MenuItem, FormHelperText } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from 'react-router-dom';
@@ -15,11 +15,11 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(2),
         minWidth: 120
     },
     selectEmpty: {
-        marginTop: theme.spacing.unit * 2
+        // marginTop: theme.spacing(2)
     }
 });
 
@@ -30,13 +30,13 @@ class CreateQuestion extends Component {
             open: false,
             selected: null,
             hasError: false,
-            id:'',
+            id: uuidv4(),
             questionType: '',
             question: '',
             questionCategory: '',
             questionLevel: '',
             answer: '',
-            newQuestion:[]
+            newQuestion: []
         }
     }
     handleToggle = () => {
@@ -45,29 +45,33 @@ class CreateQuestion extends Component {
         })
     }
     handleChange = name => ({ target: { value } }) => {
-        // const { id, value } = e.target
         this.setState({
             [name]: value
-            // selected: value
         })
     }
     handleSubmit = e => {
         e.preventDefault()
         console.log(this.state)
         // this.props.history.push('/questionBank');
-        const {questionType,question,questionCategory,questionLevel,answer} = this.state
-        const newQ = {
-            id: uuidv4(),
-            questionType,
-            question,
-            questionCategory,
-            questionLevel,
-            answer
+        // const { id, questionType, question, questionCategory, questionLevel, answer } = this.state
+        // this.props.createQuestion(id, questionType, question, questionCategory, questionLevel, answer);
+
+        this.setState({ hasError: false });
+        if (!this.state.selected) {
+            this.setState({ hasError: true });
         }
-        this.setState({
-            newQuestion: [{...this.state.newQuestion, newQ}]
-        })
-        this.props.createQuestion(newQ);
+        // const newQ = {
+        //     id,
+        //     questionType,
+        //     question,
+        //     questionCategory,
+        //     questionLevel,
+        //     answer
+        // }
+        // this.setState({
+        //     newQuestion: [...this.state.newQuestion, newQ]
+        // })
+
         // this.setState({ hasError: false });
         // if (!this.state.selected) {
         //     this.setState({ hasError: true });
@@ -80,12 +84,12 @@ class CreateQuestion extends Component {
     //     }
     // }
     render() {
-        const { open, selected, hasError } = this.state;
+        const { open, hasError, questionType, questionLevel, questionCategory, question, answer } = this.state;
         const { classes } = this.props;
         // const { auth } = this.props
         // if (!auth.uid) return <Redirect to="/" />
         return (
-            <form className={classes.root}>
+            <form className={classes.root} onSubmit={this.handleSubmit}>
                 <Fab onClick={this.handleToggle} aria-label="Add" color="secondary" >
                     <AddIcon />
                 </Fab>
@@ -95,12 +99,11 @@ class CreateQuestion extends Component {
                         <DialogContentText>
                             To create a new question.
                         </DialogContentText>
-                        <FormControl className={classes.formControl} error={hasError} >
+                        <FormControl fullWidth className={classes.formControl} error={hasError} >
                             <InputLabel htmlFor="questionType">Question Type : </InputLabel>
                             <Select
-                                fullWidth
                                 name="questionType"
-                                value={selected}
+                                value={questionType}
                                 onChange={this.handleChange('questionType')}
                                 input={<Input id="questionType" />}
                             >
@@ -118,12 +121,11 @@ class CreateQuestion extends Component {
                             <Input id="question" name="question" onChange={this.handleChange('question')} />
                         </FormControl>
                         <br />
-                        <FormControl className={classes.formControl} error={hasError} >
+                        <FormControl fullWidth className={classes.formControl} error={hasError} >
                             <InputLabel htmlFor="questionCategory">Question Category : </InputLabel>
                             <Select
-                                fullWidth
                                 name="questionCategory"
-                                value={selected}
+                                value={questionCategory}
                                 onChange={this.handleChange('questionCategory')}
                                 input={<Input id="questionCategory" />}
                             >
@@ -134,9 +136,8 @@ class CreateQuestion extends Component {
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
-                        <FormControl component="fieldset" fullWidth>
-                            <InputLabel htmlFor="questionLevel">Question Level : </InputLabel>
-                            <br />
+                        <FormControl component="fieldset" className={classes.formControl} fullWidth>
+                            <FormLabel component="questionLevel">Question Level : </FormLabel>
                             <RadioGroup name="questionLevel" onChange={this.handleChange('questionLevel')} style={{ display: 'inline-block' }}>
                                 <FormControlLabel
                                     value="easy"
@@ -172,7 +173,7 @@ class CreateQuestion extends Component {
                         <Button onClick={this.handleToggle} color="secondary">
                             Cancel
                         </Button>
-                        <Button color="primary" onClick={this.handleSubmit} component={Link} to="/questionBank">
+                        <Button color="primary" component={Link} to="/questionBank">
                             CREATE
                         </Button>
                     </DialogActions>

@@ -1,9 +1,6 @@
 import React from 'react'
 import { Card, CardActions, CardContent, Button, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-// import {connect} from 'react-redux'
-// import {firestoreConnect} from 'react-redux-firebase'
-// import {compose} from 'redux'
 
 
 

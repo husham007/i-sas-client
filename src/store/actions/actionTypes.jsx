@@ -3,3 +3,7 @@ export const SET_LOGIN_SUCCESS = 'SET_LOGIN_SUCCESS';
 export const SET_LOGIN_ERROR = 'SET_LOGIN_ERROR';
 export const SIGN_UP = 'SIGN_UP';
 export const SIGN_OUT = 'SIGN_OUT';
+
+export const CREATE_QUESTION = 'CREATE_QUESTION';
+export const DELETE_QUESTION = 'DELETE_QUESTION';
+export const EDIT_QUESTION = 'EDIT_QUESTION';

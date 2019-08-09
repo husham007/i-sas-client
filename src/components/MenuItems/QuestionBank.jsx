@@ -1,31 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 import QuestionList from '../questionBank/QuestionList'
 import { AppBar, Tabs, Tab, Typography,Box, makeStyles } from '@material-ui/core'
 import CreateQuestion from '../questionBank/CreateQuestion';
 import { connect } from 'react-redux'
-import {Link} from 'react-router-dom'
-// import {firestoreConnect} from 'react-redux-firebase'
-// import {compose} from 'redux'
-// import {Redirect} from 'react-router-dom'
 
 
-// function TabContainer(props) {
-//     return (
-//         <Typography component="div" style={{ padding: 8 * 3 }}>
-//             {props.children}
-//         </Typography>
-//     );
-// }
-
-// TabContainer.propTypes = {
-//     children: PropTypes.node.isRequired,
-// };
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        // backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.paper,
     },
     shortIndicator: {
         maxWidth: 60,
@@ -59,8 +43,7 @@ const QuestionBank = (props) => {
         setValue(newValue);
     }
 
-    const { questions, auth } = props
-    // if (!auth.uid) return <Redirect to="/signin" />
+    const { questions} = props
     return (
         <div value={value} className={classes.root}>
             <AppBar position="static" color="secondary">
@@ -70,14 +53,7 @@ const QuestionBank = (props) => {
                     <Tab label="STATESTICS" />
                 </Tabs>
             </AppBar>
-            {/* {value === 0 && <TabContainer>
-                <CreateQuestion />
-                <QuestionList
-                questions={questions}
-                />
-            </TabContainer>}
-            {value === 1 && <TabContainer>Publish here!</TabContainer>} */}
-            <TabPanel value={value} index={0}>
+            <TabPanel value={value} index={0} >
                 <CreateQuestion />
                 <QuestionList
                     questions={questions}

@@ -1,11 +1,11 @@
 import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION } from '../actions/actionTypes'
 
 const initState = {
-    index:null,
+    index: null,
     editing: false,
     questions: [
         {
-            id: 1,
+            id: '1',
             questionType: 'fill blanks',
             question: 'what is array ?',
             questionCategory: 'javascript',
@@ -14,7 +14,7 @@ const initState = {
             // createdAt: ''
         },
         {
-            id: 2,
+            id: '2',
             questionType: 'multiple choice',
             question: 'which one is variable ?',
             questionCategory: 'javascript',
@@ -23,7 +23,7 @@ const initState = {
             // createdAt: ''
         },
         {
-            id: 3,
+            id: '3',
             questionType: 'Single choice',
             question: 'what is arrow function ?',
             questionCategory: 'javascript',
@@ -33,20 +33,22 @@ const initState = {
         },
 
     ],
-    question:''
+    // question: ''
 };
 
-const bankReducer = (state = initState, {type, payload}) => {
-    switch (type) { 
+const bankReducer = (state = initState, { type, payload }) => {
+    switch (type) {
         case CREATE_QUESTION:
             console.log('created question :)', payload.question)
             return { ...state, questions: [...state.questions, payload.question] };
         case DELETE_QUESTION:
             const questions = [...state.questions];
             questions.splice(payload.index, 1);
-            return{...state, questions: questions};
+            return { ...state, questions: questions };
         case EDIT_QUESTION:
-            return{...state,editing: true, index: payload.index, question: payload.question}
+            const questions = [...state.questions];
+            questions.splice(payload.index, 1,payload.question);
+            return { ...state, questions: questions };
         default:
             return state;
     }

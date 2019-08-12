@@ -3,7 +3,6 @@ import uuidv4 from 'uuid/v4'
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Fab, Radio, MenuItem, FormHelperText } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from "@material-ui/core/styles";
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createQuestion } from '../../store/actions/bankAction'
@@ -35,8 +34,7 @@ class CreateQuestion extends Component {
             question: '',
             questionCategory: '',
             questionLevel: '',
-            answer: '',
-            newQuestion: []
+            answer: ''
         }
     }
     handleToggle = () => {
@@ -44,7 +42,14 @@ class CreateQuestion extends Component {
             open: !this.state.open
         })
     }
-    handleChange = name => ({ target: { value } }) => {
+    handleChange = e => {
+        console.log(this.state)
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+    handleRadios = name => ({ target: { value } }) => {
         this.setState({
             [name]: value
         })
@@ -53,48 +58,30 @@ class CreateQuestion extends Component {
         e.preventDefault()
         console.log(this.state)
         // this.props.history.push('/questionBank');
-        // const { id, questionType, question, questionCategory, questionLevel, answer } = this.state
-        // this.props.createQuestion(id, questionType, question, questionCategory, questionLevel, answer);
+        const { id, question, questionType, questionCategory, questionLevel, answer } = this.state
+        const q = { id, question, questionType, questionCategory, questionLevel, answer }
+        this.props.createQuestion(q);
 
         this.setState({ hasError: false });
-        if (!this.state.selected) {
+        if (!question || !questionType || !questionCategory || !questionLevel || !answer) {
             this.setState({ hasError: true });
+        }else{
+            this.handleToggle()
         }
-        // const newQ = {
-        //     id,
-        //     questionType,
-        //     question,
-        //     questionCategory,
-        //     questionLevel,
-        //     answer
-        // }
-        // this.setState({
-        //     newQuestion: [...this.state.newQuestion, newQ]
-        // })
-
-        // this.setState({ hasError: false });
-        // if (!this.state.selected) {
-        //     this.setState({ hasError: true });
-        // }
     }
-    // handleClick = () => {
-    //     this.setState({ hasError: false });
-    //     if (!this.state.selected) {
-    //         this.setState({ hasError: true });
-    //     }
-    // }
+    
     render() {
         const { open, hasError, questionType, questionLevel, questionCategory, question, answer } = this.state;
         const { classes } = this.props;
         // const { auth } = this.props
         // if (!auth.uid) return <Redirect to="/" />
         return (
-            <form className={classes.root} onSubmit={this.handleSubmit}>
-                <Fab onClick={this.handleToggle} aria-label="Add" color="secondary" >
+            <form className={classes.root}>
+                <Fab onClick={this.handleToggle} aria-label="Add" color="secondary" style={{ position: "fixed" }} >
                     <AddIcon />
                 </Fab>
                 <Dialog open={open} onClose={this.handleToggle} fullWidth>
-                    <DialogTitle id="form-dialog-title">Create Question</DialogTitle>
+                    <DialogTitle id="form-dialog-title" style={{ paddingBottom: 0 }}>Create Question</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             To create a new question.
@@ -104,7 +91,7 @@ class CreateQuestion extends Component {
                             <Select
                                 name="questionType"
                                 value={questionType}
-                                onChange={this.handleChange('questionType')}
+                                onChange={this.handleChange}
                                 input={<Input id="questionType" />}
                             >
                                 <MenuItem value="singleChoice">Single Choice</MenuItem>
@@ -112,13 +99,13 @@ class CreateQuestion extends Component {
                                 <MenuItem value="matching">Matching</MenuItem>
                                 <MenuItem value="fillBlank">Fill the Blank</MenuItem>
                             </Select>
-
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
-                        <FormControl fullWidth>
+                        <FormControl className={classes.formControl} error={hasError} fullWidth>
                             <InputLabel htmlFor="question">Question : </InputLabel>
-                            <Input id="question" name="question" onChange={this.handleChange('question')} />
+                            <Input id="question" name="question" value={question} onChange={this.handleChange} />
+                            {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
                         <FormControl fullWidth className={classes.formControl} error={hasError} >
@@ -126,7 +113,7 @@ class CreateQuestion extends Component {
                             <Select
                                 name="questionCategory"
                                 value={questionCategory}
-                                onChange={this.handleChange('questionCategory')}
+                                onChange={this.handleChange}
                                 input={<Input id="questionCategory" />}
                             >
                                 <MenuItem value="midterm">midTerm</MenuItem>
@@ -136,9 +123,9 @@ class CreateQuestion extends Component {
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
-                        <FormControl component="fieldset" className={classes.formControl} fullWidth>
-                            <FormLabel component="questionLevel">Question Level : </FormLabel>
-                            <RadioGroup name="questionLevel" onChange={this.handleChange('questionLevel')} style={{ display: 'inline-block' }}>
+                        <FormControl component="fieldset" className={classes.formControl} error={hasError} fullWidth>
+                            <FormLabel>Question Level : </FormLabel>
+                            <RadioGroup name="questionLevel" value={questionLevel} onChange={this.handleRadios('questionLevel')} style={{ display: 'inline-block' }}>
                                 <FormControlLabel
                                     value="easy"
                                     id="easy"
@@ -161,20 +148,22 @@ class CreateQuestion extends Component {
                                     label="Hard"
                                 />
                             </RadioGroup>
+                            {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
-                        <FormControl fullWidth>
+                        <FormControl className={classes.formControl} error={hasError} fullWidth>
                             <InputLabel htmlFor="answer">Answer : </InputLabel>
-                            <Input id="answer" name="answer" onChange={this.handleChange('answer')} />
+                            <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
+                            {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleToggle} color="secondary">
-                            Cancel
-                        </Button>
-                        <Button color="primary" component={Link} to="/questionBank">
+                        <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!question || !questionType || !questionCategory || !questionLevel || !answer}>
                             CREATE
+                        </Button>
+                        <Button variant="contained" onClick={this.handleToggle} color="secondary">
+                            CANCEL
                         </Button>
                     </DialogActions>
                 </Dialog>

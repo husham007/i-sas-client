@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import uuidv4 from 'uuid/v4'
+// import uuidv4 from 'uuid/v4'
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Radio, MenuItem, FormHelperText } from '@material-ui/core'
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
@@ -36,12 +36,12 @@ class EditQuestion extends Component {
             open: false,
             selected: null,
             hasError: false,
-            id: uuidv4(),
-            questionType: '',
-            question: '',
-            questionCategory: '',
-            questionLevel: '',
-            answer: ''
+            id: this.props.question.id,
+            question: this.props.question.question,
+            questionType: this.props.question.questionType,
+            questionCategory: this.props.question.questionCategory,
+            questionLevel: this.props.question.questionLevel,
+            answer: this.props.question.answer
         }
     }
     handleToggle = () => {
@@ -50,7 +50,7 @@ class EditQuestion extends Component {
         })
     }
     handleChange = e => {
-        console.log(this.state)
+        // console.log(this.state)
         const { name, value } = e.target
         this.setState({
             [name]: value
@@ -63,11 +63,12 @@ class EditQuestion extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
+        console.log(this.props.question.id)
         console.log(this.state)
-        // this.props.history.push('/questionBank');
-        const { id, question, questionType, questionCategory, questionLevel, answer } = this.state
-        const q = { id, question, questionType, questionCategory, questionLevel, answer }
+        const { id,question, questionType, questionCategory, questionLevel, answer } = this.state
+        const q = {id,question, questionType, questionCategory, questionLevel, answer }
         this.props.editQuestion(q);
+        
         this.setState({ hasError: false });
         if (!question || !questionType || !questionCategory || !questionLevel || !answer) {
             this.setState({ hasError: true });
@@ -76,19 +77,19 @@ class EditQuestion extends Component {
         }
     }
     render() {
-        const { open, hasError, questionType, questionLevel, questionCategory, question, answer } = this.state;
+        const { open, hasError } = this.state;
         const { classes } = this.props;
+        const { question, questionType, questionCategory, questionLevel, answer } = this.state;
         // const { auth } = this.props
         // if (!auth.uid) return <Redirect to="/" />
         return (
             <form className={classes.root}>
-                {/* <Fab onClick={this.handleToggle} aria-label="Add" color="secondary" style={{ position: "fixed" }} >
-                    <AddIcon />
-                </Fab> */}
-                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" >Edit <Edit style={{ marginLeft: 10 }} /></Button>
+                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" >
+                    Edit <Edit style={{ marginLeft: 10 }} />
+                </Button>
                 <Dialog open={open} onClose={this.handleToggle} TransitionComponent={Transition}
                     keepMounted fullWidth>
-                    <DialogTitle id="form-dialog-title" style={{paddingBottom:0}} >Edit Question</DialogTitle>
+                    <DialogTitle id="form-dialog-title" style={{ paddingBottom: 0 }} >Edit Question</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             To edit this question.

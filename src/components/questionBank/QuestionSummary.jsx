@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import moment from 'moment'
-import { Card, CardActions, CardContent, Typography, Table, TableRow, TableCell } from '@material-ui/core'
+import { Card, CardActions, CardContent, Typography, Table,TableBody, TableRow, TableCell } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import DeleteAlert from '../Alerts/DeleteAlert';
 import EditQuestion from './EditQuestion';
@@ -27,6 +27,7 @@ class QuestionSummary extends Component {
             <Card className={classes.card}>
                 <CardContent style={{ flex: 3 }}>
                     <Table>
+                    <TableBody>
                         <TableRow>
                             <TableCell>
                                 <Typography variant="overline" color="textSecondary" gutterBottom>
@@ -94,7 +95,7 @@ class QuestionSummary extends Component {
                             </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography variant="body">
+                                <Typography variant="body1">
                                     Mostafa Hazareh
                             </Typography>
                             </TableCell>
@@ -112,6 +113,7 @@ class QuestionSummary extends Component {
                             </Typography>
                             </TableCell>
                         </TableRow>
+                    </TableBody>
                     </Table>
                 </CardContent>
                 <CardActions style={{ flex: 1, alignSelf: 'flex-start', marginTop: 20, marginBottom: 10 }}>

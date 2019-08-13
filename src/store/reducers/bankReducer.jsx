@@ -42,13 +42,15 @@ const bankReducer = (state = initState, { type, payload }) => {
             console.log('created question :)', payload.question)
             return { ...state, questions: [...state.questions, payload.question] };
         case DELETE_QUESTION:
+        console.log('this is deleted...')
             const questions = [...state.questions];
             questions.splice(payload.index, 1);
             return { ...state, questions: questions };
         case EDIT_QUESTION:
-            const questions = [...state.questions];
-            questions.splice(payload.index, 1,payload.question);
-            return { ...state, questions: questions };
+        console.log('this is edited !')
+            const Qs = [...state.questions];
+            Qs.splice(payload.index, 1,payload.index);
+            return { ...state, questions: Qs };
         default:
             return state;
     }

@@ -43,7 +43,7 @@ class CreateQuestion extends Component {
         })
     }
     handleChange = e => {
-        console.log(this.state)
+        // console.log(this.state)
         const { name, value } = e.target
         this.setState({
             [name]: value
@@ -65,11 +65,18 @@ class CreateQuestion extends Component {
         this.setState({ hasError: false });
         if (!question || !questionType || !questionCategory || !questionLevel || !answer) {
             this.setState({ hasError: true });
-        }else{
-            this.handleToggle()
+        } else {
+            this.handleToggle();
+            this.setState({
+                questionType: '',
+                question: '',
+                questionCategory: '',
+                questionLevel: '',
+                answer: ''
+            })
         }
     }
-    
+
     render() {
         const { open, hasError, questionType, questionLevel, questionCategory, question, answer } = this.state;
         const { classes } = this.props;

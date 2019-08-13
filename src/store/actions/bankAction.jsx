@@ -39,12 +39,11 @@ export const deleteQuestion = index => {
     }
 };
 
-export const editQuestion = (index, question) => {
+export const editQuestion = (index) => {
     return {
         type: EDIT_QUESTION,
         payload: {
-            index,
-            question
+            index
         }
     }
 };

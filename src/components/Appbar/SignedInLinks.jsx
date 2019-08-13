@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const SignedInLinks = (props) => {
     const classes = useStyles()
-    console.log(props)
+    // console.log(props)
     const [value, setValue] = React.useState(0);
 
     function handleChange(event, newValue) {
@@ -52,13 +52,13 @@ const SignedInLinks = (props) => {
                 log out
             </Button>
             {" "}
-            <Typography variant="caption" className={classes.menuItems} style={{marginLeft:20}} gutterBottom>{props.profile.firstName} {props.profile.lastName}</Typography>
+            <Typography variant="h3" className={classes.menuItems} style={{ marginLeft: 20 }} gutterBottom>{props.profile.firstName} {props.profile.lastName} {props.profile.initials}</Typography>
         </Toolbar>
     )
 }
 
 const mapStateToProps = state => {
-    console.log(state)
+    // console.log(state)
     return state;
 }
 const mapDispatchToProps = dispatch => {

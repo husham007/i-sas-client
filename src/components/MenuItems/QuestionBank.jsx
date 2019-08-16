@@ -5,6 +5,7 @@ import CreateQuestion from '../questionBank/CreateQuestion';
 import { connect } from 'react-redux'
 import qM from '../../assets/images/qM.jpg'
 import SearchQuestion from '../questionBank/SearchQuestion';
+import QuestionSummary from '../questionBank/QuestionSummary';
 
 
 const useStyles = makeStyles(theme => ({
@@ -60,11 +61,12 @@ const QuestionBank = ({ questions }) => {
             </AppBar>
             <TabPanel value={value} index={0} >
                 <CreateQuestion />
-                <QuestionList questions={questions} />
+                {/* <QuestionList questions={questions} /> */}
+                {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SearchQuestion />
-                <QuestionList questions={questions} />
+                {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statestics

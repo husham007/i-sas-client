@@ -52,7 +52,7 @@ class FilterQuestion extends Component {
         const { classes } = this.props,
             { questionType, questionCategory, questionLevel } = this.state;
         console.log(this.state)
-        // console.log(this.props)
+        console.log(this.props)
         return (
             <div className={classes.root}>
                 <FormControl className={classes.formControl}>
@@ -105,7 +105,7 @@ class FilterQuestion extends Component {
 
 const mapStateToProps = state => {
     return {
-        text: state.bank.questions.question
+        text: state.bank.questions
     }
 }
 const mapDispatchToProps = dispatch => {

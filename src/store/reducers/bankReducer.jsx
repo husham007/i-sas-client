@@ -40,24 +40,25 @@ const bankReducer = (state = initState, { type, payload }) => {
             console.log('created question :)', payload.question)
             return { ...state, questions: [...state.questions, payload.question] };
         case DELETE_QUESTION:
-        console.log('this is deleted...')
+            console.log('this is deleted...')
             const questions = [...state.questions];
             questions.splice(payload.index, 1);
             return { ...state, questions: questions };
         case EDIT_QUESTION:
-        console.log('this is edited !')
+            console.log('this is edited !')
             const Qs = [...state.questions];
-            Qs.splice(payload.index, 1,payload.index);
+            Qs.splice(payload.index, 1, payload.index);
             return { ...state, questions: Qs };
         case SEARCH_QUESTION_ANY:
-        console.log('search result!')
-            const filteredQ = [...state.questions];
-            const searched = filteredQ.filter( q =>{
-                return q.question.toLowerCase().includes(payload.text.toLowerCase())
-            })
-            const result = payload.text === '' ? null : searched;
-            return { ...state, questions: result };
-            default:
+            console.log('search result!')
+            // const filteredQ = [...state.questions];
+            // const searched = state.questions.filter(q => {
+            //     return q.question.toLowerCase().includes(payload.text.toLowerCase())
+            // })
+            // const result = payload.text === '' ? null : searched;
+            // return { questions: result, filteredQ};
+            return { ...state };
+        default:
             return state;
     }
 };

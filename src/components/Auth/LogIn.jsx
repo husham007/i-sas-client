@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { signIn } from '../../store/actions/authAction'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({
     button: {
@@ -43,7 +43,7 @@ class LogIn extends Component {
         // let { open, email, password } = this.state;
         // let { isLoginPending, isLoginSuccess, loginError } = this.props;
         const { open, email, password } = this.state,
-            { authError,auth } = this.props;
+            { authError, auth } = this.props;
         // const { authError, auth } = this.props;
         if (auth.uid) return <Redirect to="/" />
         return (
@@ -82,8 +82,8 @@ class LogIn extends Component {
 
                     </DialogContent>
                     <DialogActions >
-                        <Button variant="contained" color="primary" onClick={this.handleSubmit} component={Link} to="/logedin" fullWidth>
-                        GET STARTED
+                        <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!email || !password} fullWidth>
+                            GET STARTED
                         </Button>
                         <div>
                             {authError ? <p>{authError}</p> : null}

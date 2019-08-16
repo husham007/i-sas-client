@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { signIn } from '../../store/actions/authAction'
+import { signIn, signInErr } from '../../store/actions/authAction'
 import {Redirect} from 'react-router-dom'
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
+
 
 const styles = theme => ({
     button: {
@@ -13,6 +16,24 @@ const styles = theme => ({
         // color:'white'
     }
 })
+
+
+const SIGN_IN = gql`
+mutation signIn($email: String! $password: String!){
+    signIn (email: $email password: $password) {
+        token
+    }
+}    
+`;
+
+const USERS = gql`
+query {
+users {
+    id
+    }  
+}
+`;
+
 
 class LogIn extends Component {
     constructor(props) {
@@ -35,17 +56,31 @@ class LogIn extends Component {
             [id]: value
         })
     }
-    handleSubmit = e => {
-        e.preventDefault()
-        this.props.signIn(this.state)
+    handleSubmit = async e => {
+        e.preventDefault();
+       
+
+       await this.props.client
+      .mutate({ mutation: SIGN_IN,  variables: {email: this.state.email, password: this.state.password}})
+      .then( (result) => {        
+          
+            this.props.signIn(result);
+              
+      })
+      .catch(err =>{console.log(err);this.props.signInErr( JSON.parse(JSON.stringify(err)))});
+        
+       
     }
     render() {
         // let { open, email, password } = this.state;
         // let { isLoginPending, isLoginSuccess, loginError } = this.props;
         const { open, email, password } = this.state,
-            { authError,auth } = this.props;
+            { authError,token } = this.props.rootReducer.auth;
+            //console.log(this.props)
+            //console.log(authError);
+            //console.log(token);
         // const { authError, auth } = this.props;
-        if (auth.uid) return <Redirect to="/" />
+       // if (auth.uid) return <Redirect to="/" />
         return (
             <div>
                 <Button variant="contained" color="primary" onClick={this.handleToggle} style={{ borderStyle: 'solid', borderBottomRightRadius: '5', borderTopRightRadius: '5' }}>
@@ -98,17 +133,19 @@ class LogIn extends Component {
 
 const mapStateToProps = state => {
     console.log(state);
-    return {
-        authError: state.auth.authError,
-        auth: state.firebase.auth
-    }
+    return {...state};
 }
 const mapDispatchToProps = dispatch => {
     return {
-        signIn: (creds) => dispatch(signIn(creds))
+        signIn: (data) => dispatch(signIn(data)),
+        signInErr: (err) =>  dispatch(signInErr(err))
     }
 }
+
+
+
 export default compose(
     withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withApollo
 )(LogIn)

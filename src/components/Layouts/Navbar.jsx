@@ -19,10 +19,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const Navbar = ({ auth, profile }) => {
+const Navbar = (props) => {
     const classes = useStyles()
     // const {auth,profile} = props
-    const links = auth.uid ? <SignedInLinks profile={profile} /> : <SignedOutLinks />
+   
+     let token = localStorage.getItem("token");
+   
+    console.log("token", token);
+    const links = token ? <SignedInLinks profile={token} /> : <SignedOutLinks />
     
     return (
         <div >
@@ -34,10 +38,10 @@ const Navbar = ({ auth, profile }) => {
 }
 
 const mapStateToProps = state =>{
-    // console.log(state);
+    console.log(state);
     return{
-        auth: state.firebase.auth,
-        profile: state.firebase.profile
+        auth: state.rootReducer.auth,
+        
     }
 }
 

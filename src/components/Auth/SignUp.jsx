@@ -44,7 +44,7 @@ class SignUp extends Component {
         const { open, firstName, lastName, email, key, password, confirmPassword } = this.state
             // { classes } = this.props
         const { auth, authError, classes } = this.props
-        if (auth.uid) return <Redirect to="/" />
+       // if (auth.uid) return <Redirect to="/" />
         return (
             <div>
                 <Button variant="contained" color="secondary" onClick={this.handleToggle} className={classes.button}>
@@ -144,8 +144,7 @@ class SignUp extends Component {
 const mapStateToProps = state => {
     console.log(state)
     return{
-        auth: state.firebase.auth,
-        authError: state.auth.authError
+       
     };
 }
 

@@ -1,6 +1,9 @@
+import { Query } from 'react-apollo';
+import React from 'react';
 
-export const signIn = (credentials) => {
-    return (dispatch, getState, { getFirebase }) => {
+
+export const signIn = ({data}) => {
+   /* return (dispatch, getState, { getFirebase }) => {
         const firebase = getFirebase();
         firebase.auth().signInWithEmailAndPassword(
             credentials.email,
@@ -11,14 +14,48 @@ export const signIn = (credentials) => {
             dispatch({ type: 'LOGIN_ERROR', err })
         });
     }
+    
+    */
+ 
+   return (dispatch)=>{
+    
+    if (data) {
+        localStorage.setItem("token", data.signIn.token);
+        dispatch({type: "TOKEN", payload: data.signIn.token})
+   } 
+   }
 }
 
+
+export const signInErr = (errors) => {
+    /* return (dispatch, getState, { getFirebase }) => {
+         const firebase = getFirebase();
+         firebase.auth().signInWithEmailAndPassword(
+             credentials.email,
+             credentials.password
+         ).then(() => {
+             dispatch({ type: 'LOGIN_SUCCESS' })
+         }).catch((err) => {
+             dispatch({ type: 'LOGIN_ERROR', err })
+         });
+     }
+     
+     */
+  
+    return (dispatch)=>{
+     
+     
+     console.log(errors);
+     dispatch({type: "AUTH_ERR", payload: errors.graphQLErrors[0].extensions.downstreamErrors[0].message})
+    }
+ }
+ 
+
 export const signOut = () => {
-    return (dispatch, getState, { getFirebase }) => {
-        const firebase = getFirebase();
-        firebase.auth().signOut().then(() => {
-            dispatch({ type: 'SIGNOUT_SUCCESS' })
-        })
+    return (dispatch, getState) => {
+        localStorage.removeItem("token");
+     
+            dispatch({ type: 'SIGNOUT_SUCCESS' })     
     }
 }
 

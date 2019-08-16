@@ -52,7 +52,7 @@ const SignedInLinks = (props) => {
                 log out
             </Button>
             {" "}
-            <Typography variant="h3" className={classes.menuItems} style={{ marginLeft: 20 }} gutterBottom>{props.profile.firstName} {props.profile.lastName} {props.profile.initials}</Typography>
+            <Typography variant="h3" className={classes.menuItems} style={{ marginLeft: 20 }} gutterBottom>{props.profile.username} </Typography>
         </Toolbar>
     )
 }

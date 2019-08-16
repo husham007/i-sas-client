@@ -6,7 +6,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3, 2),
     backgroundColor: '#000',
-    // height: '500px'
   },
   box: {
     margin: theme.spacing(4, 18)
@@ -24,8 +23,12 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
     border: '2px',
     borderStyle: 'solid',
-    borderColor:'#7f7f7f',
-    height: '280px'
+    borderColor: '#7f7f7f',
+    height: '280px',
+    '&:hover':{
+      borderColor:'#ffb503',
+
+    }
   }
 
 }));
@@ -52,8 +55,8 @@ const Main = () => {
               <i className="fas fa-book" style={{ fontSize: '55px', margin: 30 }}></i>
 
               <Typography variant="h6">Question Bank</Typography>
-              <br/>
-              <Typography variant="overline" style={{lineHeight: '1'}}>Quickly create great looking tests using miltiple question types and formatting options.</Typography>
+              <br />
+              <Typography variant="overline" style={{ lineHeight: '1' }}>Quickly create great looking tests using miltiple question types and formatting options.</Typography>
             </Paper>
           </Grid>
           <Grid item sm>

@@ -48,11 +48,13 @@ const SignedInLinks = (props) => {
                 <Tab label="about us" component={Link} to="/aboutUs" className={classes.menuItems} />
                 <Tab label="contacts" component={Link} to="/contacts" className={classes.menuItems} />
             </Tabs>
+            <div style={{marginLeft:'20px', width:'30%',display:'flex',justifyContent:'flex-end'}}>
             <Button onClick={props.signOut} variant="outlined" color="primary" component={Link} to="/">
                 log out
             </Button>
             {" "}
-            <Typography variant="h3" className={classes.menuItems} style={{ marginLeft: 20 }} gutterBottom>{props.profile.firstName} {props.profile.lastName} {props.profile.initials}</Typography>
+            <Typography variant="h3" className={classes.menuItems} style={{ marginLeft: 20,marginBottom:'-10' }} gutterBottom>{props.profile.firstName} {props.profile.lastName}</Typography>
+            </div>
         </Toolbar>
     )
 }

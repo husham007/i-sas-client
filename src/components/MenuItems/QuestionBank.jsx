@@ -3,14 +3,15 @@ import QuestionList from '../questionBank/QuestionList'
 import { AppBar, Tabs, Tab, Typography, Box, makeStyles } from '@material-ui/core'
 import CreateQuestion from '../questionBank/CreateQuestion';
 import { connect } from 'react-redux'
-import QuestionMark from '../../assets/images/questionMark.jpg'
+import qM from '../../assets/images/qM.jpg'
+import SearchQuestion from '../questionBank/SearchQuestion';
 
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        height: '100%',
-        backgroundImage: `url(${QuestionMark})`,
+        minHeight: '76vh',
+        backgroundImage: `url(${qM})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'noRepeat',
@@ -39,8 +40,8 @@ function TabPanel(props) {
     );
 }
 
-const QuestionBank = (props) => {
-    console.log(props)
+const QuestionBank = ({ questions }) => {
+    // console.log(props)
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -48,7 +49,6 @@ const QuestionBank = (props) => {
         setValue(newValue);
     }
 
-    const { questions } = props
     return (
         <div value={value} className={classes.root}>
             <AppBar position="sticky" color="secondary">
@@ -59,13 +59,12 @@ const QuestionBank = (props) => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >
-                <CreateQuestion questions={questions} />
-                <QuestionList
-                    questions={questions}
-                />
+                <CreateQuestion />
+                <QuestionList questions={questions} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                search
+                <SearchQuestion />
+                <QuestionList questions={questions} />
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statestics

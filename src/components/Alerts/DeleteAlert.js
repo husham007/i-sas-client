@@ -4,7 +4,6 @@ import { Delete } from '@material-ui/icons'
 import { deleteQuestion } from '../../store/actions/bankAction';
 import { connect } from 'react-redux'
 import Slide from '@material-ui/core/Slide';
-import DeleteSnackbar from './DeleteSnackbar'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -13,28 +12,28 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class DeleteAlert extends Component {
     state = {
-        open: false,
-        del: false
+        open: false
     }
     handleToggle = () => {
         this.setState({
-            open: !this.state.open,
-            // del: !this.state.del
+            open: !this.state.open
         })
     }
     handleDelete = () => {
         this.props.deleteQuestion(this.props.question.id)
         this.handleToggle()
+        
     }
+    
     render() {
         // const { question, deleteQuestion } = this.props;
         return (
-            <div>
             <div>
                 <Button size="small" variant="outlined" onClick={this.handleToggle} style={{ color: '#d32f2f' }}>
                     Delete
                 <Delete style={{ marginLeft: 10 }} />
                 </Button>
+                {/* {!this.state.del ? <DeleteSnackbar open={this.state.open} Toggle={this.handleToggle} /> : null} */}
                 <Dialog
                     open={this.state.open}
                     TransitionComponent={Transition}
@@ -58,11 +57,7 @@ class DeleteAlert extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-                
             </div>
-                {!this.state.del ? <DeleteSnackbar open={this.state.open} Toggle={this.handleToggle} /> : null}
-            </div>
-
         );
     }
 }

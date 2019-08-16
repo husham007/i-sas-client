@@ -1,8 +1,6 @@
-import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION } from '../actions/actionTypes'
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, SEARCH_QUESTION_ANY } from '../actions/actionTypes'
 
 const initState = {
-    index: null,
-    editing: false,
     questions: [
         {
             id: '1',
@@ -51,7 +49,15 @@ const bankReducer = (state = initState, { type, payload }) => {
             const Qs = [...state.questions];
             Qs.splice(payload.index, 1,payload.index);
             return { ...state, questions: Qs };
-        default:
+        case SEARCH_QUESTION_ANY:
+        console.log('search result!')
+            const filteredQ = [...state.questions];
+            const searched = filteredQ.filter( q =>{
+                return q.question.toLowerCase().includes(payload.text.toLowerCase())
+            })
+            const result = payload.text === '' ? null : searched;
+            return { ...state, questions: result };
+            default:
             return state;
     }
 };

@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 import Navbar from './components/Layouts/Navbar';
 import MainPage from '../src/components/Layouts/MainPage'
-// import SignedInLinks from './components/Appbar/SignedInLinks'
-// import SignedOutLinks from './components/Appbar/SignedOutLinks'
 import Footer from './components/Layouts/Footer';
 import QuestionBank from './components/MenuItems/QuestionBank';
 import QuestionDetails from './components/questionBank/QuestionDetails';
@@ -18,7 +16,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="app">
+          <div style={{minHeight:'88vh', backgroundColor:'#000'}}>
           <CssBaseline />
           <Navbar />
           <Switch>
@@ -31,8 +29,8 @@ class App extends Component {
             <Route path="/questionBank/question/:id" component={QuestionDetails} />
             <Route path="/questionBank/create" component={CreateQuestion} />
           </Switch>
+          </div>
           <Footer />
-        </div>
       </Router>
     );
   }

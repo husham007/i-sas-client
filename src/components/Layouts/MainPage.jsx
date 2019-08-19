@@ -8,7 +8,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#000',
   },
   box: {
-    margin: theme.spacing(4, 18)
+    margin: theme.spacing(4, 18),
+    [theme.breakpoints.down('xs')]: {
+      margin: theme.spacing(1, 3),
+    }
+    
   },
   grid: {
     borderColor: '#fff',

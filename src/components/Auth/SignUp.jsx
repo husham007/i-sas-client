@@ -2,16 +2,23 @@
 import React, { Component } from 'react'
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Link } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
+import { PersonAdd, Close } from '@material-ui/icons';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import {NavLink} from 'react-router-dom'
-import {Redirect} from 'react-router-dom'
-import {signUp} from '../../store/actions/authAction'
+import { NavLink } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+import { signUp } from '../../store/actions/authAction'
 
 const styles = theme => ({
     button: {
-        // backgroundColor: '#2b679b',
-        // color:'white'
+        borderStyle: 'solid',
+        borderBottomRightRadius: '5',
+        borderTopRightRadius: '5',
+        width: '120px'
+    },
+    title: {
+        display: 'flex',
+        justifyContent: 'space-between'
     }
 })
 
@@ -42,17 +49,20 @@ class SignUp extends Component {
     }
     render() {
         const { open, firstName, lastName, email, key, password, confirmPassword } = this.state
-            // { classes } = this.props
+        // { classes } = this.props
         const { auth, authError, classes } = this.props
         if (auth.uid) return <Redirect to="/" />
         return (
             <div>
-                <Button variant="contained" color="secondary" onClick={this.handleToggle} className={classes.button}>
-                    Sign Up
+                <Button size="small" variant="contained" color="secondary" onClick={this.handleToggle} className={classes.button}>
+                    <PersonAdd style={{ marginRight: '10px' }} />    Sign Up
                 </Button>
                 <Dialog open={open} onClose={this.handleToggle} fullWidth maxWidth="xs">
-                    <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
-                    <DialogContent style={{ margin: '10px 60px' }}>
+                    <div className={classes.title}>
+                        <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
+                        <div onClick={this.handleToggle} style={{ padding: '15px',cursor:'pointer' }}><Close /></div>
+                    </div>
+                    <DialogContent>
                         <DialogContentText>
                             Get started straight away
                         </DialogContentText>
@@ -143,7 +153,7 @@ class SignUp extends Component {
 
 const mapStateToProps = state => {
     console.log(state)
-    return{
+    return {
         auth: state.firebase.auth,
         authError: state.auth.authError
     };

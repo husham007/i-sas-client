@@ -23,10 +23,10 @@ const Navbar = (props) => {
     const classes = useStyles()
     // const {auth,profile} = props
    
-     let token = localStorage.getItem("token");
+     let token = props.auth.token;
    
     console.log("token", token);
-    const links = token ? <SignedInLinks profile={token} /> : <SignedOutLinks />
+    const links = token ? <SignedInLinks profile={props.auth} /> : <SignedOutLinks />
     
     return (
         <div >

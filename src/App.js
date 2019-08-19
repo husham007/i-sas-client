@@ -13,11 +13,14 @@ import SignUp from './components/Auth/SignUp';
 import CreateQuestion from './components/questionBank/CreateQuestion';
 import AboutUS from './components/MenuItems/AboutUS';
 import Contacts from './components/MenuItems/Contacts';
+import { getToken } from './store/actions/authAction';
+import { connect } from 'react-redux'
+import { compose } from 'redux'
 
 class App extends Component {
  
   render() {
-   
+   this.props.getToken();
     return (
       <Router>
         <div className="app">
@@ -41,4 +44,15 @@ class App extends Component {
 
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+      getToken: (token) => dispatch(getToken(token)),
+      
+  }
+}
+
+export default compose(
+  connect(null, mapDispatchToProps),
+)(App)
+
+//export default App;

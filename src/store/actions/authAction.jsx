@@ -21,7 +21,11 @@ export const signIn = ({data}) => {
     
     if (data) {
         localStorage.setItem("token", data.signIn.token);
-        dispatch({type: "TOKEN", payload: data.signIn.token})
+        let token = data.signIn.token;
+        let base64Url = token.split('.')[1];
+        let decodedToken = JSON.parse(window.atob(base64Url));
+        //console.log("decoded token", decodedToken)
+        dispatch({type: "SET_TOKEN", payload: {decodedToken, token}});
    } 
    }
 }
@@ -56,6 +60,20 @@ export const signOut = () => {
         localStorage.removeItem("token");
      
             dispatch({ type: 'SIGNOUT_SUCCESS' })     
+    }
+}
+
+export const getToken = () => {
+    return (dispatch, getState) => {
+        let token = localStorage.getItem("token");
+        let decodedToken = null;
+        if (token){
+        let base64Url = token.split('.')[1];
+        decodedToken = JSON.parse(window.atob(base64Url));
+
+        }
+     
+        dispatch({type: "GET_TOKEN", payload: {decodedToken, token}});  
     }
 }
 

@@ -2,6 +2,7 @@ import {
     CREATE_QUESTION,
     DELETE_QUESTION,
     EDIT_QUESTION,
+    LOAD_QUESTIONS,
     SEARCH_QUESTION_ANY,
     SEARCH_QUESTION_CATEGORY,
     SEARCH_QUESTION_LEVEL,
@@ -16,6 +17,17 @@ export const createQuestion = (newQuestion) => {
         }
     }
 };
+
+export const loadQuestions = (data) => {
+    console.log(data);
+    return {
+        type: LOAD_QUESTIONS,
+        payload: {
+            questions: data.questions ? data.questions.page : null
+        }
+    }
+};
+
 
 export const deleteQuestion = index => {
     return {

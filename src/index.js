@@ -28,11 +28,20 @@ const authLink = setContext((_, {
 const httpLink = createHttpLink({
   uri: 'https://isas-gateway.herokuapp.com/graphql'
 });
+/*
+export const client = (async (authLink, httpLink)=>{
+  return await new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
+  })
+})(authLink, httpLink);
+*/
 
-const client = new ApolloClient({
+export const client= new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });
+
 
 
 
@@ -86,6 +95,7 @@ ReactDOM.render(<Provider store={store}><MuiThemeProvider theme={theme}><App /><
 })
 
 */
+
 
 
 

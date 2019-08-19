@@ -105,7 +105,7 @@ class FilterQuestion extends Component {
 
 const mapStateToProps = state => {
     return {
-        text: state.bank.questions
+        text: state.rootReducer.bank.questions
     }
 }
 const mapDispatchToProps = dispatch => {

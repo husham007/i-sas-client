@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteAlert from '../Alerts/DeleteAlert';
 import EditQuestion from './EditQuestion';
+import { connect } from 'react-redux'
+import { compose } from 'redux'
 
 const styles = theme => ({
     card: {
@@ -44,7 +46,7 @@ class QuestionSummary extends Component {
                                     </TableCell>
                                     <TableCell>
                                         <Typography variant="body1">
-                                            {question.question}
+                                            {question.statement}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>
@@ -68,7 +70,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                {question.questionType}
+                                                {question.type}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -80,7 +82,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                {question.questionLevel}
+                                                {question.level}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -92,7 +94,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                {question.questionCategory}
+                                                {question.category}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -116,7 +118,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                Mostafa Hazareh
+                                            {question.author.username}
                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -144,4 +146,15 @@ class QuestionSummary extends Component {
 
 }
 
-export default withStyles(styles)(QuestionSummary)
+const mapStateToProps = state => {
+    console.log(state);
+    return {
+        ...state
+    }
+}
+
+export default compose(
+    withStyles(styles),
+    connect(mapStateToProps,null),   
+)(QuestionSummary)
+//export default withStyles(styles)

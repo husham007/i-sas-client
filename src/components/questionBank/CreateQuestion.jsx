@@ -182,7 +182,7 @@ class CreateQuestion extends Component {
 const mapStateToProps = state => {
     return {
         //         auth: state.firebase.auth
-        questions: state.bank.questions
+        questions: state.rootReducer.bank.questions
     }
 }
 

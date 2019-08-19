@@ -1,37 +1,30 @@
-import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, SEARCH_QUESTION_ANY } from '../actions/actionTypes'
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, SEARCH_QUESTION_ANY } from '../actions/actionTypes'
 
+
+
+/*
+const QUESTIONS = gql`
+query {
+questions {
+    page {
+        id
+    }  
+}
+}
+`;
+console.log(client);
+client.query({ query: QUESTIONS })
+    .then((result) => {
+
+        //this.props.signIn(result);
+        console.log(result);
+
+    })
+    .catch(err => { console.log(err); this.props.signInErr(JSON.parse(JSON.stringify(err))) });
+
+*/
 const initState = {
-    questions: [
-        {
-            id: '1',
-            questionType: 'fill blanks',
-            question: 'what is array ?',
-            questionCategory: 'javascript',
-            questionLevel: 'medium',
-            answer: 'a variable that contains many values.',
-            // createdAt: ''
-        },
-        {
-            id: '2',
-            questionType: 'multiple choice',
-            question: 'which one is variable ?',
-            questionCategory: 'javascript',
-            questionLevel: 'easy',
-            answer: 'a variable that contains many values.',
-            // createdAt: ''
-        },
-        {
-            id: '3',
-            questionType: 'Single choice',
-            question: 'what is arrow function ?',
-            questionCategory: 'javascript',
-            questionLevel: 'hard',
-            answer: 'a variable that contains many values.',
-            // createdAt: ''
-        },
-
-    ],
-    // question: ''
+   deleted: null
 };
 
 const bankReducer = (state = initState, { type, payload }) => {
@@ -39,11 +32,12 @@ const bankReducer = (state = initState, { type, payload }) => {
         case CREATE_QUESTION:
             console.log('created question :)', payload.question)
             return { ...state, questions: [...state.questions, payload.question] };
+        case LOAD_QUESTIONS:
+            console.log('loadQuestions :)', payload)
+            return { ...state, questions: [...state.questions, payload.questions] };
         case DELETE_QUESTION:
-            console.log('this is deleted...')
-            const questions = [...state.questions];
-            questions.splice(payload.index, 1);
-            return { ...state, questions: questions };
+            console.log('this is deleted...')           
+            return { ...state, deleted: true};
         case EDIT_QUESTION:
             console.log('this is edited !')
             const Qs = [...state.questions];

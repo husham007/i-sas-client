@@ -26,7 +26,7 @@ const Navbar = (props) => {
    
      let token = props.auth.token;
    
-    console.log("token", token);
+    //console.log("token", token);
     const links = token ? <SignedInLinks profile={props.auth} /> : <SignedOutLinks />
     
     return (
@@ -39,7 +39,7 @@ const Navbar = (props) => {
 }
 
 const mapStateToProps = state =>{
-    console.log(state);
+    //console.log(state);
     return{
         auth: state.rootReducer.auth,
         

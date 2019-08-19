@@ -4,10 +4,20 @@ import { Delete } from '@material-ui/icons'
 import { deleteQuestion } from '../../store/actions/bankAction';
 import { connect } from 'react-redux'
 import Slide from '@material-ui/core/Slide';
+import { withApollo } from 'react-apollo';
+import { compose } from 'redux';
+import gql from 'graphql-tag';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
+
+const DELETE_QUESTION = gql`
+mutation deleteQuestion($id: ID!){
+    deleteQuestion (id: $id) 
+}    
+`;
 
 
 class DeleteAlert extends Component {
@@ -20,8 +30,17 @@ class DeleteAlert extends Component {
         })
     }
     handleDelete = () => {
-        this.props.deleteQuestion(this.props.question.id)
-        this.handleToggle()
+        this.props.client
+      .mutate({ mutation: DELETE_QUESTION,  variables: {id: this.props.question.id}})
+      .then( (result) => {        
+          
+            this.props.deleteQuestion(this.props.question.id);
+            this.handleToggle()
+              
+      })
+      .catch(err =>{console.log(err);this.props.signInErr( JSON.parse(JSON.stringify(err)))});
+       // this.props.deleteQuestion(this.props.question.id)
+       // this.handleToggle()
         
     }
     
@@ -62,4 +81,8 @@ class DeleteAlert extends Component {
     }
 }
 
-export default connect(null, { deleteQuestion })(DeleteAlert);
+//export default connect(null, { deleteQuestion })(DeleteAlert);
+export default compose(
+   connect(null, { deleteQuestion }),
+    withApollo
+)(DeleteAlert)

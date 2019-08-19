@@ -4,7 +4,7 @@ import QuestionSummary from './QuestionSummary';
 
 const QuestionList = ({ questions }) => {
     return (
-        <div>
+        <div style={{marginTop:'60px'}}>
             {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
                  {/* return(
                     <Link to={"/questionBank/question/" + question.id} key={question.id}>

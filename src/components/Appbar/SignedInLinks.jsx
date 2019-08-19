@@ -48,12 +48,15 @@ const SignedInLinks = (props) => {
                 <Tab label="about us" component={Link} to="/aboutUs" className={classes.menuItems} />
                 <Tab label="contacts" component={Link} to="/contacts" className={classes.menuItems} />
             </Tabs>
+            <div style={{marginLeft:'20px', width:'30%',display:'flex',justifyContent:'flex-end'}}>
             <Button onClick={props.signOut} variant="outlined" color="primary" component={Link} to="/">
                 log out
             </Button>
             {" "}
             <Typography variant="h3" className={classes.menuItems} style={{ marginLeft: 20 }} gutterBottom>{props.profile.username} </Typography>
+            </div>
         </Toolbar>
+
     )
 }
 

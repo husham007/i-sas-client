@@ -3,14 +3,16 @@ import QuestionList from '../questionBank/QuestionList'
 import { AppBar, Tabs, Tab, Typography, Box, makeStyles } from '@material-ui/core'
 import CreateQuestion from '../questionBank/CreateQuestion';
 import { connect } from 'react-redux'
-import QuestionMark from '../../assets/images/questionMark.jpg'
+import qM from '../../assets/images/qM.jpg'
+import SearchQuestion from '../questionBank/SearchQuestion';
+import QuestionSummary from '../questionBank/QuestionSummary';
 
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        height: '100%',
-        backgroundImage: `url(${QuestionMark})`,
+        minHeight: '76vh',
+        backgroundImage: `url(${qM})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'noRepeat',
@@ -39,8 +41,8 @@ function TabPanel(props) {
     );
 }
 
-const QuestionBank = (props) => {
-    console.log(props)
+const QuestionBank = ({ questions }) => {
+    // console.log(props)
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -48,7 +50,6 @@ const QuestionBank = (props) => {
         setValue(newValue);
     }
 
-    const { questions } = props
     return (
         <div value={value} className={classes.root}>
             <AppBar position="sticky" color="secondary">
@@ -59,13 +60,13 @@ const QuestionBank = (props) => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >
-                <CreateQuestion questions={questions} />
-                <QuestionList
-                    questions={questions}
-                />
+                <CreateQuestion />
+                {/* <QuestionList questions={questions} /> */}
+                {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                search
+                <SearchQuestion />
+                {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statestics

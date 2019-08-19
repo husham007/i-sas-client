@@ -4,11 +4,16 @@ import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+<<<<<<< HEAD
 import { signIn, signInErr } from '../../store/actions/authAction'
 import {Redirect} from 'react-router-dom'
 import gql from 'graphql-tag';
 import { withApollo } from 'react-apollo';
 
+=======
+import { signIn } from '../../store/actions/authAction'
+import { Redirect } from 'react-router-dom'
+>>>>>>> 584ec860ffddcfe67c8780b1a8f114aba4483bc6
 
 const styles = theme => ({
     button: {
@@ -117,8 +122,8 @@ class LogIn extends Component {
 
                     </DialogContent>
                     <DialogActions >
-                        <Button variant="contained" color="primary" onClick={this.handleSubmit} component={Link} to="/logedin" fullWidth>
-                        GET STARTED
+                        <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!email || !password} fullWidth>
+                            GET STARTED
                         </Button>
                         <div>
                             {authError ? <p>{authError}</p> : null}

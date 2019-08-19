@@ -17,8 +17,8 @@ const styles = theme => ({
         margin: theme.spacing(2),
         minWidth: 120
     },
-    selectEmpty: {
-        // marginTop: theme.spacing(2)
+    addIcon: {
+        position: "fixed",
     }
 });
 
@@ -84,7 +84,7 @@ class CreateQuestion extends Component {
         // if (!auth.uid) return <Redirect to="/" />
         return (
             <form className={classes.root}>
-                <Fab onClick={this.handleToggle} aria-label="Add" color="secondary" style={{ position: "fixed" }} >
+                <Fab size="large" onClick={this.handleToggle} className={classes.addIcon} aria-label="Add" color="secondary" >
                     <AddIcon />
                 </Fab>
                 <Dialog open={open} onClose={this.handleToggle} fullWidth>
@@ -179,11 +179,12 @@ class CreateQuestion extends Component {
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         auth: state.firebase.auth
-//     }
-// }
+const mapStateToProps = state => {
+    return {
+        //         auth: state.firebase.auth
+        questions: state.bank.questions
+    }
+}
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -191,11 +192,7 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-// export default compose(
-//     withStyles(styles),
-//     connect(mapStateToProps,mapDispatchToProps)
-// )(CreateQuestion);
 export default compose(
     withStyles(styles),
-    connect(null, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps)
 )(CreateQuestion)

@@ -6,6 +6,7 @@ const DeleteSnackbar = ({open,Toggle}) => {
     return (
         <div>
             <Snackbar
+                variant="success"
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
@@ -29,7 +30,8 @@ const DeleteSnackbar = ({open,Toggle}) => {
                         <Close />
                     </IconButton>,
                 ]}
-            />
+            >
+            </Snackbar>
         </div>
     )
 }

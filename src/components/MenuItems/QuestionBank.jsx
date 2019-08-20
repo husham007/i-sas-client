@@ -62,11 +62,15 @@ const QuestionBank = ({ questions }) => {
             <TabPanel value={value} index={0} >
                 <CreateQuestion />
                 {/* <QuestionList questions={questions} /> */}
-                {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
+                <div style={{ marginTop: '60px' }}>
+                    {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
+                </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SearchQuestion />
+
                 {questions && questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
+
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statestics

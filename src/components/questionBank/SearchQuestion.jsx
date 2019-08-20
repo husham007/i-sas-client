@@ -8,7 +8,8 @@ import FilterQuestion from './FilterQuestion';
 
 const Styles = theme => ({
     root: {
-        padding: theme.spacing(4)
+        padding: theme.spacing(4),
+        height:'150px'
     },
     search: {
         display: 'flex',

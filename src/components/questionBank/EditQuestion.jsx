@@ -24,8 +24,16 @@ const styles = theme => ({
         margin: theme.spacing(2),
         minWidth: 120
     },
-    selectEmpty: {
-        // marginTop: theme.spacing(2)
+    editBtn: {
+        marginLeft: 10,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: 0,
+        }
+    },
+    edit:{
+        [theme.breakpoints.down('xs')]: {
+            display: 'none'
+        }
     }
 });
 
@@ -65,10 +73,10 @@ class EditQuestion extends Component {
         e.preventDefault()
         console.log(this.props.question.id)
         console.log(this.state)
-        const { id,question, questionType, questionCategory, questionLevel, answer } = this.state
-        const q = {id,question, questionType, questionCategory, questionLevel, answer }
+        const { id, question, questionType, questionCategory, questionLevel, answer } = this.state
+        const q = { id, question, questionType, questionCategory, questionLevel, answer }
         this.props.editQuestion(q);
-        
+
         this.setState({ hasError: false });
         if (!question || !questionType || !questionCategory || !questionLevel || !answer) {
             this.setState({ hasError: true });
@@ -85,7 +93,8 @@ class EditQuestion extends Component {
         return (
             <form className={classes.root}>
                 <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" >
-                    Edit <Edit style={{ marginLeft: 10 }} />
+                    <div className={classes.edit}>Edit</div>
+                    <Edit className={classes.editBtn} />
                 </Button>
                 <Dialog open={open} onClose={this.handleToggle} TransitionComponent={Transition}
                     keepMounted fullWidth>

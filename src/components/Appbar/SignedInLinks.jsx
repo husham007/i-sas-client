@@ -2,12 +2,12 @@ import React from 'react'
 import { CssBaseline, Divider, Drawer, Tabs, Tab, Toolbar, Button, Typography, IconButton, Hidden, List, ListItem } from '@material-ui/core'
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import { Menu, Home, Archive, Contacts, PersonPin } from '@material-ui/icons'
-// import HomeIcon from '@material-ui/icons/Home';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 import { signOut } from '../../store/actions/authAction'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/images/integrifyLogo.png'
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -191,7 +191,7 @@ const SignedInLinks = (props) => {
                     </Drawer>
                 </Hidden>
             </nav>
-        </Toolbar >
+        </Toolbar>
     )
 }
 

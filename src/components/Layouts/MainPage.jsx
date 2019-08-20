@@ -1,6 +1,10 @@
 import React from 'react'
 import { Grid, Paper, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import QuestionBankPaper from './Main/QuestionBankPaper';
+import CreatExamPaper from './Main/CreatExamPaper';
+import GiveExamPaper from './Main/GiveExamPaper';
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       margin: theme.spacing(1, 3),
     }
-    
+
   },
   grid: {
     borderColor: '#fff',
@@ -20,24 +24,9 @@ const useStyles = makeStyles(theme => ({
     width: '80%',
     margin: 'auto'
   },
-  paper: {
-    padding: theme.spacing(1, 2),
-    margin: theme.spacing(3),
-    backgroundColor: '#000',
-    overflowY: 'auto',
-    border: '2px',
-    borderStyle: 'solid',
-    borderColor: '#7f7f7f',
-    height: '280px',
-    '&:hover':{
-      borderColor:'#ffb503',
-
-    }
-  }
-
 }));
 
-const Main = () => {
+const Main = ({ auth }) => {
   const classes = useStyles();
   // const [spacing, setSpacing] = React.useState(2);
   return (
@@ -55,33 +44,24 @@ const Main = () => {
         </Box>
         <Grid container justify="center" className={classes.grid}>
           <Grid item sm>
-            <Paper className={classes.paper}>
-              <i className="fas fa-book" style={{ fontSize: '55px', margin: 30 }}></i>
-
-              <Typography variant="h6">Question Bank</Typography>
-              <br />
-              <Typography variant="overline" style={{ lineHeight: '1' }}>Quickly create great looking tests using miltiple question types and formatting options.</Typography>
-            </Paper>
+            <QuestionBankPaper auth={auth} />
           </Grid>
           <Grid item sm>
-            <Paper className={classes.paper}>
-              <i className="fas fa-laptop-code" style={{ fontSize: '55px', margin: 30 }}></i>
-              <Typography variant="h6">Create Exam</Typography>
-              <br />
-              <Typography variant="overline" style={{ lineHeight: '1' }}>Test can eigther be published privately to a sleect grpup or open them up to everyone with a single link and registration page.</Typography>
-            </Paper>
+            <CreatExamPaper auth={auth} />
           </Grid>
           <Grid item sm>
-            <Paper className={classes.paper}>
-              <i className="fas fa-chalkboard-teacher" style={{ fontSize: '55px', margin: 30 }}></i>
-              <Typography variant="h6">Give Exam</Typography>
-              <br />
-              <Typography variant="overline" style={{ lineHeight: '1' }}>Testify instantly marks and grades your tests. Powerful reports then allow you to perform in-depth analysis across all responses.</Typography>
-            </Paper>
+            <GiveExamPaper />
           </Grid>
         </Grid>
       </Paper>
     </div>
   );
 }
-export default Main
+
+const mapStateToProps = state => {
+  // console.log(state);
+  return {
+    auth: state.firebase.auth,
+  }
+}
+export default connect(mapStateToProps, null)(Main)

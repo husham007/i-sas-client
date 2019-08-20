@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import uuidv4 from 'uuid/v4'
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Fab, Radio, MenuItem, FormHelperText } from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add';
+import {Add,Close} from '@material-ui/icons';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -19,7 +19,12 @@ const styles = theme => ({
     },
     addIcon: {
         position: "fixed",
-    }
+    },
+    title: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+
 });
 
 class CreateQuestion extends Component {
@@ -85,10 +90,13 @@ class CreateQuestion extends Component {
         return (
             <form className={classes.root}>
                 <Fab size="large" onClick={this.handleToggle} className={classes.addIcon} aria-label="Add" color="secondary" >
-                    <AddIcon />
+                    <Add />
                 </Fab>
                 <Dialog open={open} onClose={this.handleToggle} fullWidth>
+                    <div className={classes.title}>
                     <DialogTitle id="form-dialog-title" style={{ paddingBottom: 0 }}>Create Question</DialogTitle>
+                    <div onClick={this.handleToggle} style={{ padding: '15px', cursor: 'pointer' }}><Close /></div>
+                    </div>
                     <DialogContent>
                         <DialogContentText>
                             To create a new question.

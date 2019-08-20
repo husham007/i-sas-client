@@ -4,7 +4,6 @@ import { Delete } from '@material-ui/icons'
 import { deleteQuestion } from '../../store/actions/bankAction';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
-import { compose } from 'redux'
 import Slide from '@material-ui/core/Slide';
 import { withApollo } from 'react-apollo';
 import { compose } from 'redux';

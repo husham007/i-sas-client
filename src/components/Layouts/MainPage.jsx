@@ -61,7 +61,7 @@ const Main = ({ auth }) => {
 const mapStateToProps = state => {
   // console.log(state);
   return {
-    auth: state.firebase.auth,
+    auth: state.rootReducer.auth,
   }
 }
 export default connect(mapStateToProps, null)(Main)

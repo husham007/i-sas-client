@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
 import { deleteQuestion } from '../../store/actions/bankAction';
+import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
+import { compose } from 'redux'
 import Slide from '@material-ui/core/Slide';
 import { withApollo } from 'react-apollo';
 import { compose } from 'redux';
@@ -12,6 +14,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const styles = theme => ({
+
+    deleteBtn: {
+        marginLeft: 10,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: 0,
+        }
+    },
+    delete: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none'
+        }
+    }
+});
 
 const DELETE_QUESTION = gql`
 mutation deleteQuestion($id: ID!){
@@ -43,14 +59,15 @@ class DeleteAlert extends Component {
        // this.handleToggle()
         
     }
-    
+
     render() {
         // const { question, deleteQuestion } = this.props;
+        const { classes } = this.props;
         return (
             <div>
                 <Button size="small" variant="outlined" onClick={this.handleToggle} style={{ color: '#d32f2f' }}>
-                    Delete
-                <Delete style={{ marginLeft: 10 }} />
+                    <div className={classes.delete}>Delete</div>
+                    <Delete className={classes.deleteBtn} />
                 </Button>
                 {/* {!this.state.del ? <DeleteSnackbar open={this.state.open} Toggle={this.handleToggle} /> : null} */}
                 <Dialog
@@ -83,6 +100,9 @@ class DeleteAlert extends Component {
 
 //export default connect(null, { deleteQuestion })(DeleteAlert);
 export default compose(
+    withStyles(styles),
    connect(null, { deleteQuestion }),
-    withApollo
+    withApollo,    
 )(DeleteAlert)
+
+

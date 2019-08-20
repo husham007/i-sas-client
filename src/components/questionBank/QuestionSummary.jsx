@@ -11,19 +11,16 @@ import { compose } from 'redux'
 const styles = theme => ({
     card: {
         display: 'flex',
-        flexWrap: 'wrap',
         maxWidth: '60%',
         margin: 'auto',
         marginBottom: '12px',
         background: '#011',
-        [theme.breakpoints.down('sm')]:{
+        [theme.breakpoints.down('sm')]: {
             maxWidth: '85%',
-            marginRight:'-5px'
+        },
+        [theme.breakpoints.down('xs')]: {
+            maxWidth: '95%',
         }
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightRegular,
     },
 });
 
@@ -34,14 +31,15 @@ class QuestionSummary extends Component {
        // console.log(question)
         return (
             <Card className={classes.card}>
-                <ExpansionPanel style={{width:'100%',background:'none'}}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} style={{ display: 'flex'}}>   
-                        <Table style={{flex:4,}}>
+                <ExpansionPanel expandIcon={<ExpandMoreIcon />} style={{ width: '100%', background: 'none' }}>
+
+                    <ExpansionPanelSummary>
+                        <Table>
                             <TableBody>
                                 <TableRow>
                                     <TableCell>
                                         <Typography variant="overline" color="textSecondary" gutterBottom>
-                                            question :
+                                            question:
                             </Typography>
                                     </TableCell>
                                     <TableCell>
@@ -52,16 +50,17 @@ class QuestionSummary extends Component {
                                 </TableRow>
                             </TableBody>
                         </Table>
-                        <CardActions style={{ flex: 1 }}>
+                        <CardActions>
                             <DeleteAlert question={question} />
                             <EditQuestion question={question} />
                         </CardActions>
                     </ExpansionPanelSummary>
+
                     <ExpansionPanelDetails>
                         <CardContent>
                             <Table>
                                 <TableBody>
-                                    
+
                                     <TableRow>
                                         <TableCell>
                                             <Typography variant="overline" color="textSecondary" gutterBottom>

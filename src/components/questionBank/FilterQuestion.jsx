@@ -9,12 +9,23 @@ import { searchANYQuestion } from '../../store/actions/bankAction'
 const styles = theme => ({
     root: {
         display: "flex",
-        justifyContent: 'center'
+        justifyContent: 'space-between',
+        maxWidth:'60%',
+        margin:'auto',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '80%',
+        },
+        [theme.breakpoints.down('xs')]: {
+            maxWidth: '100%',
+        },
+
     },
     formControl: {
         flex: 1,
-        margin: theme.spacing(2),
-        maxWidth: '16%'
+        maxWidth: '25%',
+        [theme.breakpoints.down('sm')]:{
+            maxWidth:'30%'
+        }
     },
 
 });

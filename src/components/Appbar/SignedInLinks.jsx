@@ -125,7 +125,7 @@ const SignedInLinks = (props) => {
                 <div className={classes.toolbar} />
                 <Divider />
                 <ListItem>
-                    <Typography variant="caption" style={{ margin: 'auto' }} gutterBottom>{props.profile.firstName} {props.profile.lastName}</Typography>
+                    <Typography variant="caption" style={{ margin: 'auto' }} gutterBottom>{props.profile.username} </Typography>
                 </ListItem>
                 <ListItem>
                     <Button style={{ width: '160px' }} variant="outlined" onClick={props.signOut} color="primary" component={Link} to="/">
@@ -135,7 +135,7 @@ const SignedInLinks = (props) => {
             </List>
         </div>
     );
-
+        console.log(props);
     return (
         <Toolbar className={classes.root}>
             <CssBaseline />
@@ -156,7 +156,7 @@ const SignedInLinks = (props) => {
                 </Tabs>
             </div>
             <div className={classes.controllers}>
-                <Typography variant="h3" className={classes.menuItems} style={{ margin: 'auto 10px' }} gutterBottom>{props.profile.firstName} {props.profile.lastName}</Typography>
+                <Typography variant="h3" className={classes.menuItems} style={{ margin: 'auto 10px' }} gutterBottom>{props.profile.username}</Typography>
                 <Button size="small" onClick={props.signOut} variant="outlined" color="primary" component={Link} to="/">
                     log out<PersonOutlineIcon style={{ marginLeft: '10px' }} />
                 </Button>

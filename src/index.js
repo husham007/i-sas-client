@@ -36,10 +36,21 @@ export const client = (async (authLink, httpLink)=>{
   })
 })(authLink, httpLink);
 */
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    //errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+   // errorPolicy: 'all',
+  },
+}
 
 export const client= new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: defaultOptions,
 });
 
 

@@ -1,4 +1,4 @@
-import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, SEARCH_QUESTION_ANY } from '../actions/actionTypes'
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, LOAD_BOOK, SEARCH_QUESTION_ANY } from '../actions/actionTypes'
 
 
 
@@ -24,20 +24,30 @@ client.query({ query: QUESTIONS })
 
 */
 const initState = {
-   deleted: null
+   deleted: null,
+   questions: [],
+   loading: false,
+   types: [],
+   levels: [],
+   categories: [],
+   bookLoading: false,
 };
 
 const bankReducer = (state = initState, { type, payload }) => {
+    
     switch (type) {
         case CREATE_QUESTION:
             console.log('created question :)', payload.question)
             return { ...state, questions: [...state.questions, payload.question] };
         case LOAD_QUESTIONS:
-            console.log('loadQuestions :)', payload)
-            return { ...state, questions: [...state.questions, payload.questions] };
+            console.log('loadQuestions :)', payload.questions)
+            return { ...state, loading: true, questions: [...payload.questions] };
+        case LOAD_BOOK:
+        console.log('loadBook :)', payload.book)
+        return { ...state, bookLoading: true, types: [...payload.book.types], levels: [...payload.book.levels], categories: [...payload.book.categories] };
         case DELETE_QUESTION:
             console.log('this is deleted...')           
-            return { ...state, deleted: true};
+            return { ...state, questions: [], loading: false};
         case EDIT_QUESTION:
             console.log('this is edited !')
             const Qs = [...state.questions];

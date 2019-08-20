@@ -31,7 +31,7 @@ const styles = theme => ({
 class QuestionSummary extends Component {
     render() {
         const { question, classes } = this.props;
-        // console.log(question)
+       // console.log(question)
         return (
             <Card className={classes.card}>
                 <ExpansionPanel style={{width:'100%',background:'none'}}>
@@ -118,7 +118,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                            {question.author.username}
+                                           {/*question.author.username*/}
                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -147,7 +147,7 @@ class QuestionSummary extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
+    //console.log(state);
     return {
         ...state
     }

@@ -3,6 +3,7 @@ import {
     DELETE_QUESTION,
     EDIT_QUESTION,
     LOAD_QUESTIONS,
+    LOAD_BOOK,
     SEARCH_QUESTION_ANY,
     SEARCH_QUESTION_CATEGORY,
     SEARCH_QUESTION_LEVEL,
@@ -18,12 +19,22 @@ export const createQuestion = (newQuestion) => {
     }
 };
 
-export const loadQuestions = (data) => {
-    console.log(data);
+export const loadQuestions = (page) => {
+    //console.log(page);
     return {
         type: LOAD_QUESTIONS,
         payload: {
-            questions: data.questions ? data.questions.page : null
+            questions: page ? page : null
+        }
+    }
+};
+
+export const loadBook = (book) => {
+    //console.log(page);
+    return {
+        type: LOAD_BOOK,
+        payload: {
+            book: book ? book : null
         }
     }
 };

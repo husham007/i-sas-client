@@ -55,13 +55,12 @@ const bankReducer = (state = initState, { type, payload }) => {
             return { ...state, questions: Qs };
         case SEARCH_QUESTION_ANY:
             console.log('search result!')
-            // const filteredQ = [...state.questions];
-            // const searched = state.questions.filter(q => {
-            //     return q.question.toLowerCase().includes(payload.text.toLowerCase())
-            // })
-            // const result = payload.text === '' ? null : searched;
-            // return { questions: result, filteredQ};
-            return { ...state };
+            const filteredQ = [...state.questions];
+            const searched = state.questions.filter(q => {
+                return q.question.toLowerCase().includes(payload.text.toLowerCase())
+            })
+            const result = payload.text === '' ? null : searched;
+            return { questions: result, filteredQ};
         default:
             return state;
     }

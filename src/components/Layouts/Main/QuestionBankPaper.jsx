@@ -33,7 +33,7 @@ const Styles = theme => ({
 class QuestionBankPaper extends Component {
     render() {
         const { classes, auth } = this.props;
-        const makeActive = auth.uid ? false : true;
+        const makeActive = auth.token ? false : true;
         return (
             <ButtonBase disabled={makeActive} component={Link} to="/questionBank">
                 <Paper className={classes.paper}>

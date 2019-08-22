@@ -61,6 +61,7 @@ const Main = ({ auth }) => {
 const mapStateToProps = state => {
   // console.log(state);
   return {
+    // auth: state.rootReducer.auth,
     auth: state.rootReducer.auth,
   }
 }

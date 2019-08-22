@@ -31,14 +31,14 @@ const Styles = theme => ({
 class CreatExamPaper extends Component {
     render() {
         const { classes, auth } = this.props;
-        const makeActive = auth.uid ? false : true;
+        const makeActive = auth.token ? false : true;
         return (
             <ButtonBase disabled={makeActive} component={Link} to="/questionBank/create">
                 <Paper className={classes.paper}>
                     <div className={classes.icon}><i className="fas fa-laptop-code"></i></div>
                     <Typography variant="h6">Create Exam</Typography>
                     <br />
-                    <Typography variant="overline" style={{ lineHeight: '1'}}>
+                    <Typography variant="overline" style={{ lineHeight: '1' }}>
                         Test can eigther be published privately to a sleect grpup or open them up to everyone with a single link and registration page.
                     </Typography>
                 </Paper>

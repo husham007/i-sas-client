@@ -16,21 +16,13 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between',
     },
     logo: {
-        margin: 10,
         width: 100,
-        height: 47
-    },
-    tabs: {
-        flexGrow: 1,
-        margin: 25,
-        borderRight: `1px solid ${theme.palette.divider}`,
+        height: 46
     },
     menuItems: {
         textTransform: 'capitalize',
-        fontSize: 16,
+        fontSize: 14,
         color: '#fee',
-        width: 'auto',
-
     },
     menuBtns: {
         textTransform: 'capitalize',
@@ -45,7 +37,6 @@ const useStyles = makeStyles(theme => ({
         marginRight: '10px'
     },
     nav: {
-        margin: 'auto',
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         }
@@ -86,6 +77,12 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
+    },
+    logoutButton: {
+        borderStyle: 'solid',
+        borderBottomRightRadius: '5',
+        borderTopRightRadius: '5',
+        width: '120px',
     },
 }));
 
@@ -135,32 +132,32 @@ const SignedInLinks = (props) => {
             </List>
         </div>
     );
-        console.log(props);
     return (
         <Toolbar className={classes.root}>
             <CssBaseline />
-            <div style={{ display: 'flex' }}>
-                <IconButton color="inherit" edge="start" onClick={handleToggle} className={classes.menuButton}>
-                    <Menu />
-                </IconButton>
+                <div style={{display: 'flex' }}>
+                    <IconButton color="inherit" edge="start" onClick={handleToggle} className={classes.menuButton}>
+                        <Menu />
+                    </IconButton>
 
-                <Link to="/">
-                    <img alt="logo" src={logo} className={classes.logo} />
-                </Link>
+                    <Link to="/">
+                        <img alt="logo" src={logo} className={classes.logo} />
+                    </Link>
 
-                <Tabs value={value} onChange={handleChange} className={classes.nav} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
-                    <Tab label="home" component={Link} to="/" className={classes.menuItems} />
-                    <Tab label="Question Bank" component={Link} to="/questionBank" className={classes.menuItems} />
-                    <Tab label="about us" component={Link} to="/aboutUs" className={classes.menuItems} />
-                    <Tab label="contacts" component={Link} to="/contacts" className={classes.menuItems} />
-                </Tabs>
-            </div>
-            <div className={classes.controllers}>
-                <Typography variant="h3" className={classes.menuItems} style={{ margin: 'auto 10px' }} gutterBottom>{props.profile.username}</Typography>
-                <Button size="small" onClick={props.signOut} variant="outlined" color="primary" component={Link} to="/">
-                    log out<PersonOutlineIcon style={{ marginLeft: '10px' }} />
-                </Button>
-            </div>
+                    <Tabs value={value} onChange={handleChange} className={classes.nav} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
+                        <Tab label="home" component={Link} to="/" className={classes.menuItems} />
+                        <Tab label="Question Bank" component={Link} to="/questionBank" className={classes.menuItems} />
+                        <Tab label="Exam" component={Link} to="/exam" className={classes.menuItems} />
+                        <Tab label="about us" component={Link} to="/aboutUs" className={classes.menuItems} />
+                        <Tab label="contacts" component={Link} to="/contacts" className={classes.menuItems} />
+                    </Tabs>
+                </div>
+                <div className={classes.controllers}>
+                    <Typography variant="h3" className={classes.menuItems} style={{ margin: 'auto 10px' }} gutterBottom>{props.profile.username}</Typography>
+                <Button size="small" onClick={props.signOut} variant="outlined" color="primary" className={classes.logoutButton} component={Link} to="/">
+                        log out<PersonOutlineIcon style={{ marginLeft: '10px' }} />
+                    </Button>
+                </div>
             <nav className={classes.drawer}>
                 <Hidden smUp implementation="css">
                     <Drawer

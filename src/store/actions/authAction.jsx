@@ -1,5 +1,5 @@
-import { Query } from 'react-apollo';
-import React from 'react';
+// import { Query } from 'react-apollo';
+// import React from 'react';
 
 
 export const signIn = ({data}) => {

@@ -10,20 +10,17 @@ import GithubIcon from '../../icons/GithubIcon'
 const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: '#ffb503',
-        display: 'flex',
-        flexWrap: 'no-wrap',
         padding: theme.spacing(3),
+        position:'sticky'
+    },
+    main: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        maxWidth: '88%',
+        margin: 'auto'
     },
     link: {
-        padding: theme.spacing(1),
-        marginTop: 0,
-        transform: 'scale(1)',
-        transition: '.5s ease-in-out',
-        '&:hover': {
-            marginTop: -10,
-            transform: 'scale(1.3)',
-            transition: '.2s ease-in-out',
-        }
+        padding: theme.spacing(0.5)
     },
 }))
 
@@ -34,15 +31,16 @@ const Footer = () => {
             <Grid
                 container
                 direction="row"
-                justify="flex-end"
+                // justify="flex-end"
                 alignItems="center"
+                className={classes.main}
             >
-                <Grid item xs={2} md={6}>
-                    <Typography style={{ fontSize: 'calc(0.6vw + 10px)' }}>
+                <Grid item>
+                    <Typography variant="body1" style={{ fontSize: 'calc(0.6vw + 10px)', color: 'black' }}>
                         Student Assessment System. &copy; 2019
                     </Typography>
                 </Grid>
-                <Grid item xs={1} md={3} >
+                <Grid item>
                     <Link href="#" color="inherit" className={classes.link} >
                         <LinkedInIcon />
                     </Link>

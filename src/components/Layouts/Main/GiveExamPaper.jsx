@@ -11,7 +11,7 @@ const Styles = theme => ({
         margin: theme.spacing(3),
         backgroundColor: '#000',
         overflowY: 'auto',
-        border: '2px',
+        border: '1px',
         borderStyle: 'solid',
         borderColor: '#7f7f7f',
         height: '320px',
@@ -39,7 +39,7 @@ class GiveExamPaper extends Component {
                     <div className={classes.icon}><i className="fas fa-chalkboard-teacher"></i></div>
                     <Typography variant="h6">Give Exam</Typography>
                     <br />
-                    <Typography variant="overline" style={{ lineHeight: '1' }}>
+                    <Typography variant="body2" style={{ lineHeight:1.5 }}>
                         Testify instantly marks and grades your tests. Powerful reports then allow you to perform in-depth analysis across all responses.
               </Typography>
                 </Paper>

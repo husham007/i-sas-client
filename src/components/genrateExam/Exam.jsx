@@ -1,17 +1,18 @@
 import React from 'react'
 // import QuestionList from '../questionBank/QuestionList'
-import { AppBar, Tabs, Tab, Typography, Box, makeStyles } from '@material-ui/core'
-import CreateQuestion from '../questionBank/CreateQuestion';
+import { AppBar, Tabs, Tab, Typography, Box, makeStyles, Button, TextField } from '@material-ui/core'
+import CreateExam from './CreateExam';
 import { connect } from 'react-redux'
-import qM from '../../assets/images/qM.jpg'
-import SearchQuestion from '../questionBank/SearchQuestion';
-import QuestionSummary from '../questionBank/QuestionSummary';
+import examBC from '../../assets/images/questionMark.jpg'
 import gql from 'graphql-tag';
 import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
 import { withApollo } from 'react-apollo';
+import ExamSummary from './ExamSummary';
+import SearchQuestion from '../questionBank/SearchQuestion'
+import QuestionSummary from '../questionBank/QuestionSummary';
+import { showExamSearch } from '../../store/actions/examAction'
 import { useQuery } from '@apollo/react-hooks';
-import BankSnackBar from '../Alerts/BankSnackBar'
 
 // const USERS = gql`
 // query {
@@ -52,8 +53,8 @@ query questionBookByName($name: String!) {
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        minHeight: '76vh',
-        backgroundImage: `url(${qM})`,
+        minHeight: '78vh',
+        backgroundImage: `url(${examBC})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'noRepeat',
@@ -67,9 +68,6 @@ const useStyles = makeStyles(theme => ({
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-
-
-
     return (
         <Typography
             component="div"
@@ -84,11 +82,11 @@ function TabPanel(props) {
     );
 }
 
-const QuestionBank = (props) => {
-    //console.log(props);
+const Exam = (props) => {
+    // console.log(props.exams);
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-
+    const [val, setVal] = React.useState(false);
     function handleChange(event, newValue) {
         setValue(newValue);
     }
@@ -116,40 +114,61 @@ const QuestionBank = (props) => {
 
     if (loading) return null;
     if (error) console.log(error);
-    // if (!props.bank.bookLoading) {
-    //     // console.log(data);
-    //     props.loadBook(data.questionBookByName);
+    if (!props.bank.bookLoading) {
+        // console.log(data);
+        props.loadBook(data.questionBookByName);
+    }
+    // function handleAdd() {
+    //     // setVal(newVal = true)
+    //     props.showExamSearch(true)
     // }
+    let result = [];
+    if (props.exam) {
+        console.log(props)
+        if (props.searchActive) {
+            result = props.searchResult
+            console.log(result)
+        } else {
+            result = props.bank.questions
+        }
+
+    }
 
     return (
         <div value={value} className={classes.root}>
-            <AppBar position="sticky" color="secondary">
+            <AppBar position="sticky" color="secondary" style={{ marginBottom: 5 }}>
                 <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
-                    <Tab label="CREATE QUESTION" />
-                    <Tab label="SEARCH QUESTION" />
-                    <Tab label="STATISTICS" />
+                    <Tab label="CREATE EXAM" />
+                    <Tab label="PUBLISH" />
+                    <Tab label="GROUP MEMBERS" />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >
-                <CreateQuestion />
-                {/* <QuestionList questions={questions} /> */}
-                {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
+                <CreateExam />
+
+                {props.exam ? <ExamSummary exam={props.exam} /> : null}
+                {/* {props.exam ? <Button variant="contained" color="primary" onClick={handleAdd} style={{ margin: 'auto' }}>Add Question</Button> : null} */}
+                {props.exam ? <SearchQuestion cas={false} /> : null}
+                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <SearchQuestion cas={true} />
-                {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} />) }
+                <h2>publish the exam in here!</h2>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                statistics
+                <h2>students list here!</h2>
             </TabPanel>
-            {props.bank.snackBarMessage ? <BankSnackBar message={props.bank.snackBarMessage} /> : null}
         </div>
     )
 }
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
-        bank: state.rootReducer.bank
+        bank: state.rootReducer.bank,
+        exam: state.rootReducer.exam.exam,
+        searchActive: state.rootReducer.exam.isSearchActive,
+        examSearch: state.rootReducer.exam.showExamSearch,
+        searchResult: state.rootReducer.exam.searchResult
     }
 }
 
@@ -157,11 +176,12 @@ const mapDispatchToProps = dispatch => {
     return {
         loadQuestions: (data) => dispatch(loadQuestions(data)),
         loadBook: (data) => dispatch(loadBook(data)),
+        showExamSearch: (value) => dispatch(showExamSearch(value))
 
     }
 }
 
-
-export default compose(connect(mapStateToProps, mapDispatchToProps),
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
     withApollo
-)(QuestionBank)
+)(Exam)

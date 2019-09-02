@@ -1,4 +1,4 @@
-import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, LOAD_BOOK, SEARCH_QUESTION_ANY } from '../actions/actionTypes'
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, LOAD_BOOK, SEARCH_QUESTION_ANY, SEARCH_PARAMETERS, BANK_SNACKBAR } from '../actions/actionTypes'
 
 
 
@@ -24,43 +24,43 @@ client.query({ query: QUESTIONS })
 
 */
 const initState = {
-   deleted: null,
-   questions: [],
-   loading: false,
-   types: [],
-   levels: [],
-   categories: [],
-   bookLoading: false,
+    deleted: null,
+    questions: [],
+    searchResult: [],
+    loading: false,
+    types: [],
+    levels: [],
+    categories: [],
+    bookLoading: false,
+    snackBarMessage: null,
 };
 
 const bankReducer = (state = initState, { type, payload }) => {
-    
+
     switch (type) {
         case CREATE_QUESTION:
             console.log('created question :)', payload.question)
-            return { ...state, questions: [...state.questions, payload.question] };
+            return { ...state, loading: false, snackBarMessage: payload.message };
         case LOAD_QUESTIONS:
-            console.log('loadQuestions :)', payload.questions)
+            // console.log('loadQuestions :)', payload.questions)
             return { ...state, loading: true, questions: [...payload.questions] };
         case LOAD_BOOK:
-        console.log('loadBook :)', payload.book)
-        return { ...state, bookLoading: true, types: [...payload.book.types], levels: [...payload.book.levels], categories: [...payload.book.categories] };
+            // console.log('loadBook :)', payload.book)
+            return { ...state, bookLoading: true, types: [...payload.book.types], levels: [...payload.book.levels], categories: [...payload.book.categories] };
         case DELETE_QUESTION:
-            console.log('this is deleted...')           
-            return { ...state, questions: [], loading: false};
+            console.log('this is deleted...')
+            return { ...state, questions: [], snackBarMessage: payload.message, loading: false };
         case EDIT_QUESTION:
             console.log('this is edited !')
-            const Qs = [...state.questions];
-            Qs.splice(payload.index, 1, payload.index);
-            return { ...state, questions: Qs };
+            return { ...state, questions: [], snackBarMessage: payload.message, loading: false };
         case SEARCH_QUESTION_ANY:
-            console.log('search result!')
-            const filteredQ = [...state.questions];
-            const searched = state.questions.filter(q => {
-                return q.question.toLowerCase().includes(payload.text.toLowerCase())
-            })
-            const result = payload.text === '' ? null : searched;
-            return { questions: result, filteredQ};
+            console.log('search result!', payload)
+            return { ...state, searchResult: [...payload.searchResult] };
+        case SEARCH_PARAMETERS:
+            return { ...state, [payload.name]: payload.value }
+        case BANK_SNACKBAR:
+            console.log('this is snackbar')
+            return { ...state, snackBarMessage: null }
         default:
             return state;
     }

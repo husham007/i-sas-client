@@ -5,6 +5,13 @@ import QuestionBankPaper from './Main/QuestionBankPaper';
 import CreatExamPaper from './Main/CreatExamPaper';
 import GiveExamPaper from './Main/GiveExamPaper';
 import { connect } from 'react-redux'
+import {loadBook, loadQuestions} from '../../store/actions/bankAction'
+import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import { compose } from 'redux';
+import { withApollo } from 'react-apollo';
+
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,23 +19,78 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#000',
   },
   box: {
-    margin: theme.spacing(4, 18),
+    margin: theme.spacing(4, 0, 4, 12),
     [theme.breakpoints.down('xs')]: {
-      margin: theme.spacing(1, 3),
+      margin: theme.spacing(1, 6),
     }
 
   },
   grid: {
     borderColor: '#fff',
     textAlign: 'center',
-    width: '80%',
+    width: '90%',
     margin: 'auto'
   },
 }));
 
-const Main = ({ auth }) => {
+const QUESTION_BOOK_BY_NAME = gql`
+query questionBookByName($name: String!) {
+    questionBookByName(name: $name) {
+        book
+        types
+        categories
+        levels
+    }
+  }`;
+
+const QUESTIONS = gql`
+query
+{
+    questions {
+        page {
+            id
+            statement
+            level
+            category
+            answer
+            type
+            author {
+                username
+            }        
+        }
+    }
+}`;
+
+const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
   const classes = useStyles();
   // const [spacing, setSpacing] = React.useState(2);
+  const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+    variables: { name: "javascript" },
+  });
+
+  (async () => {
+    await client
+      .query({ query: QUESTIONS })
+      .then(({ data }) => {
+        // console.log(data) 
+        //console.log(props.bank.questions);
+        if (!bank.loading) {
+          loadQuestions(data.questions.page);
+        }
+
+        // questions = [...questions, ...data.questions.page];
+
+      })
+      .catch(err => { throw err });
+
+  })();
+
+  if (loading) return null;
+  if (error) console.log(error);
+  if (!bank.bookLoading && data) {
+    // console.log(data);
+    loadBook(data.questionBookByName);
+  }
   return (
     <div>
       <Paper className={classes.root} square>
@@ -54,6 +116,7 @@ const Main = ({ auth }) => {
           </Grid>
         </Grid>
       </Paper>
+      
     </div>
   );
 }
@@ -63,6 +126,18 @@ const mapStateToProps = state => {
   return {
     // auth: state.rootReducer.auth,
     auth: state.rootReducer.auth,
+    bank: state.rootReducer.bank
   }
 }
-export default connect(mapStateToProps, null)(Main)
+const mapDispatchToProps = dispatch => {
+  return {
+    loadQuestions: (data) => dispatch(loadQuestions(data)),
+    loadBook: (data) => dispatch(loadBook(data)),
+
+  }
+}
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withApollo
+) (Main)

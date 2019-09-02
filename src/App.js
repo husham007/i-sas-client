@@ -14,6 +14,7 @@ import Contacts from './components/MenuItems/Contacts';
 import { getToken } from './store/actions/authAction';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+import Exam from './components/genrateExam/Exam';
 
 class App extends Component {
  
@@ -33,6 +34,7 @@ class App extends Component {
             <Route path="/questionBank" exact component={QuestionBank} />
             <Route path="/questionBank/question/:id" component={QuestionDetails} />
             <Route path="/questionBank/create" component={CreateQuestion} />
+            <Route path="/exam" component={Exam} />
           </Switch>
           </div>
           <Footer />

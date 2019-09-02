@@ -11,7 +11,7 @@ const Styles = theme => ({
         margin: theme.spacing(3),
         backgroundColor: '#000',
         overflowY: 'auto',
-        border: '2px',
+        border: '1px',
         borderStyle: 'solid',
         borderColor: '#7f7f7f',
         height: '320px',
@@ -23,7 +23,7 @@ const Styles = theme => ({
     icon: {
         fontSize: '55px',
         margin: 30,
-        '&:hover': {
+        '&:hover':{
             color: '#ffb503',
         }
     }
@@ -40,7 +40,7 @@ class QuestionBankPaper extends Component {
                     <div className={classes.icon}><i className="fas fa-book"></i></div>
                     <Typography variant="h6">Question Bank</Typography>
                     <br />
-                    <Typography variant="overline" style={{ lineHeight: '1' }}>
+                    <Typography variant="body2" style={{ lineHeight:1.5 }}>
                         Quickly create great looking tests using miltiple question types and formatting options.
               </Typography>
                 </Paper>

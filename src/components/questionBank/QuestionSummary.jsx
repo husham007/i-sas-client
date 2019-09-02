@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 // import moment from 'moment'
-import { Card, CardActions, CardContent, Typography, Table, TableBody, TableRow, TableCell, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary } from '@material-ui/core'
+import { Card, CardContent, Typography, Table, TableBody, TableRow, TableCell, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanelActions } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DeleteAlert from '../Alerts/DeleteAlert';
+import { ExpandMore, AddCircleOutlineSharp } from '@material-ui/icons';
+import clsx from 'clsx';
 import EditQuestion from './EditQuestion';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+import DeleteQuestion from './DeleteQuestion';
+import AddToExam from '../genrateExam/AddToExam';
 
 const styles = theme => ({
     card: {
@@ -22,18 +24,40 @@ const styles = theme => ({
             maxWidth: '95%',
         }
     },
+    head: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        background: 'none'
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1)
+    },
+    dense: {
+        marginTop: theme.spacing(2),
+    },
+
 });
 
 
 class QuestionSummary extends Component {
+    state = {
+        createdAt: '',
+    }
+    handleOnChange = e => {
+        const { name, value } = e.target;
+        this.setState({
+            [name]: value
+        })
+        // this.props.searchANYQuestion(this.state.search)
+    }
     render() {
-        const { question, classes } = this.props;
-       // console.log(question)
+        const { question, exam, classes } = this.props;
         return (
             <Card className={classes.card}>
-                <ExpansionPanel expandIcon={<ExpandMoreIcon />} style={{ width: '100%', background: 'none' }}>
-
-                    <ExpansionPanelSummary>
+                <ExpansionPanel style={{ width: '100%', background: 'none' }}>
+                    <ExpansionPanelSummary expandIcon={<ExpandMore />}>
                         <Table>
                             <TableBody>
                                 <TableRow>
@@ -50,12 +74,7 @@ class QuestionSummary extends Component {
                                 </TableRow>
                             </TableBody>
                         </Table>
-                        <CardActions>
-                            <DeleteAlert question={question} />
-                            <EditQuestion question={question} />
-                        </CardActions>
                     </ExpansionPanelSummary>
-
                     <ExpansionPanelDetails>
                         <CardContent>
                             <Table>
@@ -77,7 +96,7 @@ class QuestionSummary extends Component {
                                         <TableCell>
                                             <Typography variant="overline" color="textSecondary" gutterBottom>
                                                 Level :
-                            </Typography>
+                                            </Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
@@ -117,8 +136,8 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                           {/*question.author.username*/}
-                            </Typography>
+                                                {question.author.username}
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
@@ -129,9 +148,9 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography className={classes.pos} color="textSecondary">
-                                                {/* {moment(question.createdAt.toDate()).calendar()} */}
+                                                {/* {moment(this.state.createdAt.toDate()).calendar()} */}
                                                 12.07.2019
-                            </Typography>
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
@@ -139,6 +158,10 @@ class QuestionSummary extends Component {
                         </CardContent>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
+                <ExpansionPanelActions style={{ position: 'sticky', display: 'block', width: 160, paddingTop: 20 }}>
+                    {this.props.marks ? null : <EditQuestion question={question} />}
+                    {this.props.marks ? <AddToExam question={question} /> : <DeleteQuestion question={question} />}
+                </ExpansionPanelActions>
             </Card>
         )
     }
@@ -146,14 +169,13 @@ class QuestionSummary extends Component {
 }
 
 const mapStateToProps = state => {
-    //console.log(state);
+    console.log(state);
     return {
-        ...state
+        ...state,
     }
 }
 
 export default compose(
     withStyles(styles),
-    connect(mapStateToProps,null),   
+    connect(mapStateToProps, null),
 )(QuestionSummary)
-//export default withStyles(styles)

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { createExam } from '../../store/actions/examAction'
+import { createSoftExam } from '../../store/actions/examAction'
 // import { withApollo } from 'react-apollo';
 // import gql from 'graphql-tag';
 // import { Redirect } from 'react-router-dom'
@@ -16,7 +16,7 @@ const styles = theme => ({
     },
     dialog: {
         padding: theme.spacing(2),
-        backgroundColor:'#011'
+        backgroundColor: '#011'
     },
     formControl: {
         // margin: theme.spacing(2),
@@ -60,7 +60,8 @@ class CreateExam extends Component {
             startTime: '',
             duration: '',
             book: 'javascript',
-            questions: []
+            author: this.props.author,
+            // questions: []
 
         }
     }
@@ -80,9 +81,9 @@ class CreateExam extends Component {
         e.preventDefault()
         console.log(this.state)
         // this.props.history.push('/questionBank');
-        const { type, name, instructions, startTime, duration } = this.state
-        const exam = { name, type, instructions, startTime, duration };
-        this.props.createExam(exam);
+        const { type, name, instructions, startTime, duration, book, author } = this.state
+        const exam = { name, type, instructions, startTime, duration, book, author };
+        this.props.createSoftExam(exam);
 
         this.setState({ hasError: false });
         if (!name || !type || !instructions || !startTime || !duration) {
@@ -215,7 +216,7 @@ class CreateExam extends Component {
 
 const mapStateToProps = state => {
     return {
-        // bank: state.rootReducer.bank
+        author: state.rootReducer.auth.id,
         exam: state.exam
     }
 }
@@ -223,7 +224,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         // createQuestion: (client, question, query) => dispatch(createQuestion(client, question, query))
-        createExam: exam => dispatch(createExam(exam))
+        createSoftExam: exam => dispatch(createSoftExam(exam))
     }
 }
 

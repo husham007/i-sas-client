@@ -4,10 +4,8 @@ import { PlaylistAdd } from '@material-ui/icons'
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import Slide from '@material-ui/core/Slide';
-import { withApollo } from 'react-apollo';
 import { compose } from 'redux';
-// import gql from 'graphql-tag';
-import { addQuestionToExam, setErrorMessage } from '../../store/actions/examAction'
+import { addQuestionToExam, setErrorMessage, createExam } from '../../store/actions/examAction'
 
 
 
@@ -31,6 +29,8 @@ const styles = theme => ({
 });
 
 
+
+
 class AddToExam extends Component {
     state = {
         open: false,
@@ -43,37 +43,20 @@ class AddToExam extends Component {
         })
     }
     handleChange = e => {
-        // console.log(this.state)
         const { name, value } = e.target
         this.setState({
             [name]: value
         })
     }
-
-    // componentDidMount= ()=>{
-    //     this.checkQuestion(this.props.question.id)
-    // }
-
     handleAdd = () => {
         this.handleToggle()
         this.props.addQuestionToExam({ question: this.props.question, marks: this.state.score })
         this.setState({
             score: '',
-            // errorMessage: null
         })
-        // if (this.props.exam.examQuestions.find(question => {
-        //     return question.question.id === this.props.question.id
-        // })) {
-        //     this.setState({
-        //         score: this.state.score
-        //     })
-        // } else {
-        //     this.props.addQuestionToExam({ question: this.props.question, marks: this.state.score })
-        //     this.setState({
-        //         score: ''
-        //     })
-        // }
+
     }
+
 
     checkQuestion = (id) => {
         console.log(id);
@@ -85,16 +68,6 @@ class AddToExam extends Component {
             return true
         }
         else {
-            //         // this.props.addQuestionToExam({ question: this.props.question.id, marks: this.state.score })
-            //         // this.setState({
-            //         //     score: ''
-            //         // })
-            console.log('not exist')
-            // if (this.state.errorMessage) {
-            //    this.setState({
-            //        errorMessage: null
-            //    })
-            // }
             return false
 
         }
@@ -106,13 +79,10 @@ class AddToExam extends Component {
     render() {
 
         const { classes, question } = this.props;
-        //console.log(question.id)
 
         if (!this.props.errorMessage.get(question.id)) {
             this.checkQuestion(question.id)
         }
-
-        // console.log(this.state)
         return (
 
             <div>
@@ -173,15 +143,14 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         addQuestionToExam: (exam) => dispatch(addQuestionToExam(exam)),
-        setErrorMessage: (id, msg) => dispatch(setErrorMessage(id, msg))
+        setErrorMessage: (id, msg) => dispatch(setErrorMessage(id, msg)),
     }
 }
 
 
 export default compose(
     withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps),
-    // withApollo,
+    connect(mapStateToProps, mapDispatchToProps)
 )(AddToExam)
 
 

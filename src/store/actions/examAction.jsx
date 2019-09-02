@@ -1,29 +1,29 @@
-import { CREATE_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG} from '../actions/actionTypes';
+import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM } from '../actions/actionTypes';
 
-export const createExam = exam => {
-    return{
-        type: CREATE_EXAM,
-        payload:{
+export const createSoftExam = exam => {
+    return {
+        type: CREATE_SOFT_EXAM,
+        payload: {
             exam
         }
     }
 };
 
-export const addQuestionToExam = question =>{
+export const addQuestionToExam = question => {
 
-    return{
+    return {
         type: ADD_QUESTION_TO_EXAM,
-        payload:{
+        payload: {
             question
         }
     }
 }
 
-export const showExamSearch = (value)=> {
+export const showExamSearch = (value) => {
     return {
         type: SHOW_EXAM_SEARCH,
         payload: {
-           value
+            value
         }
     }
 };
@@ -55,12 +55,52 @@ export const removeQuestion = id => {
     }
 };
 
-export const setErrorMessage = (id,msg) =>{
+export const setErrorMessage = (id, msg) => {
     return {
         type: REMOVE_EXAM_ERRORMSG,
         payload: {
             id, msg
         }
     }
+}
+
+export const createExam = (exam,QUERY,client) => {
+    let examInput = {...exam.exam}
+    console.log(exam)
+    examInput.questions = [...exam.examQuestions]
+    return async (dispatch) => {
+
+        await client
+            .mutate({ mutation: QUERY, variables: { examInput } })
+            .then(({ data }) => {
+                dispatch({
+                    type: CREATE_EXAM,
+                    payload: {
+                        data: data
+                    }
+                })
+
+
+
+            })
+        // .catch(err => { console.log(err)});
+
+    }
+
+    // return {
+    //     type: CREATE_EXAM,
+    //     payload: {
+    //         examInput: {
+    //             name: exam.exam.name,
+    //             type: exam.exam.type,
+    //             instructions: exam.exam.instructions,
+    //             startTime: exam.exam.startTime,
+    //             duration: exam.exam.duration,
+    //             book: exam.exam.book,
+    //             author: exam.exam.author,
+    //             questions: exam.examQuestions,
+    //         }
+    //     }
+    // }
 }
 

@@ -122,7 +122,7 @@ export const searchQuestion = (client, search, QUERY) => {
     })
     // .catch(err => { console.log(err)});
 
-}
+    }
 
     
 };

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { Grid, Typography, Divider } from '@material-ui/core'
+import { Grid, Typography, Divider, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import EditExam from './EditExam';
 import DeleteExam from './DeleteExam';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import QuestionSummary from '../questionBank/QuestionSummary';
-import { removeQuestion, setErrorMessage } from '../../store/actions/examAction'
+import { removeQuestion, setErrorMessage, createExam } from '../../store/actions/examAction'
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
 
 
 const Styles = theme => ({
@@ -32,6 +34,21 @@ const Styles = theme => ({
     },
 })
 
+const CREATE_EXAM = gql`
+mutation createExam($examInput: ExamInput!) {
+    createExam(examInput: $examInput) {
+        name
+        type
+        instructions
+        startTime
+        duration
+        book
+        author{
+            username
+        }
+    }
+  }`;
+
 class ExamSummary extends Component {
     handleRemove = (e) => {
         console.log('this is remove btn');
@@ -46,6 +63,9 @@ class ExamSummary extends Component {
         console.log(sum)
         return sum;
 
+    }
+    handleCreate = () => {
+        this.props.createExam(this.props.exam, CREATE_EXAM, this.props.client)
     }
     render() {
         const { classes, exam, examQuestions } = this.props
@@ -75,9 +95,14 @@ class ExamSummary extends Component {
                     </div>
                 </Grid>
                 <Divider />
-                <Grid item fullWidth>
+                <Grid item>
                     <div style={{ margin: 30 }}>
                         {this.props.examQuestions.map((question) => <div><QuestionSummary question={question.question} /> {question.marks}<button id={question.question.id} onClick={this.handleRemove} >remove</button></div>)}
+                    </div>
+                </Grid>
+                <Grid item>
+                    <div style={{ margin: 'auto' }}>
+                        <Button onClick={this.handleCreate} variant="contained" color="secondary" disabled={!(examQuestions.length > 0)}>CREATE EXAM</Button>
                     </div>
                 </Grid>
             </Grid>
@@ -89,6 +114,7 @@ const mapStateToProps = state => {
     console.log(state.rootReducer.exam.examQuestions)
     return {
         ...state,
+        exam: state.rootReducer.exam,
         examQuestions: state.rootReducer.exam.examQuestions,
 
     }
@@ -97,11 +123,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         removeQuestion: (question) => dispatch(removeQuestion(question)),
-        setErrorMessage: (id, msg) => dispatch(setErrorMessage(id, msg))
+        setErrorMessage: (id, msg) => dispatch(setErrorMessage(id, msg)),
+        createExam: (exam, query, client) => dispatch(createExam(exam, query, client))
     }
 }
 
 export default compose(
     withStyles(Styles),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withApollo
 )(ExamSummary);

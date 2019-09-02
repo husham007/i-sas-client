@@ -1,4 +1,4 @@
-import { CREATE_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG } from '../actions/actionTypes';
+import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM } from '../actions/actionTypes';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 
@@ -15,7 +15,7 @@ const initState = {
 const examReducer = (state = initState, { type, payload }) => {
 
     switch (type) {
-        case CREATE_EXAM:
+        case CREATE_SOFT_EXAM:
             console.log('created Exam :)', payload.exam)
             return { ...state, exam: payload.exam };
         case SEARCH_QUESTION_FOR_EXAM:
@@ -30,14 +30,11 @@ const examReducer = (state = initState, { type, payload }) => {
         console.log('its removed!');
             return { ...state ,examQuestions:state.examQuestions.filter( question => question.question.id !== payload.id)}
         case REMOVE_EXAM_ERRORMSG:
-        // let key = payload.id;
-        // let errorArray = []
-        // errorArray[key] = payload.msg
-            // console.log(state.errorMessage.concat(errorArray))
             let newState = {...state}
             newState.errorMessage.set(payload.id, payload.msg)
             return { ...newState}
-        
+        case CREATE_EXAM:
+        return{...state,exams: [...state.exams,payload.data]}
         default:
             return state;
     }

@@ -77,24 +77,34 @@ export const getToken = () => {
     }
 }
 
-export const signUp = newUser => {
-    return (dispatch, getState, { getFirebase, getFirestore }) => {
-        const firebase = getFirebase()
-        const firestore = getFirestore()
+export const signUp = (client, newUser, SIGN_UP) => {
+    return async (dispatch, getState) => {
+        if (newUser.password !== newUser.confirmPassword){
+            dispatch({type: "AUTH_ERR", payload: "Password and Confirm Password Mismatched"});
+        }
+        else {
 
-        firebase.auth().createUserWithEmailAndPassword(
-            newUser.email,
-            newUser.password
-        ).then((resp) => {
-            return firestore.collection('users').doc(resp.user.uid).set({
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-                initials: newUser.firstName[0] + newUser.lastName[0]
+            await client
+            .mutate({ mutation: SIGN_UP,  variables: {email: newUser.email,
+                                                     password: newUser.password,
+                                                     key: newUser.key,
+                                                     username: newUser.username,                         
+                                                    }})
+            .then( ({data}) => {        
+                
+                localStorage.setItem("token", data.signUp.token);
+                let token = data.signUp.token;
+                let base64Url = token.split('.')[1];
+                let decodedToken = JSON.parse(window.atob(base64Url));
+                //console.log("decoded token", decodedToken)
+                dispatch({type: "SET_TOKEN", payload: {decodedToken, token}});                    
             })
-        }).then(() => {
-            dispatch({ type: 'SIGNUP_SUCCESS' })
-        }).catch(err => {
-            dispatch({ type: 'SIGNUP_ERROR', err })
-        })
+            .catch(errors =>{
+                dispatch({type: "AUTH_ERR", payload: errors.graphQLErrors[0].extensions.downstreamErrors[0].message})
+            });
+        }
+      
+
+       
     }
 }

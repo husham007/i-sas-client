@@ -7,7 +7,9 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { NavLink } from 'react-router-dom'
 import { Redirect } from 'react-router-dom'
-import { signUp } from '../../store/actions/authAction'
+import { signUp, signInErr } from '../../store/actions/authAction';
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
 
 const styles = theme => ({
     button: {
@@ -22,13 +24,20 @@ const styles = theme => ({
     }
 })
 
+const SIGN_UP = gql`
+mutation signUp($email: String! $password: String! $username: String! $key: String!){
+    signUp (username: $username key: $key email: $email password: $password) {
+        token
+    }
+}    
+`;
+
 class SignUp extends Component {
     state = {
         open: false,
-        firstName: '',
-        lastName: '',
-        email: '',
-        key: '',
+        username: null,
+        email: null,
+        key: null,
         password: '',
         confirmPassword: ''
     }
@@ -43,12 +52,18 @@ class SignUp extends Component {
             [name]: value
         })
     }
-    handleSubmit = e => {
-        e.preventDefault()
-        this.props.signUp(this.state)
+    handleSubmit = async e => {
+        e.preventDefault(); 
+          
+        this.props.signUp(this.props.client, this.state, SIGN_UP);
+              
+      
+
+
+      //  this.props.signUp(this.state)
     }
     render() {
-        const { open, firstName, lastName, email, key, password, confirmPassword } = this.state
+        const { open, username, email, key, password, confirmPassword } = this.state
         // { classes } = this.props
         const { auth, authError, classes } = this.props
        // if (auth.uid) return <Redirect to="/" />
@@ -70,23 +85,14 @@ class SignUp extends Component {
                             autoFocus
                             autoComplete='off'
                             margin="dense"
-                            name="firstName"
-                            label="First Name"
+                            name="username"
+                            label="Username"
                             variant="filled"
-                            value={firstName}
+                            value={username}
                             onChange={this.handleChange}
                             fullWidth
                         />
-                        <TextField
-                            autoComplete='off'
-                            margin="dense"
-                            name="lastName"
-                            label="Last Name"
-                            variant="filled"
-                            value={lastName}
-                            onChange={this.handleChange}
-                            fullWidth
-                        />
+                       
                         <TextField
                             autoComplete='off'
                             margin="dense"
@@ -160,10 +166,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        signUp: (newUser) => dispatch(signUp(newUser))
+        signUp: (client, user, SIGN_UP) => dispatch(signUp(client, user, SIGN_UP)),
+       
     };
 }
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
+    withApollo,
     withStyles(styles)
 )(SignUp)

@@ -75,7 +75,7 @@ class LogIn extends Component {
             this.props.signIn(result);
               
       })
-      .catch(err =>{console.log(err);this.props.signInErr( JSON.parse(JSON.stringify(err)))});
+      .catch(err =>{this.props.signInErr( JSON.parse(JSON.stringify(err)))});
         
        
     }

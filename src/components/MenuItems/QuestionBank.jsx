@@ -122,7 +122,7 @@ const QuestionBank = (props) => {
     
     if (loading) return null;
     if (error) console.log(error);
-    if (!props.bank.bookLoading){
+    if (data && !props.bank.bookLoading){
         console.log(data);
         props.loadBook(data.questionBookByName);
     }

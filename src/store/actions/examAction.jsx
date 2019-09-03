@@ -1,4 +1,4 @@
-import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM } from '../actions/actionTypes';
+import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM, LOAD_EXAMS } from '../actions/actionTypes';
 
 export const createSoftExam = exam => {
     return {
@@ -67,7 +67,13 @@ export const setErrorMessage = (id, msg) => {
 export const createExam = (exam,QUERY,client) => {
     let examInput = {...exam.exam}
     console.log(exam)
-    examInput.questions = [...exam.examQuestions]
+    let questions = exam.examQuestions.map( q => {
+        return {
+            question: q.question.id,
+            marks: q.marks
+        }
+    })
+    examInput.questions = questions
     return async (dispatch) => {
 
         await client
@@ -102,5 +108,14 @@ export const createExam = (exam,QUERY,client) => {
     //         }
     //     }
     // }
+}
+
+export const loadExams = exams =>{
+    return {
+        type: LOAD_EXAMS,
+        payload: {
+            exams
+        }
+    }
 }
 

@@ -11,7 +11,7 @@ import { withApollo } from 'react-apollo';
 import ExamSummary from './ExamSummary';
 import SearchQuestion from '../questionBank/SearchQuestion'
 import QuestionSummary from '../questionBank/QuestionSummary';
-import { showExamSearch } from '../../store/actions/examAction'
+import { showExamSearch, loadExams } from '../../store/actions/examAction'
 import { useQuery } from '@apollo/react-hooks';
 
 // const USERS = gql`
@@ -21,7 +21,32 @@ import { useQuery } from '@apollo/react-hooks';
 //     }  
 // }
 // `;
-
+const EXAMS = gql`
+query
+{
+    exams{
+    id
+    name
+    type
+    instructions
+    startTime
+    duration
+    examQuestions {
+      question{
+          id
+        statement
+        type
+        category
+        level
+        answer
+        author{
+            username
+        }
+      }
+      marks
+    }
+  }
+}`;
 const QUESTIONS = gql`
 query
 {
@@ -108,16 +133,44 @@ const Exam = (props) => {
 
     })();
 
-    const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+    let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
         variables: { name: "javascript" },
     });
-
     if (loading) return null;
     if (error) console.log(error);
     if (!props.bank.bookLoading) {
         // console.log(data);
         props.loadBook(data.questionBookByName);
     }
+  
+        // let { loading, error, data } = useQuery(EXAMS);
+        // if (loading) return null;
+        // if (error) console.log(error);
+        // if (!props.examLoaded) {
+        //     // console.log(data);
+        //     props.loadExams({ data });
+        // }
+    (async () => {
+        await props.client
+            .query({ query:EXAMS })
+            .then(({ data }) => {
+                // console.log(data) 
+                //console.log(props.bank.questions);
+                if (!props.examLoaded) {
+                    props.loadExams(data);
+                }
+
+                // questions = [...questions, ...data.questions.page];
+
+            })
+            .catch(err => { throw err });
+
+    })();
+    
+
+
+
+
     // function handleAdd() {
     //     // setVal(newVal = true)
     //     props.showExamSearch(true)
@@ -139,7 +192,7 @@ const Exam = (props) => {
             <AppBar position="sticky" color="secondary" style={{ marginBottom: 5 }}>
                 <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
                     <Tab label="CREATE EXAM" />
-                    <Tab label="PUBLISH" />
+                    <Tab label="All EXAMS" />
                     <Tab label="GROUP MEMBERS" />
                 </Tabs>
             </AppBar>
@@ -152,7 +205,7 @@ const Exam = (props) => {
                 {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <h2>publish the exam in here!</h2>
+
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <h2>students list here!</h2>
@@ -168,7 +221,8 @@ const mapStateToProps = state => {
         exam: state.rootReducer.exam.exam,
         searchActive: state.rootReducer.exam.isSearchActive,
         examSearch: state.rootReducer.exam.showExamSearch,
-        searchResult: state.rootReducer.exam.searchResult
+        searchResult: state.rootReducer.exam.searchResult,
+        examLoaded: state.rootReducer.exam.examLoaded
     }
 }
 
@@ -176,7 +230,8 @@ const mapDispatchToProps = dispatch => {
     return {
         loadQuestions: (data) => dispatch(loadQuestions(data)),
         loadBook: (data) => dispatch(loadBook(data)),
-        showExamSearch: (value) => dispatch(showExamSearch(value))
+        showExamSearch: (value) => dispatch(showExamSearch(value)),
+        loadExams: (data) => dispatch(loadExams(data))
 
     }
 }

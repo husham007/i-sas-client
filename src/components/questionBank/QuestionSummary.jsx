@@ -159,8 +159,21 @@ class QuestionSummary extends Component {
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <ExpansionPanelActions style={{ position: 'sticky', display: 'block', width: 160, paddingTop: 20 }}>
-                    {this.props.marks ? null : <EditQuestion question={question} />}
-                    {this.props.marks ? <AddToExam question={question} /> : <DeleteQuestion question={question} />}
+                    {(() => {
+                        if (this.props.marks) {
+                            return <AddToExam question={question} />
+                        } else if (this.props.exam) {
+                            return null
+                        } else {
+                            return <div>
+                                <EditQuestion question={question} />
+                                <DeleteQuestion question={question} />
+                            </div>
+                            
+                        }
+                    })()}
+                    {/* {this.props.marks ? null : <EditQuestion question={question} />}
+                    {this.props.marks  ? <AddToExam question={question} /> : <DeleteQuestion question={question} />} */}
                 </ExpansionPanelActions>
             </Card>
         )

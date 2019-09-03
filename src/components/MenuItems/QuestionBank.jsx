@@ -1,5 +1,5 @@
 import React from 'react'
-import QuestionList from '../questionBank/QuestionList'
+// import QuestionList from '../questionBank/QuestionList'
 import { AppBar, Tabs, Tab, Typography, Box, makeStyles } from '@material-ui/core'
 import CreateQuestion from '../questionBank/CreateQuestion';
 import { connect } from 'react-redux'
@@ -11,14 +11,15 @@ import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
 import { withApollo } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
+import BankSnackBar from '../Alerts/BankSnackBar'
 
-const USERS = gql`
-query {
-users {
-    id
-    }  
-}
-`;
+// const USERS = gql`
+// query {
+// users {
+//     id
+//     }  
+// }
+// `;
 
 const QUESTIONS = gql`
 query
@@ -67,7 +68,7 @@ const useStyles = makeStyles(theme => ({
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
-   
+
 
     return (
         <Typography
@@ -84,42 +85,35 @@ function TabPanel(props) {
 }
 
 const QuestionBank = (props) => {
-     //console.log(props);
+    //console.log(props);
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
     function handleChange(event, newValue) {
         setValue(newValue);
     }
-    //console.log(props.client.link);
-    
-    //let questions = [];
-   
-    ( async ()=>{
+
+    (async () => {
         await props.client
-        .query({ query: QUESTIONS})
-        .then(({data}) => {        
-           // console.log(data) 
-            //console.log(props.bank.questions);
-            if (!props.bank.loading){
-                props.loadQuestions(data.questions.page);
-            }          
-             
-            // questions = [...questions, ...data.questions.page];
-                
-        })
-        .catch(err =>{throw err});
+            .query({ query: QUESTIONS })
+            .then(({ data }) => {
+                // console.log(data) 
+                //console.log(props.bank.questions);
+                if (!props.bank.loading) {
+                    props.loadQuestions(data.questions.page);
+                }
+
+                // questions = [...questions, ...data.questions.page];
+
+            })
+            .catch(err => { throw err });
 
     })();
-    
-   
-    
-    
-    
+
     const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
         variables: { name: "javascript" },
-      });
-    
+    });
+
     if (loading) return null;
     if (error) console.log(error);
     if (data && !props.bank.bookLoading){
@@ -134,8 +128,8 @@ const QuestionBank = (props) => {
         <div value={value} className={classes.root}>
             <AppBar position="sticky" color="secondary">
                 <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
-                    <Tab label="CREATE" />
-                    <Tab label="SEARCH" />
+                    <Tab label="CREATE QUESTION" />
+                    <Tab label="SEARCH QUESTION" />
                     <Tab label="STATISTICS" />
                 </Tabs>
             </AppBar>
@@ -145,20 +139,19 @@ const QuestionBank = (props) => {
                 {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <SearchQuestion />
-                {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
+                <SearchQuestion cas={true} />
+                {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} />) }
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statistics
             </TabPanel>
+            {props.bank.snackBarMessage ? <BankSnackBar message={props.bank.snackBarMessage} /> : null}
         </div>
     )
 }
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
-        
         bank: state.rootReducer.bank
     }
 }
@@ -167,18 +160,9 @@ const mapDispatchToProps = dispatch => {
     return {
         loadQuestions: (data) => dispatch(loadQuestions(data)),
         loadBook: (data) => dispatch(loadBook(data)),
-        
+
     }
 }
-
-
-// export default compose(
-//     connect(mapStateToProps),
-//     firestoreConnect([
-//         {collection: 'questions'}
-//     ])
-// )(QuestionBank)
-
 
 
 export default compose(connect(mapStateToProps, mapDispatchToProps),

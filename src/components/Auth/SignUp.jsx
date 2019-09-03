@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Link } from '@material-ui/core'
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Link, Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { PersonAdd, Close } from '@material-ui/icons';
 import { connect } from 'react-redux'
@@ -21,6 +21,10 @@ const styles = theme => ({
     title: {
         display: 'flex',
         justifyContent: 'space-between'
+    },
+    actions: {
+        display: 'flex',
+        flexDirection: 'column',
     }
 })
 
@@ -66,7 +70,7 @@ class SignUp extends Component {
         const { open, username, email, key, password, confirmPassword } = this.state
         // { classes } = this.props
         const { auth, authError, classes } = this.props
-       // if (auth.uid) return <Redirect to="/" />
+        // if (auth.uid) return <Redirect to="/" />
         return (
             <div>
                 <Button size="small" variant="contained" color="secondary" onClick={this.handleToggle} className={classes.button}>
@@ -75,7 +79,7 @@ class SignUp extends Component {
                 <Dialog open={open} onClose={this.handleToggle} fullWidth maxWidth="xs">
                     <div className={classes.title}>
                         <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
-                        <div onClick={this.handleToggle} style={{ padding: '15px',cursor:'pointer' }}><Close /></div>
+                        <div onClick={this.handleToggle} style={{ padding: '15px', cursor: 'pointer' }}><Close /></div>
                     </div>
                     <DialogContent>
                         <DialogContentText>
@@ -143,13 +147,13 @@ class SignUp extends Component {
                     >
                         I'm already registered
                     </Link>
-                    <DialogActions >
+                    <DialogActions className={classes.actions}>
                         <Button variant="contained" color="secondary" onClick={this.handleSubmit} fullWidth>
                             <NavLink to="/logedin" style={{ color: 'white', textDecoration: 'none' }}>GET REGISTERED</NavLink>
                         </Button>
-                        <div className="red-text center">
+                        <Typography color="error" variant="subtitle1">
                             {authError ? <p> {authError} </p> : null}
-                        </div>
+                        </Typography>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -159,8 +163,8 @@ class SignUp extends Component {
 
 const mapStateToProps = state => {
     console.log(state)
-    return{
-       
+    return {
+
     };
 }
 

@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from '@material-ui/core'
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { Person, Close } from '@material-ui/icons';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { signIn, signInErr } from '../../store/actions/authAction'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import gql from 'graphql-tag';
 import { withApollo } from 'react-apollo';
 
@@ -22,7 +22,10 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'space-between'
     },
-
+    actions: {
+        display: 'flex',
+        flexDirection: 'column',
+    }
 })
 
 
@@ -82,13 +85,13 @@ class LogIn extends Component {
     render() {
 
         const { open, email, password } = this.state,
-            { authError,token } = this.props.rootReducer.auth,
+            { authError, token } = this.props.rootReducer.auth,
             //console.log(this.props)
             //console.log(authError);
             //console.log(token);
             { classes } = this.props;
         // const { authError, auth } = this.props;
-       // if (auth.uid) return <Redirect to="/" />
+        // if (auth.uid) return <Redirect to="/" />
         return (
             <div>
                 <Button size="small" variant="contained" color="primary" onClick={this.handleToggle} className={classes.button}>
@@ -105,7 +108,7 @@ class LogIn extends Component {
                         </DialogContentText>
                         <TextField
                             autoFocus
-                            autoComplete='off'
+                            // autoComplete='off'
                             margin="dense"
                             id="email"
                             label="Email"
@@ -127,13 +130,13 @@ class LogIn extends Component {
                         />
 
                     </DialogContent>
-                    <DialogActions >
+                    <DialogActions className={classes.actions}>
                         <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!email || !password} fullWidth>
                             GET STARTED
                         </Button>
-                        <div>
+                        <Typography color="error" variant="subtitle1">
                             {authError ? <p>{authError}</p> : null}
-                        </div>
+                        </Typography>
                     </DialogActions>
                 </Dialog>
 
@@ -144,12 +147,12 @@ class LogIn extends Component {
 
 const mapStateToProps = state => {
     console.log(state);
-    return {...state};
+    return { ...state };
 }
 const mapDispatchToProps = dispatch => {
     return {
         signIn: (data) => dispatch(signIn(data)),
-        signInErr: (err) =>  dispatch(signInErr(err))
+        signInErr: (err) => dispatch(signInErr(err))
     }
 }
 

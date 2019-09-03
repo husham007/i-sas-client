@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
-import { deleteQuestion } from '../../store/actions/bankAction';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import Slide from '@material-ui/core/Slide';
@@ -35,7 +34,7 @@ mutation deleteQuestion($id: ID!){
 `;
 
 
-class DeleteAlert extends Component {
+class DeleteExam extends Component {
     state = {
         open: false
     }
@@ -45,18 +44,18 @@ class DeleteAlert extends Component {
         })
     }
     handleDelete = () => {
-        this.props.client
-      .mutate({ mutation: DELETE_QUESTION,  variables: {id: this.props.question.id}})
-      .then( (result) => {        
-          
-            this.props.deleteQuestion(this.props.question.id);
-            this.handleToggle()
-              
-      })
-      .catch(err =>{console.log(err);this.props.signInErr( JSON.parse(JSON.stringify(err)))});
-       // this.props.deleteQuestion(this.props.question.id)
-       // this.handleToggle()
-        
+        // this.props.client
+        //     .mutate({ mutation: DELETE_QUESTION, variables: { id: this.props.question.id } })
+        //     .then((result) => {
+
+        //         this.props.deleteQuestion(this.props.question.id);
+        //         this.handleToggle()
+
+        //     })
+        //     .catch(err => { console.log(err); this.props.signInErr(JSON.parse(JSON.stringify(err))) });
+        // // this.props.deleteQuestion(this.props.question.id)
+        // // this.handleToggle()
+
     }
 
     render() {
@@ -64,7 +63,7 @@ class DeleteAlert extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <Button size="small" variant="outlined" onClick={this.handleToggle} style={{ color: '#d32f2f' }}>
+                <Button size="small" variant="outlined" onClick={this.handleToggle} style={{ color: '#d32f2f', paddingLeft:20}} >
                     <div className={classes.delete}>Delete</div>
                     <Delete className={classes.deleteBtn} />
                 </Button>
@@ -100,8 +99,8 @@ class DeleteAlert extends Component {
 //export default connect(null, { deleteQuestion })(DeleteAlert);
 export default compose(
     withStyles(styles),
-   connect(null, { deleteQuestion }),
-    withApollo,    
-)(DeleteAlert)
+    // connect(null, { deleteQuestion }),
+    withApollo,
+)(DeleteExam)
 
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 // import moment from 'moment'
-import { Card, CardContent, Typography, Table, TableBody, TableRow, TableCell, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanelActions } from '@material-ui/core'
+import { Card, CardContent, Typography, Table, TableBody, TableRow, TableCell, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanelActions, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import { ExpandMore, AddCircleOutlineSharp } from '@material-ui/icons';
+import { ExpandMore, BlurOff } from '@material-ui/icons';
 import clsx from 'clsx';
 import EditQuestion from './EditQuestion';
 import { connect } from 'react-redux'
@@ -13,7 +13,7 @@ import AddToExam from '../genrateExam/AddToExam';
 const styles = theme => ({
     card: {
         display: 'flex',
-        maxWidth: '60%',
+        maxWidth: '70%',
         margin: 'auto',
         marginBottom: '12px',
         background: '#011',
@@ -37,6 +37,18 @@ const styles = theme => ({
     dense: {
         marginTop: theme.spacing(2),
     },
+    removeBtn: {
+        marginLeft: 10,
+        marginRight: 25,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: 0,
+        }
+    },
+    remove: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none'
+        }
+    }
 
 });
 
@@ -54,6 +66,7 @@ class QuestionSummary extends Component {
     }
     render() {
         const { question, exam, classes } = this.props;
+        console.log(question)
         return (
             <Card className={classes.card}>
                 <ExpansionPanel style={{ width: '100%', background: 'none' }}>
@@ -64,7 +77,7 @@ class QuestionSummary extends Component {
                                     <TableCell>
                                         <Typography variant="overline" color="textSecondary" gutterBottom>
                                             question:
-                            </Typography>
+                                        </Typography>
                                     </TableCell>
                                     <TableCell>
                                         <Typography variant="body1">
@@ -76,7 +89,7 @@ class QuestionSummary extends Component {
                         </Table>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                        <CardContent>
+                        <CardContent style={{ width: '100%' }}>
                             <Table>
                                 <TableBody>
 
@@ -84,7 +97,7 @@ class QuestionSummary extends Component {
                                         <TableCell>
                                             <Typography variant="overline" color="textSecondary" gutterBottom>
                                                 Type :
-                            </Typography>
+                                            </Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
@@ -163,17 +176,21 @@ class QuestionSummary extends Component {
                         if (this.props.marks) {
                             return <AddToExam question={question} />
                         } else if (this.props.exam) {
-                            return null
+                            return <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <Typography variant="button" style={{}}> points: {this.props.questionMark}</Typography>
+                                <Button size="small" onClick={() => this.props.handleRemove(this.props.questionId)} style={{ color: '#d32f2f' }}>
+                                    <div className={classes.remove}>Remove</div>
+                                    <BlurOff className={classes.removeBtn} />
+                                </Button>
+                            </div>
                         } else {
                             return <div>
                                 <EditQuestion question={question} />
                                 <DeleteQuestion question={question} />
                             </div>
-                            
+
                         }
                     })()}
-                    {/* {this.props.marks ? null : <EditQuestion question={question} />}
-                    {this.props.marks  ? <AddToExam question={question} /> : <DeleteQuestion question={question} />} */}
                 </ExpansionPanelActions>
             </Card>
         )

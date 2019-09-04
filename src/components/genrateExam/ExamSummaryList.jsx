@@ -14,7 +14,7 @@ import { withApollo } from 'react-apollo';
 const Styles = theme => ({
     root: {
         width: '90%',
-        backgroundColor: '#111',
+        backgroundColor: '#011',
         margin: 'auto',
         marginTop: theme.spacing(10),
         display: 'flex',
@@ -61,41 +61,37 @@ mutation createExam($examInput: ExamInput!) {
     }
   }`;
 
-class ExamSummary extends Component {
-    handleRemove = (id) => {
+class ExamSummaryList extends Component {
+    handleRemove = (e) => {
         console.log('this is remove btn');
-        //  const { id } = e.target
+        const { id } = e.target
         this.props.removeQuestion(id)
         this.props.setErrorMessage(id, null)
     }
 
-    handleSum = (questions) => {
+    handleSum = () => {
         let sum = 0;
-        questions.forEach(question => { sum = sum + parseInt(question.marks) })
+        this.props.examQuestions.forEach(question => { sum = sum + parseInt(question.marks) })
         // console.log(sum)
         return sum;
 
     }
     handleCreate = () => {
-        console.log(this.props)
-        this.props.createExam(this.props.rootReducer.exam, CREATE_EXAM, this.props.client)
+        this.props.createExam(this.props.exam, CREATE_EXAM, this.props.client)
     }
     render() {
-        let { classes, examQuestions, exam, questions } = this.props
-        console.log(exam)
-        if (questions) {
-            examQuestions = questions;
-        }
+        let { classes, examQuestions,exam} = this.props
+       console.log(exam)
         return (
             <div className={classes.root}>
                 <Grid container className={classes.grid}>
                     <Grid item className={classes.title} xs={12}>
                         <div>
-                            <Typography variant="h5">{exam.name}</Typography>
+                            <Typography variant="h3">{exam.name}</Typography>
                         </div>
                         <div style={{ flexBasis: '20%', display: 'flex', justifyContent: 'space-between' }}>
-                            <EditExam exam={exam} />
-                            <DeleteExam />
+                            {/* <EditExam />
+                            <DeleteExam /> */}
                         </div>
                     </Grid>
                     <Grid item className={classes.details} xs={12}>
@@ -105,19 +101,21 @@ class ExamSummary extends Component {
                         </div>
                         <div style={{ flex: 1 }}>
                             <Typography variant="subtitle1">Total questions: {examQuestions.length}</Typography>
-                            <Typography variant="subtitle1">Total marks: {this.handleSum(examQuestions)}</Typography>
+                            <Typography variant="subtitle1">Total marks: {this.handleSum()}</Typography>
                         </div>
                         <div style={{ flex: 1 }}>
                             <Typography variant="subtitle1">Start Time: {exam.startTime}</Typography>
                             <Typography variant="subtitle1">Duration: {exam.duration}/ min</Typography>
                         </div>
                     </Grid>
-                    <Divider variant="fullWidth" light />
-                    <Grid item style={{ paddingTop: 30 }} xs={12}>
-                        {examQuestions.map((question) => <QuestionSummary exam={true} question={question.question} key={question.question.id} questionMark={question.marks} questionId={question.question.id} handleRemove={this.handleRemove} />)}
+                    <Divider light />
+                    <Grid item xs={12}>
+                        <div style={{ margin: 30 }}>
+                            {this.props.examQuestions.map((question) => <QuestionSummary exam={true} question={question.question} key={question.question.id} handleRemove={this.handleRemove} questionMark={question.marks} />)}
+                        </div>
                     </Grid>
                     <Grid item style={{ textAlign: 'center', paddingTop: 55 }} xs={12}>
-                        {this.props.btn ? <Button onClick={this.handleCreate} variant="contained" color="secondary" disabled={!(examQuestions.length > 0)}>CREATE EXAM</Button> : null}
+                        <Button onClick={this.handleCreate} variant="contained" color="secondary" disabled={!(examQuestions.length > 0)}>CREATE EXAM</Button>
                     </Grid>
                 </Grid>
             </div>
@@ -129,8 +127,7 @@ const mapStateToProps = state => {
     console.log(state.rootReducer.exam.examQuestions)
     return {
         ...state,
-        // exam: state.rootReducer.exam,
-
+        // exams: state.rootReducer.exam.exams,
         examQuestions: state.rootReducer.exam.examQuestions,
 
     }
@@ -148,4 +145,4 @@ export default compose(
     withStyles(Styles),
     connect(mapStateToProps, mapDispatchToProps),
     withApollo
-)(ExamSummary);
+)(ExamSummaryList);

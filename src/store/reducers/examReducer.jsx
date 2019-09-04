@@ -18,7 +18,7 @@ const examReducer = (state = initState, { type, payload }) => {
     switch (type) {
         case CREATE_SOFT_EXAM:
             console.log('created Exam :)', payload.exam)
-            return { ...state, exam: payload.exam };
+            return { ...state, examQuestions: [], exam: payload.exam };
         case SEARCH_QUESTION_FOR_EXAM:
             console.log('search result for exam!', payload)
             return { ...state, isSearchActive: true, searchResult: [...payload.searchResult] };
@@ -28,7 +28,7 @@ const examReducer = (state = initState, { type, payload }) => {
             console.log('add it to exam');
             return { ...state, examQuestions: [...state.examQuestions, payload.question] }
         case REMOVE_EXAM:
-            console.log('its removed!');
+            console.log('its removed!', payload.id);
             return { ...state, examQuestions: state.examQuestions.filter(question => question.question.id !== payload.id) }
         case REMOVE_EXAM_ERRORMSG:
             let newState = { ...state }
@@ -38,7 +38,7 @@ const examReducer = (state = initState, { type, payload }) => {
             return { ...state, exam: null, exams: [...state.exams, payload.data] }
         case LOAD_EXAMS:
             console.log('exams list are here')
-            return { ...state, examLoaded: true, exams: [payload.exams] }
+            return { ...state, examLoaded: true, exams: [...payload.exams.exams] }
         default:
             return state;
     }

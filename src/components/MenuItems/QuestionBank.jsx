@@ -59,10 +59,7 @@ const useStyles = makeStyles(theme => ({
         backgroundRepeat: 'noRepeat',
         backgroundAttachment: 'fixed',
     },
-    shortIndicator: {
-        maxWidth: 60,
-        marginLeft: theme.spacing(6),
-    }
+
 }));
 
 function TabPanel(props) {
@@ -124,7 +121,7 @@ const QuestionBank = (props) => {
     return (
         <div value={value} className={classes.root}>
             <AppBar position="sticky" color="secondary">
-                <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
+                <Tabs value={value} onChange={handleChange} indicatorColor="primary" style={{ marginLeft: '8%' }}>
                     <Tab label="CREATE QUESTION" />
                     <Tab label="SEARCH QUESTION" />
                     <Tab label="STATISTICS" />

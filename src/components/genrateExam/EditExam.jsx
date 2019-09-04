@@ -99,6 +99,7 @@ class EditExam extends Component {
         const { classes } = this.props;
         const { name, type, startTime, duration, instructions } = this.state
         const types = ['Exam', 'Quiz', 'Assignment'];
+        console.log(startTime)
         // const { levels, types, categories } = this.props.bank;
         return (
             <form className={classes.root}>
@@ -164,7 +165,8 @@ class EditExam extends Component {
                                 <TextField
                                     onChange={this.handleChange}
                                     name="startTime"
-                                    value={startTime}
+                                    defaultValue={startTime}
+                                    // value={startTime}
                                     id="datetime-local"
                                     label="start time"
                                     type="datetime-local"
@@ -207,7 +209,7 @@ class EditExam extends Component {
 
 const mapStateToProps = state => {
     return {
-        exam: state.rootReducer.exam.exam,
+        // exam: state.rootReducer.exam,
     }
 }
 

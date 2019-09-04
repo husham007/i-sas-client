@@ -82,7 +82,7 @@ export const createExam = (exam,QUERY,client) => {
                 dispatch({
                     type: CREATE_EXAM,
                     payload: {
-                        data: data
+                        data: data.createExam
                     }
                 })
 

@@ -172,8 +172,8 @@ class CreateExam extends Component {
                                     <TextField
                                         onChange={this.handleChange}
                                         name="startTime"
-                                        defaultValue="startTime"
-                                        value={startTime}
+                                        defaultValue={startTime}
+                                        // value={startTime}
                                         id="datetime-local"
                                         label="start time"
                                         type="datetime-local"

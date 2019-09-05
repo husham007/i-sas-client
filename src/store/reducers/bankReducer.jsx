@@ -32,7 +32,6 @@ const initState = {
     levels: [],
     categories: [],
     bookLoading: false,
-    snackBarMessage: null,
 };
 
 const bankReducer = (state = initState, { type, payload }) => {
@@ -40,7 +39,7 @@ const bankReducer = (state = initState, { type, payload }) => {
     switch (type) {
         case CREATE_QUESTION:
             console.log('created question :)', payload.question)
-            return { ...state, loading: false, snackBarMessage: payload.message };
+            return { ...state, loading: false };
         case LOAD_QUESTIONS:
             // console.log('loadQuestions :)', payload.questions)
             return { ...state, loading: true, questions: [...payload.questions] };
@@ -49,18 +48,15 @@ const bankReducer = (state = initState, { type, payload }) => {
             return { ...state, bookLoading: true, types: [...payload.book.types], levels: [...payload.book.levels], categories: [...payload.book.categories] };
         case DELETE_QUESTION:
             console.log('this is deleted...')
-            return { ...state, questions: [], snackBarMessage: payload.message, loading: false };
+            return { ...state, questions: [], loading: false };
         case EDIT_QUESTION:
             console.log('this is edited !')
-            return { ...state, questions: [], snackBarMessage: payload.message, loading: false };
+            return { ...state, questions: [], loading: false };
         case SEARCH_QUESTION_ANY:
             console.log('search result!', payload)
             return { ...state, searchResult: [...payload.searchResult] };
         case SEARCH_PARAMETERS:
             return { ...state, [payload.name]: payload.value }
-        case BANK_SNACKBAR:
-            console.log('this is snackbar')
-            return { ...state, snackBarMessage: null }
         default:
             return state;
     }

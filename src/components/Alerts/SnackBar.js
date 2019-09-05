@@ -11,7 +11,7 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { resetBankSnackBar } from '../../store/actions/bankAction'
+import { resetSnackBar } from '../../store/actions/snackBarAction';
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -68,7 +68,7 @@ const useStyles2 = makeStyles(theme => ({
     },
 }));
 
-const BankSnackBar = ({ message, resetBankSnackBar, snackBarMessage }) => {
+const SnackBar = ({ message, resetSnackBar, snackBarMessage }) => {
     console.log(snackBarMessage);
     const classes = useStyles2();
     const [open, setOpen] = React.useState(false);
@@ -81,7 +81,7 @@ const BankSnackBar = ({ message, resetBankSnackBar, snackBarMessage }) => {
         if (reason === 'clickaway') {
             return;
         }
-        const val = snackBarMessage ? resetBankSnackBar() : null;
+        const val = snackBarMessage ? resetSnackBar() : null;
         setOpen(false);
 
         return val;
@@ -110,14 +110,14 @@ const BankSnackBar = ({ message, resetBankSnackBar, snackBarMessage }) => {
 
 const mapStateToProps = state => {
     return {
-        snackBarMessage: state.rootReducer.bank.snackBarMessage
+        snackBarMessage: state.rootReducer.snackBar.snackBarMessage
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        resetBankSnackBar: () => dispatch(resetBankSnackBar())
+        resetSnackBar: () => dispatch(resetSnackBar())
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BankSnackBar)
+export default connect(mapStateToProps, mapDispatchToProps)(SnackBar)

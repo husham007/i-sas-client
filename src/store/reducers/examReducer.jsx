@@ -1,4 +1,4 @@
-import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM, LOAD_EXAMS } from '../actions/actionTypes';
+import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM, LOAD_EXAMS, DELETE_EXAM,SELECT_EXAM,RESET_SELECT_EXAM } from '../actions/actionTypes';
 
 
 
@@ -11,34 +11,36 @@ const initState = {
     isSearchActive: false,
     examQuestions: [],
     errorMessage: new Map(),
+    selected: null,
 }
 
 const examReducer = (state = initState, { type, payload }) => {
 
     switch (type) {
         case CREATE_SOFT_EXAM:
-            console.log('created Exam :)', payload.exam)
             return { ...state, examQuestions: [], exam: payload.exam };
         case SEARCH_QUESTION_FOR_EXAM:
-            console.log('search result for exam!', payload)
             return { ...state, isSearchActive: true, searchResult: [...payload.searchResult] };
         case SHOW_EXAM_SEARCH:
             return { ...state, showExamSearch: payload.value }
         case ADD_QUESTION_TO_EXAM:
-            console.log('add it to exam');
             return { ...state, examQuestions: [...state.examQuestions, payload.question] }
         case REMOVE_EXAM:
-            console.log('its removed!', payload.id);
             return { ...state, examQuestions: state.examQuestions.filter(question => question.question.id !== payload.id) }
         case REMOVE_EXAM_ERRORMSG:
             let newState = { ...state }
             newState.errorMessage.set(payload.id, payload.msg)
             return { ...newState }
         case CREATE_EXAM:
-            return { ...state, exam: null, exams: [...state.exams, payload.data] }
+            return { ...state, exam: null, exams: [], examLoaded:false }
         case LOAD_EXAMS:
-            console.log('exams list are here')
             return { ...state, examLoaded: true, exams: [...payload.exams.exams] }
+        case DELETE_EXAM:
+            return { ...state,selected: null, examLoaded: false,exams:[], exam:null}
+        case SELECT_EXAM:
+        return{...state,selected: payload.selected, }
+        case RESET_SELECT_EXAM:
+        return{...state,selected: null, }
         default:
             return state;
     }

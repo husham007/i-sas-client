@@ -65,8 +65,7 @@ class QuestionSummary extends Component {
         // this.props.searchANYQuestion(this.state.search)
     }
     render() {
-        const { question, exam, classes } = this.props;
-        console.log(question)
+        const { question, classes } = this.props;
         return (
             <Card className={classes.card}>
                 <ExpansionPanel style={{ width: '100%', background: 'none' }}>
@@ -80,7 +79,7 @@ class QuestionSummary extends Component {
                                         </Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography variant="body1">
+                                        <Typography variant="body1" style={{fontSize:'calc(.6vw + 10px)'}}>
                                             {question.statement}
                                         </Typography>
                                     </TableCell>
@@ -177,11 +176,11 @@ class QuestionSummary extends Component {
                             return <AddToExam question={question} />
                         } else if (this.props.exam) {
                             return <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <Typography variant="button" style={{}}> points: {this.props.questionMark}</Typography>
-                                <Button size="small" onClick={() => this.props.handleRemove(this.props.questionId)} style={{ color: '#d32f2f' }}>
+                                <Typography variant="button" style={{ marginLeft: 10 }}> points: {this.props.questionMark}</Typography>
+                                {this.props.remove ? <Button size="small" onClick={() => this.props.handleRemove(this.props.questionId)} style={{ color: '#d32f2f' }}>
                                     <div className={classes.remove}>Remove</div>
                                     <BlurOff className={classes.removeBtn} />
-                                </Button>
+                                </Button> : null}
                             </div>
                         } else {
                             return <div>
@@ -191,6 +190,7 @@ class QuestionSummary extends Component {
 
                         }
                     })()}
+
                 </ExpansionPanelActions>
             </Card>
         )

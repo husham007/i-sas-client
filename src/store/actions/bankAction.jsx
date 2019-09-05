@@ -9,7 +9,7 @@ import {
     LOAD_BOOK,
     SEARCH_QUESTION_ANY,
     SEARCH_PARAMETERS,
-    BANK_SNACKBAR
+    SNACKBAR_MSG
     
 } from './actionTypes';
 
@@ -26,7 +26,12 @@ export const createQuestion = (client, question, QUERY) => {
                         message: 'New question is created!'
                     }
                 })
-
+                 dispatch({
+                        type: SNACKBAR_MSG,
+                        payload: {
+                            message: 'New question is created!'
+                        }
+                    })
             })
         // .catch(err => { console.log(err)});
 
@@ -56,22 +61,22 @@ export const loadBook = (book) => {
 
 
 export const deleteQuestion = index => {
-    return {
-        type: DELETE_QUESTION,
-        payload: {
-            index,
-            message: 'This question is deleted!'
-        }
+    return async (dispatch) => {
+        dispatch({
+            type: DELETE_QUESTION,
+            payload: {
+                index
+            }
+        })
+        dispatch({
+            type: SNACKBAR_MSG,
+            payload: {
+                message: 'This question is Deleted!'
+            }
+        })
     }
 };
-export const resetBankSnackBar = () => {
-    return {
-        type: BANK_SNACKBAR,
-        payload: {
-           
-        }
-    }
-};
+
 
 export const editQuestion = (client, question) => {
 
@@ -92,10 +97,14 @@ export const editQuestion = (client, question) => {
                     type: EDIT_QUESTION,
                     payload: {
                         question: question.id,
-                        message:'This question is edited!'
                     }
                 })
-
+                dispatch({
+            type: SNACKBAR_MSG,
+            payload: {
+                message: 'This question is Edited!'
+            }
+        })
             })
         // .catch(err => { console.log(err)});
 

@@ -14,6 +14,8 @@ import QuestionSummary from '../questionBank/QuestionSummary';
 import { showExamSearch, loadExams } from '../../store/actions/examAction'
 import { useQuery } from '@apollo/react-hooks';
 import ExamsList from './ExamsList';
+import BankSnackBar from '../Alerts/SnackBar';
+
 
 // const USERS = gql`
 // query {
@@ -115,7 +117,7 @@ function TabPanel(props) {
 }
 
 const Exam = (props) => {
-    // console.log(props.exams);
+    console.log(props.snackBarMessage);
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [val, setVal] = React.useState(false);
@@ -200,7 +202,7 @@ const Exam = (props) => {
                 {(() => {
                     if (props.exam) {
                         return <div>
-                            <ExamSummary exam={props.exam} btn={true} />
+                            <ExamSummary exam={props.exam} btn={true} remove={true}/>
                             <SearchQuestion cas={false} />
                         </div>
                     } else {
@@ -208,15 +210,16 @@ const Exam = (props) => {
                     }
                 })()}
 
-                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} />)}
+                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} remove={false}/>)}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <ExamsList exams={props.exams} />
+                <ExamsList exams={props.exams} remove={false} />
 
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <h2>students list here!</h2>
             </TabPanel>
+            {props.snackBarMessage ? <BankSnackBar message={props.snackBarMessage} /> : null}
         </div>
     )
 }
@@ -224,6 +227,7 @@ const Exam = (props) => {
 const mapStateToProps = state => {
     console.log(state)
     return {
+        snackBarMessage: state.rootReducer.snackBar.snackBarMessage,
         bank: state.rootReducer.bank,
         exam: state.rootReducer.exam.exam,
         exams: state.rootReducer.exam.exams,

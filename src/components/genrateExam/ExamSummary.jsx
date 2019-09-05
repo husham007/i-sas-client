@@ -93,28 +93,31 @@ class ExamSummary extends Component {
                         <div>
                             <Typography variant="h5">{exam.name}</Typography>
                         </div>
-                        <div style={{ flexBasis: '20%', display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ flexBasis: '22%', display: 'flex', justifyContent: 'space-between', marginRight: 20 }}>
                             <EditExam exam={exam} />
-                            <DeleteExam />
+                            <DeleteExam exam={exam} />
                         </div>
                     </Grid>
                     <Grid item className={classes.details} xs={12}>
                         <div style={{ flex: 2, paddingRight: 15 }}>
                             <Typography variant="h5">Type: <span>{exam.type}</span></Typography>
+                            <Divider variant="middle" />
                             <Typography variant="h5">Instructions: <span>{exam.instructions}</span></Typography>
                         </div>
                         <div style={{ flex: 1 }}>
                             <Typography variant="subtitle1">Total questions: {examQuestions.length}</Typography>
+                            <Divider variant="middle" />
                             <Typography variant="subtitle1">Total marks: {this.handleSum(examQuestions)}</Typography>
                         </div>
                         <div style={{ flex: 1 }}>
                             <Typography variant="subtitle1">Start Time: {exam.startTime}</Typography>
+                            <Divider variant="middle" />
                             <Typography variant="subtitle1">Duration: {exam.duration}/ min</Typography>
                         </div>
                     </Grid>
-                    <Divider variant="fullWidth" light />
+                    <Divider />
                     <Grid item style={{ paddingTop: 30 }} xs={12}>
-                        {examQuestions.map((question) => <QuestionSummary exam={true} question={question.question} key={question.question.id} questionMark={question.marks} questionId={question.question.id} handleRemove={this.handleRemove} />)}
+                        {examQuestions.map((question) => <QuestionSummary exam={true} remove={this.props.remove} question={question.question} key={question.question.id} questionMark={question.marks} questionId={question.question.id} handleRemove={this.handleRemove} />)}
                     </Grid>
                     <Grid item style={{ textAlign: 'center', paddingTop: 55 }} xs={12}>
                         {this.props.btn ? <Button onClick={this.handleCreate} variant="contained" color="secondary" disabled={!(examQuestions.length > 0)}>CREATE EXAM</Button> : null}

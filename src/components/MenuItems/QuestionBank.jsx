@@ -11,7 +11,7 @@ import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
 import { withApollo } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
-import BankSnackBar from '../Alerts/BankSnackBar'
+import SnackBar from '../Alerts/SnackBar'
 
 // const USERS = gql`
 // query {
@@ -130,23 +130,24 @@ const QuestionBank = (props) => {
             <TabPanel value={value} index={0} >
                 <CreateQuestion />
                 {/* <QuestionList questions={questions} /> */}
-                {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} />)}
+                {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SearchQuestion cas={true} />
-                {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} />) }
+                {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} remove={false}/>) }
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statistics
             </TabPanel>
-            {props.bank.snackBarMessage ? <BankSnackBar message={props.bank.snackBarMessage} /> : null}
+            {props.snackBarMessage ? <SnackBar message={props.snackBarMessage} /> : null}
         </div>
     )
 }
 
 const mapStateToProps = state => {
     return {
-        bank: state.rootReducer.bank
+        bank: state.rootReducer.bank,
+        snackBarMessage: state.rootReducer.snackBar.snackBarMessage
     }
 }
 

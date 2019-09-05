@@ -41,8 +41,7 @@ const styles = theme => ({
         justifyContent: 'space-between'
     },
     textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+        margin: theme.spacing(0,1),
     },
     dense: {
         marginTop: 19,
@@ -103,7 +102,7 @@ class EditExam extends Component {
         // const { levels, types, categories } = this.props.bank;
         return (
             <form className={classes.root}>
-                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" fullWidth>
+                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" style={{paddingLeft: 20,width:110 }}>
                     <div className={classes.edit}>Edit</div>
                     <Edit className={classes.editBtn} />
                 </Button>

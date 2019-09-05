@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createQuestion } from '../../store/actions/bankAction'
+import {snackBarMsg} from '../../store/actions/snackBarAction'
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 // import { Redirect } from 'react-router-dom'
@@ -78,7 +79,7 @@ class CreateQuestion extends Component {
         // this.props.history.push('/questionBank');
         const { statement, type, category, level, answer } = this.state
         this.props.createQuestion(this.props.client, this.state, CREATE_QUESTION);
-
+        // this.props.snackBarMsg('New Question is Created!')
         this.setState({ hasError: false });
         if (!statement || !type || !category || !level || !answer) {
             this.setState({ hasError: true });
@@ -193,7 +194,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createQuestion: (client, question, query) => dispatch(createQuestion(client, question, query))
+        createQuestion: (client, question, query) => dispatch(createQuestion(client, question, query)),
+        snackBarMsg: (msg) => dispatch(snackBarMsg(msg))
     }
 }
 

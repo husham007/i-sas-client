@@ -11,7 +11,8 @@ import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
 import { withApollo } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
-import SnackBar from '../Alerts/SnackBar'
+import  SnackBar from '../Alerts/SnackBar';
+import LoadingProgress from '../Alerts/LoadingProgress';
 
 // const USERS = gql`
 // query {
@@ -32,6 +33,7 @@ query
             category
             answer
             type
+            options
             author {
                 username
             }        
@@ -91,10 +93,13 @@ const QuestionBank = (props) => {
     }
 
     (async () => {
+        if (props.bank.loading){
+            
+        }else{
         await props.client
             .query({ query: QUESTIONS })
             .then(({ data }) => {
-                // console.log(data) 
+                console.log(data) 
                 //console.log(props.bank.questions);
                 if (!props.bank.loading) {
                     props.loadQuestions(data.questions.page);
@@ -104,14 +109,16 @@ const QuestionBank = (props) => {
 
             })
             .catch(err => { throw err });
-
+        }
+        
     })();
 
     const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
         variables: { name: "javascript" },
+        fetchPolicy: "cache-first",
     });
 
-    if (loading) return null;
+    if (loading) return <LoadingProgress />;
     if (error) console.log(error);
     // if (!props.bank.bookLoading) {
     //     // console.log(data);
@@ -130,11 +137,12 @@ const QuestionBank = (props) => {
             <TabPanel value={value} index={0} >
                 <CreateQuestion />
                 {/* <QuestionList questions={questions} /> */}
+                
                 {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SearchQuestion cas={true} />
-                {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} remove={false}/>) }
+                {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={2}>
                 statistics

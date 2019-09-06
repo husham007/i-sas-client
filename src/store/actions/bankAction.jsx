@@ -16,7 +16,7 @@ import {
 export const createQuestion = (client, question, QUERY) => {
     return async (dispatch) => {
         await client
-            .mutate({ mutation: QUERY, variables: { statement: question.statement, category: question.category, type: question.type, level: question.level, answer: question.answer, book: question.book } })
+            .mutate({ mutation: QUERY, variables: { statement: question.statement, category: question.category, type: question.type,options: question.options, level: question.level, answer: question.answer, book: question.book } })
             .then((result) => {
 
                 dispatch({

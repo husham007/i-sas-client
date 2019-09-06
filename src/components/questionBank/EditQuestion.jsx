@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-// import uuidv4 from 'uuid/v4'
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Radio, MenuItem, FormHelperText } from '@material-ui/core'
+import clsx from 'clsx';
+import { Icon, Typography, Fab, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Radio, MenuItem, FormHelperText } from '@material-ui/core'
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { editQuestion } from '../../store/actions/bankAction'
-import { Edit, Close } from '@material-ui/icons'
+import { Edit, Close, Add } from '@material-ui/icons'
 // import { Redirect } from 'react-router-dom'
 import Slide from '@material-ui/core/Slide';
 import { withApollo } from 'react-apollo';
@@ -57,7 +57,8 @@ class EditQuestion extends Component {
             level: this.props.question.level,
             answer: this.props.question.answer,
             book: 'javascript',
-            options:[]
+            options: this.props.question.options,
+            currentOption: ''
         }
     }
     handleToggle = () => {
@@ -72,6 +73,29 @@ class EditQuestion extends Component {
             [name]: value
         })
     }
+    handleChangeOption = e => {
+        // console.log(this.state)
+        const { value } = e.target
+        this.setState({
+            currentOption: value,
+
+        })
+    }
+    handleOption = (e) => {
+        e.preventDefault()
+        this.setState({
+            options: [...this.state.options, this.state.currentOption],
+            currentOption: ''
+        })
+    }
+    handleRemoveOption = e => {
+        e.preventDefault()
+        const { name, id } = e.target;
+        this.setState({
+            options: this.state.options.filter(option => option !== id)
+        })
+
+    }
     handleRadios = name => ({ target: { value } }) => {
         this.setState({
             [name]: value
@@ -79,11 +103,11 @@ class EditQuestion extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
-        const { statement, type, category, level, answer } = this.state
+        const { statement, type, category, level, answer, options } = this.state
         this.props.editQuestion(this.props.client, this.state);
 
         this.setState({ hasError: false });
-        if (!statement || !type || !category || !level || !answer) {
+        if (!statement || !type || !category || !level || !answer || !options) {
             this.setState({ hasError: true });
         } else {
             this.handleToggle()
@@ -92,7 +116,7 @@ class EditQuestion extends Component {
     render() {
         const { open, hasError } = this.state;
         const { classes } = this.props;
-        const { statement, type, category, level, answer } = this.state;
+        const { statement, type, category, level, answer, currentOption, options } = this.state;
         const { levels, types, categories } = this.props.bank;
         return (
             <form className={classes.root}>
@@ -121,6 +145,18 @@ class EditQuestion extends Component {
                             </Select>
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
+                        <br />
+                        {type === 'MCQ' ? <FormControl style={{ display: 'flex' }} className={classes.formControl}>
+                            <div >
+                                <InputLabel htmlFor="option">Option : </InputLabel>
+                                <Input name="option" value={this.state.currentOption} onChange={this.handleChangeOption} />
+                                <Fab size="small" color="primary" onClick={this.handleOption} disabled={!currentOption}><Add /></Fab>
+                            </div>
+                            <div>
+                                {options.map((option, i) => <div key={i}><Typography>{option}</Typography><Icon className={clsx(classes.icon, 'fa fa-minus-circle')} style={{ color: 'red' }} name={option} id={option} onClick={this.handleRemoveOption} /></div>)}
+                            </div>
+                        </FormControl>
+                            : null}
                         <br />
                         <FormControl className={classes.formControl} error={hasError} fullWidth>
                             <InputLabel htmlFor="statement">Question : </InputLabel>

@@ -15,7 +15,7 @@ import { showExamSearch, loadExams } from '../../store/actions/examAction'
 import { useQuery } from '@apollo/react-hooks';
 import ExamsList from './ExamsList';
 import BankSnackBar from '../Alerts/SnackBar';
-
+import LoadingProgress from '../Alerts/LoadingProgress';
 
 // const USERS = gql`
 // query {
@@ -61,6 +61,7 @@ query
             category
             answer
             type
+            options
             author {
                 username
             }        
@@ -91,6 +92,7 @@ const useStyles = makeStyles(theme => ({
     box: {
         width: '80%',
         backgroundColor: '#011',
+        fontSize:'calc(2vw + 16px)',
         margin: 'auto',
         textAlign: 'center',
         paddingTop: 40,
@@ -126,6 +128,9 @@ const Exam = (props) => {
     }
 
     (async () => {
+        if (props.bank.loading){
+            
+        }else{
         await props.client
             .query({ query: QUESTIONS })
             .then(({ data }) => {
@@ -139,18 +144,26 @@ const Exam = (props) => {
 
             })
             .catch(err => { throw err });
-
+        }
+        
     })();
 
-    let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
-        variables: { name: "javascript" },
-    });
-    if (loading) return null;
-    if (error) console.log(error);
-    if (!props.bank.bookLoading) {
-        // console.log(data);
-        props.loadBook(data.questionBookByName);
-    }
+
+
+            
+        let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+                variables: { name: "javascript" },
+                fetchPolicy: "cache-first",
+            });
+            if (loading) return <LoadingProgress />;
+            if (error) console.log(error);
+            if (!props.bank.bookLoading) {
+                // console.log(data);
+                props.loadBook(data.questionBookByName);
+        }
+         
+    
+   
 
     // let { loading, error, data } = useQuery(EXAMS);
     // if (loading) return null;
@@ -194,7 +207,7 @@ const Exam = (props) => {
                 <Tabs value={value} onChange={handleChange} indicatorColor="primary" style={{ marginLeft: '8%' }}>
                     <Tab label="CREATE EXAM" />
                     <Tab label="All EXAMS" />
-                    <Tab label="GROUP MEMBERS" />
+                    {/* <Tab label="GROUP MEMBERS" /> */}
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >

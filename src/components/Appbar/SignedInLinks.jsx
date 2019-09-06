@@ -114,7 +114,7 @@ const SignedInLinks = (props) => {
                     <Button onClick={handleToggle} component={Link} to="/questionBank" className={classes.menuBtns}><Archive className={classes.menuIcons} />question bank</Button>
                 </ListItem>
                 <ListItem>
-                    <Button onClick={handleToggle} component={Link} to="/exam" className={classes.menuBtns}><PersonPin className={classes.menuIcons} />exam</Button>
+                    <Button onClick={handleToggle} component={Link} to="/exams" className={classes.menuBtns}><PersonPin className={classes.menuIcons} />exam</Button>
                 </ListItem>
                 <ListItem>
                     <Button onClick={handleToggle} component={Link} to="/aboutUs" className={classes.menuBtns}><PersonPin className={classes.menuIcons} />about us</Button>
@@ -151,7 +151,7 @@ const SignedInLinks = (props) => {
                 <Tabs value={value} onChange={handleChange} className={classes.nav} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
                     <Tab label="home" component={Link} to="/" className={classes.menuItems} />
                     <Tab label="Question Bank" component={Link} to="/questionBank" className={classes.menuItems} />
-                    <Tab label="Exam" component={Link} to="/exam" className={classes.menuItems} />
+                    <Tab label="Exams" component={Link} to="/exam" className={classes.menuItems} />
                     <Tab label="about us" component={Link} to="/aboutUs" className={classes.menuItems} />
                     {/* <Tab label="contacts" component={Link} to="/contacts" className={classes.menuItems} /> */}
                 </Tabs>

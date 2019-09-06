@@ -104,6 +104,18 @@ class QuestionSummary extends Component {
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
+                                    {question.type === 'MCQ' ? <TableRow>
+                                        <TableCell>
+                                            <Typography variant="overline" color="textSecondary" gutterBottom>
+                                                Options :
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="body1">
+                                                {question.options.map( (option,index) =>  <span key={index}>{option}</span>)}
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow> : null}
                                     <TableRow>
                                         <TableCell>
                                             <Typography variant="overline" color="textSecondary" gutterBottom>
@@ -199,7 +211,7 @@ class QuestionSummary extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
+    // console.log(state);
     return {
         ...state,
     }

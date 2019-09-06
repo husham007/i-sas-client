@@ -1,31 +1,42 @@
 import React, { Component } from 'react';
 import { List, ListItem, Divider } from '@material-ui/core';
 import ExamSummary from './ExamSummary';
-import {connect} from 'react-redux'
-import {selectExam} from '../../store/actions/examAction'
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { selectExam } from '../../store/actions/examAction';
+import { withStyles } from '@material-ui/core/styles';
+
+
+const styles = theme => ({
+    root: {
+        display: 'flex',
+    },
+    list: {
+        width: 200,
+        // background: 'none',
+        height: '55vh',
+
+    }
+})
+
+
 
 class ExamsList extends Component {
     state = {
         selectedExam: this.props.selected,
 
     }
-
-    
     handleGet = (e) => {
         const { id } = e.target;
-        // this.setState({
-        //     // [id]: value,
-        //     selectedExam: id,
-        // })
         this.props.selectExam(id)
     }
     render() {
-        console.log(this.props.selected)
-        console.log(this.props.exams)
+        const { classes } = this.props;
         return (
-            <div style={{ display: 'flex' }}>
+            <div className={classes.root}>
                 <div>
-                    <List component="nav" style={{ width: 220, background: 'none', height: '100%', marginTop: -20, maxHeight: 470 }}>
+                    <List component="nav" className={classes.list}>
+                        <ListItem style={{ fontSize: '18px', fontFamily: 'TimesNewRoman', textAlign: 'center', background: '#111' }}>Exams List</ListItem>
                         {this.props.exams.map((exam, id) => <div key={exam.id}><ListItem id={id} onClick={this.handleGet} button>{exam.name} </ListItem><Divider /></div>)}
 
                     </List>
@@ -39,22 +50,25 @@ class ExamsList extends Component {
                         startTime: this.props.exams[this.props.selected].startTime,
                         duration: this.props.exams[this.props.selected].duration,
                         book: 'javascript',
-                    }} /> : null} 
+                    }} /> : null}
                 </div>
             </div>
         );
     }
 }
 
-const mapStateToProps = state =>{
-    return{
+const mapStateToProps = state => {
+    return {
         selected: state.rootReducer.exam.selected
     }
 }
-const mapDispatchToProps = dispatch =>{
-    return{
+const mapDispatchToProps = dispatch => {
+    return {
         selectExam: (id) => dispatch(selectExam(id))
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExamsList);
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
+)(ExamsList);

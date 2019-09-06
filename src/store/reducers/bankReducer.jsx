@@ -39,7 +39,7 @@ const bankReducer = (state = initState, { type, payload }) => {
     switch (type) {
         case CREATE_QUESTION:
             console.log('created question :)', payload.question)
-            return { ...state, loading: false };
+            return { ...state, loading: false, bookLoading: false };
         case LOAD_QUESTIONS:
             // console.log('loadQuestions :)', payload.questions)
             return { ...state, loading: true, questions: [...payload.questions] };

@@ -10,7 +10,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { compose } from 'redux';
 import { withApollo } from 'react-apollo';
-
+import LoadingProgress from '../Alerts/LoadingProgress';
 
 
 const useStyles = makeStyles(theme => ({
@@ -54,6 +54,7 @@ query
             category
             answer
             type
+            options
             author {
                 username
             }        
@@ -64,28 +65,34 @@ query
 const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
   const classes = useStyles();
   // const [spacing, setSpacing] = React.useState(2);
-  const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
-    variables: { name: "javascript" },
-  });
+  
 
   (async () => {
-    await client
-      .query({ query: QUESTIONS })
-      .then(({ data }) => {
-        // console.log(data) 
-        //console.log(props.bank.questions);
-        if (!bank.loading) {
-          loadQuestions(data.questions.page);
+        if (bank.loading){
+            
+        }else{
+        await client
+            .query({ query: QUESTIONS })
+            .then(({ data }) => {
+                // console.log(data) 
+                //console.log(props.bank.questions);
+                if (!bank.loading) {
+                    loadQuestions(data.questions.page);
+                }
+
+                // questions = [...questions, ...data.questions.page];
+
+            })
+            .catch(err => { throw err });
         }
+        
+    })();
 
-        // questions = [...questions, ...data.questions.page];
-
-      })
-      .catch(err => { throw err });
-
-  })();
-
-  if (loading) return null;
+  const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+    variables: { name: "javascript" },
+    fetchPolicy: "cache-first",
+  });
+  if (loading) return <LoadingProgress />;
   if (error) console.log(error);
   if (!bank.bookLoading && data) {
     // console.log(data);

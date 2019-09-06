@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Grid, Typography, Divider, Button } from '@material-ui/core'
+import { Grid, Typography, Divider, Button } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles'
 import EditExam from './EditExam';
 import DeleteExam from './DeleteExam';
@@ -13,8 +14,8 @@ import { withApollo } from 'react-apollo';
 
 const Styles = theme => ({
     root: {
-        width: '90%',
-        backgroundColor: '#111',
+        width: '70%',
+        backgroundColor: '#0c0f0f',
         margin: 'auto',
         marginTop: theme.spacing(10),
         display: 'flex',
@@ -62,6 +63,14 @@ mutation createExam($examInput: ExamInput!) {
   }`;
 
 class ExamSummary extends Component {
+    state = {
+        open: this.props.exam,
+    }
+    handleToggle = () => {
+        this.setState({
+            open: ''
+        })
+    }
     handleRemove = (id) => {
         console.log('this is remove btn');
         //  const { id } = e.target
@@ -83,6 +92,7 @@ class ExamSummary extends Component {
     render() {
         let { classes, examQuestions, exam, questions } = this.props
         console.log(exam)
+    console.log(this.state)
         if (questions) {
             examQuestions = questions;
         }
@@ -91,18 +101,21 @@ class ExamSummary extends Component {
                 <Grid container className={classes.grid}>
                     <Grid item className={classes.title} xs={12}>
                         <div>
-                            <Typography variant="h5">{exam.name}</Typography>
+                            <Typography variant="h4">{exam.name}</Typography>
                         </div>
-                        <div style={{ flexBasis: '22%', display: 'flex', justifyContent: 'space-between', marginRight: 20 }}>
+                        {this.props.remove ? <div onClick={this.handleToggle} style={{ padding: '15px', cursor: 'pointer' }}><Close /></div> : <div style={{ flexBasis: '22%', display: 'flex', justifyContent: 'space-between', marginRight: 20 }}>
                             <EditExam exam={exam} />
                             <DeleteExam exam={exam} />
                         </div>
+
+                        }
+
                     </Grid>
                     <Grid item className={classes.details} xs={12}>
                         <div style={{ flex: 2, paddingRight: 15 }}>
-                            <Typography variant="h5">Type: <span>{exam.type}</span></Typography>
+                            <Typography variant="subtitle1">Type: <span>{exam.type}</span></Typography>
                             <Divider variant="middle" />
-                            <Typography variant="h5">Instructions: <span>{exam.instructions}</span></Typography>
+                            <Typography variant="subtitle1">Instructions: <span>{exam.instructions}</span></Typography>
                         </div>
                         <div style={{ flex: 1 }}>
                             <Typography variant="subtitle1">Total questions: {examQuestions.length}</Typography>

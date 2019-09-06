@@ -67,11 +67,11 @@ class LogIn extends Component {
             [id]: value
         })
     }
-    handleSubmit = async e => {
+    handleSubmit =  e => {
         e.preventDefault();
        
 
-       await this.props.client
+        this.props.client
       .mutate({ mutation: SIGN_IN,  variables: {email: this.state.email, password: this.state.password}})
       .then( (result) => {        
           

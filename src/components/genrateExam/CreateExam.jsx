@@ -61,6 +61,7 @@ class CreateExam extends Component {
             duration: '',
             book: 'javascript',
             author: this.props.author,
+            loading: false
             // questions: []
 
         }
@@ -84,6 +85,7 @@ class CreateExam extends Component {
         const { type, name, instructions, startTime, duration, book, author } = this.state
         const exam = { name, type, instructions, startTime, duration, book, author };
         this.props.createSoftExam(exam);
+        
 
         this.setState({ hasError: false });
         if (!name || !type || !instructions || !startTime || !duration) {
@@ -104,7 +106,7 @@ class CreateExam extends Component {
         const { open, hasError, type, name, instructions, startTime, duration } = this.state;
         const { classes } = this.props;
         const types = ['Exam', 'Quiz', 'Assignment'];
-        console.log(this.state)
+        //console.log(this.state)
         // const { levels, types, categories } = this.props.bank;
         // const { auth } = this.props
         // if (!auth.uid) return <Redirect to="/" />

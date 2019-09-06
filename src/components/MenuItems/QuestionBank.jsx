@@ -93,28 +93,35 @@ const QuestionBank = (props) => {
         setValue(newValue);
     }
 
-    (async () => {
-        await props.client
-            .query({ query: QUESTIONS })
-            .then(({ data }) => {
-                // console.log(data) 
-                //console.log(props.bank.questions);
-                if (!props.bank.loading) {
-                    props.loadQuestions(data.questions.page);
-                }
-
-                // questions = [...questions, ...data.questions.page];
-
-            })
-            .catch(err => { throw err });
-
-    })();
+    if(!props.bank.loading){
+        (() => {
+            return props.client
+                 .query({ query: QUESTIONS })
+                 .then((data ) => {
+                     // console.log(data) ; 
+                      //if (!data.loading) return <div>loading</div>;
+     
+                     //console.log(props.bank.questions);
+                     if (data.data && !props.bank.loading) {
+                         props.loadQuestions(data.data.questions.page);
+                     }
+     
+                     // questions = [...questions, ...data.questions.page];
+     
+                 })
+                 .catch(err => { throw err });
+     
+         })();
+    }
+    
+  
 
     const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
         variables: { name: "javascript" },
+       
     });
 
-    if (loading) return null;
+    if (loading) return <div>loading</div>;
     if (error) console.log(error);
     if (data && !props.bank.bookLoading){
         console.log(data);

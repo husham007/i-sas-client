@@ -115,28 +115,31 @@ const Exam = (props) => {
     function handleChange(event, newValue) {
         setValue(newValue);
     }
-
-    (async () => {
-        await props.client
-            .query({ query: QUESTIONS })
-            .then(({ data }) => {
-                // console.log(data) 
-                //console.log(props.bank.questions);
-                if (!props.bank.loading) {
-                    props.loadQuestions(data.questions.page);
-                }
-
-                // questions = [...questions, ...data.questions.page];
-
-            })
-            .catch(err => { throw err });
-
-    })();
+    if(!props.bank.loading){
+        (async () => {
+            await props.client
+                .query({ query: QUESTIONS })
+                .then(({ data }) => {
+                    // console.log(data) 
+                    //console.log(props.bank.questions);
+                    if (!props.bank.loading) {
+                        props.loadQuestions(data.questions.page);
+                    }
+    
+                    // questions = [...questions, ...data.questions.page];
+    
+                })
+                .catch(err => { throw err });
+    
+        })();
+    }
+    
 
     let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
         variables: { name: "javascript" },
+        fetchPolicy: 'network-and-cache',
     });
-    if (loading) return null;
+    if (loading || !props.bank.loading) return <div>loading</div>;
     if (error) console.log(error);
     if (!props.bank.bookLoading) {
         // console.log(data);
@@ -215,14 +218,15 @@ const Exam = (props) => {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
+   // console.log(state)
     return {
         bank: state.rootReducer.bank,
         exam: state.rootReducer.exam.exam,
         searchActive: state.rootReducer.exam.isSearchActive,
         examSearch: state.rootReducer.exam.showExamSearch,
         searchResult: state.rootReducer.exam.searchResult,
-        examLoaded: state.rootReducer.exam.examLoaded
+        examLoaded: state.rootReducer.exam.examLoaded,
+        loading: state.rootReducer.exam.loading,
     }
 }
 

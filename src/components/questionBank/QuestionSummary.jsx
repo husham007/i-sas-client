@@ -136,7 +136,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                {question.author.username}
+                                            {question.author.username}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -182,7 +182,7 @@ class QuestionSummary extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
+    //console.log(state);
     return {
         ...state,
     }

@@ -64,9 +64,7 @@ query
 const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
   const classes = useStyles();
   // const [spacing, setSpacing] = React.useState(2);
-  const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
-    variables: { name: "javascript" },
-  });
+  
 
   (async () => {
     await client
@@ -74,7 +72,7 @@ const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
       .then(({ data }) => {
         // console.log(data) 
         //console.log(props.bank.questions);
-        if (!bank.loading) {
+        if (data && !bank.loading) {
           loadQuestions(data.questions.page);
         }
 
@@ -85,8 +83,13 @@ const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
 
   })();
 
-  if (loading) return null;
-  if (error) console.log(error);
+  const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+    variables: { name: "javascript" },
+    fetchPolicy: 'network-and-cache',
+  });
+
+  if (loading) return <div>loading</div>;
+  //if (error) throw error;
   if (!bank.bookLoading && data) {
     // console.log(data);
     loadBook(data.questionBookByName);
@@ -122,7 +125,7 @@ const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
 }
 
 const mapStateToProps = state => {
-  // console.log(state);
+   console.log(state);
   return {
     // auth: state.rootReducer.auth,
     auth: state.rootReducer.auth,

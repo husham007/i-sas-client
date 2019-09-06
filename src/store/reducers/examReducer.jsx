@@ -11,6 +11,7 @@ const initState = {
     isSearchActive: false,
     examQuestions: [],
     errorMessage: new Map(),
+    
 }
 
 const examReducer = (state = initState, { type, payload }) => {
@@ -35,10 +36,10 @@ const examReducer = (state = initState, { type, payload }) => {
             newState.errorMessage.set(payload.id, payload.msg)
             return { ...newState }
         case CREATE_EXAM:
-            return { ...state, exam: null, exams: [...state.exams, payload.data] }
+            return { ...state, exam: null, examQuestions: [], examLoaded: false }
         case LOAD_EXAMS:
             console.log('exams list are here')
-            return { ...state, examLoaded: true, exams: [payload.exams] }
+            return { ...state, examLoaded: true ,exams: [...payload.exams.exams] }
         default:
             return state;
     }

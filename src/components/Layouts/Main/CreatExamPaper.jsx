@@ -21,9 +21,7 @@ const Styles = theme => ({
     icon: {
         fontSize: '55px',
         margin: 30,
-        '&:hover': {
-            color: '#ffb503',
-        }
+        // color: '#ffb503',
     }
 
 });
@@ -32,13 +30,15 @@ class CreatExamPaper extends Component {
     render() {
         const { classes, auth } = this.props;
         const makeActive = auth.token ? false : true;
+        const color = auth.token ? 'primary' : '';
+        const colorIcon = auth.token ? '#ffb503' : '#fff';
         return (
             <ButtonBase disabled={makeActive} component={Link} to="/exam">
                 <Paper className={classes.paper}>
-                    <div className={classes.icon}><i className="fas fa-laptop-code"></i></div>
+                    <div className={classes.icon} style={{ color: `${colorIcon}` }}><i className="fas fa-laptop-code"></i></div>
                     <Typography variant="h6">Exam</Typography>
                     <br />
-                    <Typography variant="body2" style={{ lineHeight: 1.5 }}>
+                    <Typography variant="body2" style={{ lineHeight: 1.5 }} color={color}>
                         Test can either be published privately to a select group or open them up to everyone with a single link and registration page.
                     </Typography>
                 </Paper>

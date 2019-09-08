@@ -9,14 +9,15 @@ import {
     LOAD_BOOK,
     SEARCH_QUESTION_ANY,
     SEARCH_PARAMETERS,
-    SNACKBAR_MSG
-    
+    SNACKBAR_MSG,
+    LOAD_STATISTICS
+
 } from './actionTypes';
 
 export const createQuestion = (client, question, QUERY) => {
     return async (dispatch) => {
         await client
-            .mutate({ mutation: QUERY, variables: { statement: question.statement, category: question.category, type: question.type,options: question.options, level: question.level, answer: question.answer, book: question.book } })
+            .mutate({ mutation: QUERY, variables: { statement: question.statement, category: question.category, type: question.type, options: question.options, level: question.level, answer: question.answer, book: question.book } })
             .then((result) => {
 
                 dispatch({
@@ -26,12 +27,12 @@ export const createQuestion = (client, question, QUERY) => {
                         message: 'New question is created!'
                     }
                 })
-                 dispatch({
-                        type: SNACKBAR_MSG,
-                        payload: {
-                            message: 'New question is created!'
-                        }
-                    })
+                dispatch({
+                    type: SNACKBAR_MSG,
+                    payload: {
+                        message: 'New question is created!'
+                    }
+                })
             })
         // .catch(err => { console.log(err)});
 
@@ -100,11 +101,11 @@ export const editQuestion = (client, question) => {
                     }
                 })
                 dispatch({
-            type: SNACKBAR_MSG,
-            payload: {
-                message: 'This question is Edited!'
-            }
-        })
+                    type: SNACKBAR_MSG,
+                    payload: {
+                        message: 'This question is Edited!'
+                    }
+                })
             })
         // .catch(err => { console.log(err)});
 
@@ -118,22 +119,22 @@ export const searchQuestion = (client, search, QUERY) => {
         await client
             .query({ query: QUERY, variables: { searchInput: search } })
             .then(({ data }) => {
-                
-                    dispatch({
-                        type: SEARCH_QUESTION_ANY,
-                        payload: {
-                            searchResult: data.searchQuestion
-                        }
-                    })
-            
+
+                dispatch({
+                    type: SEARCH_QUESTION_ANY,
+                    payload: {
+                        searchResult: data.searchQuestion
+                    }
+                })
 
 
-    })
-    // .catch(err => { console.log(err)});
+
+            })
+        // .catch(err => { console.log(err)});
 
     }
 
-    
+
 };
 
 export const setSearchParameters = (name, value) => {
@@ -146,7 +147,15 @@ export const setSearchParameters = (name, value) => {
     }
 }
 
-
+export const loadStatistics = data => {
+    // console.log(data)
+    return {
+        type: LOAD_STATISTICS,
+        payload: {
+            data
+        }
+    }
+}
 
 
 

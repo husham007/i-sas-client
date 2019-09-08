@@ -104,7 +104,7 @@ class ExamSummary extends Component {
                             <Typography variant="h4">{exam.name}</Typography>
                         </div>
                         {this.props.remove ? <div onClick={this.handleToggle} style={{ padding: '15px', cursor: 'pointer' }}><Close /></div> : <div style={{ flexBasis: '22%', display: 'flex', justifyContent: 'space-between', marginRight: 20 }}>
-                            <EditExam exam={exam} />
+                            {/* <EditExam exam={exam} /> */}
                             <DeleteExam exam={exam} />
                         </div>
 

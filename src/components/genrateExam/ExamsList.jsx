@@ -45,6 +45,7 @@ class ExamsList extends Component {
                     {this.props.selected ? <ExamSummary btn={false} remove={false} questions={this.props.exams[this.props.selected].examQuestions} exam={{
                         id: this.props.exams[this.props.selected].id,
                         type: this.props.exams[this.props.selected].type,
+                        options: this.props.exams[this.props.selected].options,
                         name: this.props.exams[this.props.selected].name,
                         instructions: this.props.exams[this.props.selected].instructions,
                         startTime: this.props.exams[this.props.selected].startTime,

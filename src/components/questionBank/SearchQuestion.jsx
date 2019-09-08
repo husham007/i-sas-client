@@ -64,6 +64,7 @@ query searchQuestion($searchInput: SearchInput!) {
         id
         statement
         type
+        options
         category
         level
         answer

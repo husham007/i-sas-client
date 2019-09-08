@@ -11,8 +11,13 @@ import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
 import { withApollo } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
-import  SnackBar from '../Alerts/SnackBar';
+import SnackBar from '../Alerts/SnackBar';
 import LoadingProgress from '../Alerts/LoadingProgress';
+import QuestionStatistics from '../questionBank/QuestionStatistics';
+import QuestionStatisticsBarChart from '../questionBank/QuestionStatisticsBarChart';
+import { loadStatistics } from '../../store/actions/bankAction';
+
+
 
 // const USERS = gql`
 // query {
@@ -51,10 +56,20 @@ query questionBookByName($name: String!) {
     }
   }`;
 
+const GET_STATISTICS = gql`
+query getStatistics($book: String!) {
+    getStatistics(book: $book) {
+        statistic
+        key
+        value
+    }
+  }`;
+
+
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        minHeight: '76vh',
+        minHeight: '78vh',
         backgroundImage: `url(${qM})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -85,6 +100,15 @@ function TabPanel(props) {
 
 const QuestionBank = (props) => {
     //console.log(props);
+const statistics = useQuery(GET_STATISTICS, {
+        variables: { book: "javascript" },
+        fetchPolicy: "cache-first",
+    });
+
+    const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+        variables: { name: "javascript" },
+        fetchPolicy: "cache-first",
+    });
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -93,37 +117,49 @@ const QuestionBank = (props) => {
     }
 
     (async () => {
-        if (props.bank.loading){
-            
-        }else{
-        await props.client
-            .query({ query: QUESTIONS })
-            .then(({ data }) => {
-                console.log(data) 
-                //console.log(props.bank.questions);
-                if (!props.bank.loading) {
-                    props.loadQuestions(data.questions.page);
-                }
+        if (props.bank.loading) {
 
-                // questions = [...questions, ...data.questions.page];
+        } else {
+            await props.client
+                .query({ query: QUESTIONS })
+                .then(({ data }) => {
+                    // console.log(data)
+                    //console.log(props.bank.questions);
+                    if (!props.bank.loading) {
+                        props.loadQuestions(data.questions.page);
+                    }
 
-            })
-            .catch(err => { throw err });
+                    // questions = [...questions, ...data.questions.page];
+
+                })
+                .catch(err => { throw err });
         }
-        
+
     })();
 
-    const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
-        variables: { name: "javascript" },
-        fetchPolicy: "cache-first",
-    });
+    
+
+    if(statistics.loading){
+       return <LoadingProgress />
+    };
+    if (!props.bank.statisticsLoading) {
+        // console.log(statistics);
+        props.loadStatistics(statistics.data.getStatistics);
+    }else{
+
+    }
+
+
+
+
+    
 
     if (loading) return <LoadingProgress />;
     if (error) console.log(error);
-    // if (!props.bank.bookLoading) {
-    //     // console.log(data);
-    //     props.loadBook(data.questionBookByName);
-    // }
+    if (!props.bank.bookLoading) {
+        // console.log(data);
+        props.loadBook(data.questionBookByName);
+    }
 
     return (
         <div value={value} className={classes.root}>
@@ -136,16 +172,18 @@ const QuestionBank = (props) => {
             </AppBar>
             <TabPanel value={value} index={0} >
                 <CreateQuestion />
-                {/* <QuestionList questions={questions} /> */}
-                
                 {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SearchQuestion cas={true} />
+                <div style={{ textAlign: 'center' }}>
+                    {props.bank && props.bank.searchResult.length > 0 ? <Typography variant="h6" color="primary"> {props.bank.searchResult.length} result(s) found.</Typography> : <Typography variant="h6" color="primary">Search is Empty</Typography>}
+                </div>
                 {props.bank && props.bank.searchResult.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={2}>
-                statistics
+                <QuestionStatisticsBarChart bank={props.bank.statistics} />
+                <QuestionStatistics bank={props.bank} />
             </TabPanel>
             {props.snackBarMessage ? <SnackBar message={props.snackBarMessage} /> : null}
         </div>
@@ -153,9 +191,11 @@ const QuestionBank = (props) => {
 }
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
         bank: state.rootReducer.bank,
-        snackBarMessage: state.rootReducer.snackBar.snackBarMessage
+        snackBarMessage: state.rootReducer.snackBar.snackBarMessage,
+
     }
 }
 
@@ -163,7 +203,7 @@ const mapDispatchToProps = dispatch => {
     return {
         loadQuestions: (data) => dispatch(loadQuestions(data)),
         loadBook: (data) => dispatch(loadBook(data)),
-
+        loadStatistics: data => dispatch(loadStatistics(data))
     }
 }
 

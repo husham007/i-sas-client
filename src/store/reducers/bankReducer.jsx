@@ -1,4 +1,4 @@
-import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, LOAD_BOOK, SEARCH_QUESTION_ANY, SEARCH_PARAMETERS, BANK_SNACKBAR } from '../actions/actionTypes'
+import { CREATE_QUESTION, DELETE_QUESTION, EDIT_QUESTION, LOAD_QUESTIONS, LOAD_BOOK, SEARCH_QUESTION_ANY, SEARCH_PARAMETERS, SNACKBAR, LOAD_STATISTICS} from '../actions/actionTypes'
 
 
 
@@ -32,6 +32,8 @@ const initState = {
     levels: [],
     categories: [],
     bookLoading: false,
+    statistics:[],
+    statisticsLoading:false
 };
 
 const bankReducer = (state = initState, { type, payload }) => {
@@ -56,7 +58,9 @@ const bankReducer = (state = initState, { type, payload }) => {
             console.log('search result!', payload)
             return { ...state, searchResult: [...payload.searchResult] };
         case SEARCH_PARAMETERS:
-            return { ...state, [payload.name]: payload.value }
+            return { ...state, [payload.name]: payload.value };
+        case LOAD_STATISTICS:
+            return { ...state,statisticsLoading:true, statistics: [...payload.data] }
         default:
             return state;
     }

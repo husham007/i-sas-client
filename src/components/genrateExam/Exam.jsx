@@ -3,7 +3,7 @@ import React from 'react'
 import { AppBar, Tabs, Tab, Typography, Box, makeStyles, Button, TextField } from '@material-ui/core'
 import CreateExam from './CreateExam';
 import { connect } from 'react-redux'
-import examBC from '../../assets/images/exam.jpg'
+import examBC from '../../assets/images/examBG.png'
 import gql from 'graphql-tag';
 import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
@@ -39,6 +39,7 @@ query
           id
         statement
         type
+        options
         category
         level
         answer
@@ -90,13 +91,11 @@ const useStyles = makeStyles(theme => ({
         backgroundAttachment: 'fixed',
     },
     box: {
-        width: '80%',
-        backgroundColor: '#011',
-        fontSize:'calc(2vw + 16px)',
+        background: 'none',
+        fontSize: 'calc(2vw + 16px)',
         margin: 'auto',
         textAlign: 'center',
         paddingTop: 40,
-        height: '20vh',
         marginTop: theme.spacing(10),
     },
 
@@ -128,42 +127,42 @@ const Exam = (props) => {
     }
 
     (async () => {
-        if (props.bank.loading){
-            
-        }else{
-        await props.client
-            .query({ query: QUESTIONS })
-            .then(({ data }) => {
-                // console.log(data) 
-                //console.log(props.bank.questions);
-                if (!props.bank.loading) {
-                    props.loadQuestions(data.questions.page);
-                }
+        if (props.bank.loading) {
 
-                // questions = [...questions, ...data.questions.page];
+        } else {
+            await props.client
+                .query({ query: QUESTIONS })
+                .then(({ data }) => {
+                    // console.log(data) 
+                    //console.log(props.bank.questions);
+                    if (!props.bank.loading) {
+                        props.loadQuestions(data.questions.page);
+                    }
 
-            })
-            .catch(err => { throw err });
+                    // questions = [...questions, ...data.questions.page];
+
+                })
+                .catch(err => { throw err });
         }
-        
+
     })();
 
 
 
-            
-        let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
-                variables: { name: "javascript" },
-                fetchPolicy: "cache-first",
-            });
-            if (loading) return <LoadingProgress />;
-            if (error) console.log(error);
-            if (!props.bank.bookLoading) {
-                // console.log(data);
-                props.loadBook(data.questionBookByName);
-        }
-         
-    
-   
+
+    let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
+        variables: { name: "javascript" },
+        fetchPolicy: "cache-first",
+    });
+    if (loading) return <LoadingProgress />;
+    if (error) console.log(error);
+    if (!props.bank.bookLoading) {
+        // console.log(data);
+        props.loadBook(data.questionBookByName);
+    }
+
+
+
 
     // let { loading, error, data } = useQuery(EXAMS);
     // if (loading) return null;
@@ -215,7 +214,7 @@ const Exam = (props) => {
                 {(() => {
                     if (props.exam) {
                         return <div>
-                            <ExamSummary exam={props.exam} btn={true} remove={true}/>
+                            <ExamSummary exam={props.exam} btn={true} remove={true} />
                             <SearchQuestion cas={false} />
                         </div>
                     } else {
@@ -223,7 +222,7 @@ const Exam = (props) => {
                     }
                 })()}
 
-                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} remove={false}/>)}
+                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <ExamsList exams={props.exams} remove={false} />

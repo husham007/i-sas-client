@@ -5,7 +5,7 @@ import QuestionBankPaper from './Main/QuestionBankPaper';
 import CreatExamPaper from './Main/CreatExamPaper';
 import GiveExamPaper from './Main/GiveExamPaper';
 import { connect } from 'react-redux'
-import {loadBook, loadQuestions} from '../../store/actions/bankAction'
+import { loadBook, loadQuestions } from '../../store/actions/bankAction'
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { compose } from 'redux';
@@ -62,31 +62,31 @@ query
     }
 }`;
 
-const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
+const Main = ({ auth, bank, loadBook, client, loadQuestions }) => {
   const classes = useStyles();
   // const [spacing, setSpacing] = React.useState(2);
-  
+
 
   (async () => {
-        if (bank.loading){
-            
-        }else{
-        await client
-            .query({ query: QUESTIONS })
-            .then(({ data }) => {
-                // console.log(data) 
-                //console.log(props.bank.questions);
-                if (!bank.loading) {
-                    loadQuestions(data.questions.page);
-                }
+    if (bank.loading) {
 
-                // questions = [...questions, ...data.questions.page];
+    } else {
+      await client
+        .query({ query: QUESTIONS })
+        .then(({ data }) => {
+          // console.log(data) 
+          //console.log(props.bank.questions);
+          if (!bank.loading) {
+            loadQuestions(data.questions.page);
+          }
 
-            })
-            .catch(err => { throw err });
-        }
-        
-    })();
+          // questions = [...questions, ...data.questions.page];
+
+        })
+        .catch(err => { throw err });
+    }
+
+  })();
 
   const { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
     variables: { name: "javascript" },
@@ -103,11 +103,11 @@ const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
       <Paper className={classes.root} square>
         <Box className={classes.box}>
           <Typography variant="h5">
-            Integrify Student Assessment System
+            Integrify Student Assessment System (I-SAS)
           </Typography>
           <br />
           <Typography variant="body2">
-            Testify is a system to create a test of quiz for students,
+            I-SAS is a system to create a test of quiz for students,
             we can identify more here ...
           </Typography>
         </Box>
@@ -118,12 +118,12 @@ const Main = ({ auth, bank,loadBook,client,loadQuestions }) => {
           <Grid item sm>
             <CreatExamPaper auth={auth} />
           </Grid>
-          <Grid item sm>
+          {/* <Grid item sm>
             <GiveExamPaper />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Paper>
-      
+
     </div>
   );
 }
@@ -147,4 +147,4 @@ const mapDispatchToProps = dispatch => {
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   withApollo
-) (Main)
+)(Main)

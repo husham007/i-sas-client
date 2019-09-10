@@ -32,7 +32,6 @@ class QuestionBankPaper extends Component {
     render() {
         const { classes, auth } = this.props;
         const makeActive = auth.token ? false : true;
-        const color = auth.token ? 'primary' : '';
         const colorIcon = auth.token ? '#ffb503' : '#fff';
         return (
             <ButtonBase disabled={makeActive} component={Link} to="/questionBank">
@@ -40,7 +39,7 @@ class QuestionBankPaper extends Component {
                     <div className={classes.icon} style={{ color: `${ colorIcon }` }}><i className="fas fa-book"></i></div>
                     <Typography variant="h6">Question Bank</Typography>
                     <br />
-                    <Typography variant="body2" style={{ lineHeight: 1.5 }} color={color}>
+                    <Typography variant="body2" style={{ lineHeight: 1.5 }}>
                         Quickly create great looking tests using miltiple question types and formatting options.
               </Typography>
                 </Paper>

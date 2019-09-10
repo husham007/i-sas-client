@@ -36,10 +36,9 @@ export default class LevelsStatistics extends PureComponent {
         })
         console.log(data)
         return (
-            <div style={{ height: "40vh", width: "30vw", }}>
+            <div style={{ height: "40vh", width: "30vw", marginLeft: 40 }}>
                 <div style={{ marginBottom: 20, fontSize: '1.6rem', fontFamily: 'Times New Roman' }}>Question Levels:</div>
                 <ResponsiveContainer>
-                    {/* <div>Categories</div> */}
                     <PieChart width={200} height={400}>
                         <Pie
                             data={data}

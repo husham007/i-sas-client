@@ -30,6 +30,11 @@ const styles = theme => ({
         justifyContent: 'space-between',
         background: 'none'
     },
+    questionItem: {
+        fontSize: 'calc(0.2rem + 12px)',
+        textAlign: 'left',
+        // borderCollapse:'collapse'
+    },
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1)
@@ -79,7 +84,7 @@ class QuestionSummary extends Component {
                                         </Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography variant="body1" style={{fontSize:'calc(.6vw + 10px)'}}>
+                                        <Typography variant="body1" className={classes.questionItem}>
                                             {question.statement}
                                         </Typography>
                                     </TableCell>
@@ -99,7 +104,7 @@ class QuestionSummary extends Component {
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="body1">
+                                            <Typography variant="body1" className={classes.questionItem}>
                                                 {question.type}
                                             </Typography>
                                         </TableCell>
@@ -112,7 +117,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                {question.options.map( (option,index) =>  <span key={index}>{option}</span>)}
+                                                {question.options.map((option, index) => <span key={index}>{option}</span>)}
                                             </Typography>
                                         </TableCell>
                                     </TableRow> : null}
@@ -123,7 +128,7 @@ class QuestionSummary extends Component {
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="body1">
+                                            <Typography variant="body1" className={classes.questionItem}>
                                                 {question.level}
                                             </Typography>
                                         </TableCell>
@@ -135,7 +140,7 @@ class QuestionSummary extends Component {
                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="body1">
+                                            <Typography variant="body1" className={classes.questionItem}>
                                                 {question.category}
                                             </Typography>
                                         </TableCell>
@@ -147,7 +152,7 @@ class QuestionSummary extends Component {
                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="body1" style={{ fontSize: 'calc(0.6vw + 9px)' }}>
+                                            <Typography variant="body1" className={classes.questionItem}>
                                                 {question.answer}
                                             </Typography>
                                         </TableCell>
@@ -159,24 +164,23 @@ class QuestionSummary extends Component {
                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="body1">
+                                            <Typography variant="body1" className={classes.questionItem}>
                                                 {question.author.username}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
-                                    <TableRow>
+                                    {/* <TableRow>
                                         <TableCell>
                                             <Typography variant="overline" color="textSecondary">
-                                                Issue by :
-                            </Typography>
+                                               
+                                            </Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography className={classes.pos} color="textSecondary">
-                                                {/* {moment(this.state.createdAt.toDate()).calendar()} */}
-                                                12.07.2019
+                                                
                                             </Typography>
                                         </TableCell>
-                                    </TableRow>
+                                    </TableRow> */}
                                 </TableBody>
                             </Table>
                         </CardContent>

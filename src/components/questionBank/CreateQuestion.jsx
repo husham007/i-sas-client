@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Fab, Radio, MenuItem, FormHelperText } from '@material-ui/core'
+import { Icon, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Fab, Radio, MenuItem, FormHelperText, Typography, TextField } from '@material-ui/core'
 import { Add, Close } from '@material-ui/icons';
+import clsx from 'clsx';
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createQuestion } from '../../store/actions/bankAction'
+import { snackBarMsg } from '../../store/actions/snackBarAction'
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 // import { Redirect } from 'react-router-dom'
@@ -12,7 +14,7 @@ import gql from 'graphql-tag';
 const styles = theme => ({
     root: {
         display: "flex",
-        flexDirection: 'column',
+        // flexDirection: 'column',
     },
     dialog: {
         padding: theme.spacing(2),
@@ -24,17 +26,22 @@ const styles = theme => ({
     },
     addIcon: {
         position: "fixed",
+        [theme.breakpoints.down('xs')]: {
+            position: 'relative',
+        }
     },
     title: {
         display: 'flex',
         justifyContent: 'space-between'
     },
-
+icon:{
+    marginLeft:10
+}
 });
 
 const CREATE_QUESTION = gql`
-        mutation createQuestion($statement: String! $category: String! $type: String! $level: String! $answer: String! $book: String!){
-        createQuestion(statement: $statement category: $category type:$type level:$level answer:$answer book:$book ) {
+        mutation createQuestion($statement: String! $category: String! $type: String! $options: [String!] $level: String! $answer: String! $book: String!){
+        createQuestion(statement: $statement category: $category type:$type options:$options level:$level answer:$answer book:$book ) {
             id
         }
     }    
@@ -48,6 +55,8 @@ class CreateQuestion extends Component {
             selected: null,
             hasError: false,
             type: '',
+            options: [],
+            currentOption: '',
             statement: '',
             category: '',
             level: '',
@@ -66,21 +75,54 @@ class CreateQuestion extends Component {
         this.setState({
             [name]: value
         })
+        if (name === 'type') {
+            this.setState({
+                options: [],
+                currentOption: '',
+                statement: '',
+                category: '',
+                level: '',
+                answer: '',
+            })
+        }
+    }
+    handleChangeOption = e => {
+        // console.log(this.state)
+        const { value } = e.target
+        this.setState({
+            currentOption: value,
+
+        })
     }
     handleRadios = name => ({ target: { value } }) => {
         this.setState({
             [name]: value
         })
     }
+    handleOption = (e) => {
+        e.preventDefault()
+        this.setState({
+            options: [...this.state.options, this.state.currentOption],
+            currentOption: ''
+        })
+    }
+    handleRemoveOption = e => {
+        e.preventDefault()
+        const { name, id } = e.target;
+        this.setState({
+            options: this.state.options.filter(option => option !== id)
+        })
+
+    }
     handleSubmit = e => {
         e.preventDefault()
         console.log(this.state)
         // this.props.history.push('/questionBank');
-        const { statement, type, category, level, answer } = this.state
+        const { statement, type, category, level, answer, options } = this.state
         this.props.createQuestion(this.props.client, this.state, CREATE_QUESTION);
-
+        // this.props.snackBarMsg('New Question is Created!')
         this.setState({ hasError: false });
-        if (!statement || !type || !category || !level || !answer) {
+        if (!statement || !type || !category || !level || !answer || !options) {
             this.setState({ hasError: true });
         } else {
             this.handleToggle();
@@ -89,13 +131,14 @@ class CreateQuestion extends Component {
                 statement: '',
                 category: '',
                 level: '',
-                answer: ''
+                answer: '',
+                options: ['option1']
             })
         }
     }
 
     render() {
-        const { open, hasError, type, level, category, statement, answer } = this.state;
+        const { open, hasError, type, level, category, statement, answer, options, currentOption } = this.state;
         const { classes } = this.props;
         const { levels, types, categories } = this.props.bank;
         // const { auth } = this.props
@@ -129,10 +172,33 @@ class CreateQuestion extends Component {
                             </FormControl>
                             <br />
                             <FormControl className={classes.formControl} error={hasError} fullWidth>
-                                <InputLabel htmlFor="statement">Question : </InputLabel>
-                                <Input id="statement" name="statement" value={statement} onChange={this.handleChange} />
+                                <TextField
+                                    id="outlined-dense-multiline"
+                                    label="Question:"
+                                    margin="dense"
+                                    // variant="outlined"
+                                    multiline
+                                    rowsMax="5"
+                                    rows="2"
+                                    name="statement"
+                                    value={statement}
+                                    onChange={this.handleChange}
+                                    className={clsx(classes.textField, classes.dense)}
+                                />
                                 {hasError && <FormHelperText>This is required!</FormHelperText>}
                             </FormControl>
+                            <br />
+                            {type === 'MCQ' ? <FormControl style={{ display: 'flex' }} className={classes.formControl}>
+                                <div >
+                                    <InputLabel htmlFor="option">Option : </InputLabel>
+                                    <Input name="option" value={this.state.currentOption} onChange={this.handleChangeOption} />
+                                    <Fab size="small" color="primary" onClick={this.handleOption} disabled={!currentOption}><Add /></Fab>
+                                </div>
+                                <div>
+                                    {options.map((option, i) => <div style={{display:'flex',minWidth:'120px'}}><Typography>{option}</Typography><Icon className={clsx(classes.icon, 'fa fa-minus-circle')} style={{ color: 'red' }} name={option} id={option} onClick={this.handleRemoveOption} /></div>)}
+                                </div>
+                            </FormControl>
+                                : null}
                             <br />
                             <FormControl fullWidth className={classes.formControl} error={hasError} >
                                 <InputLabel htmlFor="category">Question Category : </InputLabel>
@@ -163,11 +229,43 @@ class CreateQuestion extends Component {
                                 {hasError && <FormHelperText>This is required!</FormHelperText>}
                             </FormControl>
                             <br />
-                            <FormControl className={classes.formControl} error={hasError} fullWidth>
-                                <InputLabel htmlFor="answer">Answer : </InputLabel>
-                                <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
-                                {hasError && <FormHelperText>This is required!</FormHelperText>}
-                            </FormControl>
+
+                            {(() => {
+                                if (type === 'MCQ') {
+                                    return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                        <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                        <Select
+                                            name="answer"
+                                            value={answer}
+                                            onChange={this.handleChange}
+                                            input={<Input id="answer" />}
+                                        >
+                                            {options.map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                        </Select>
+                                        {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                    </FormControl>
+                                } else if (type === 'True/False') {
+                                    return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                        <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                        <Select
+                                            name="answer"
+                                            value={answer}
+                                            onChange={this.handleChange}
+                                            input={<Input id="answer" />}
+                                        >
+                                            {['true', 'false'].map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                        </Select>
+                                        {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                    </FormControl>
+                                } else {
+                                    return <FormControl className={classes.formControl} error={hasError} fullWidth>
+                                        <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                        <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
+                                        {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                    </FormControl>
+                                }
+                            })()}
+
                             <br />
                         </DialogContent>
                         <DialogActions>
@@ -193,7 +291,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createQuestion: (client, question, query) => dispatch(createQuestion(client, question, query))
+        createQuestion: (client, question, query) => dispatch(createQuestion(client, question, query)),
+        snackBarMsg: (msg) => dispatch(snackBarMsg(msg))
     }
 }
 

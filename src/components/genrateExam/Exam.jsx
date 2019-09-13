@@ -3,7 +3,7 @@ import React from 'react'
 import { AppBar, Tabs, Tab, Typography, Box, makeStyles, Button, TextField } from '@material-ui/core'
 import CreateExam from './CreateExam';
 import { connect } from 'react-redux'
-import examBC from '../../assets/images/questionMark.jpg'
+import examBC from '../../assets/images/examBG.png'
 import gql from 'graphql-tag';
 import { loadQuestions, loadBook } from '../../store/actions/bankAction';
 import { compose } from 'redux';
@@ -13,6 +13,9 @@ import SearchQuestion from '../questionBank/SearchQuestion'
 import QuestionSummary from '../questionBank/QuestionSummary';
 import { showExamSearch, loadExams } from '../../store/actions/examAction'
 import { useQuery } from '@apollo/react-hooks';
+import ExamsList from './ExamsList';
+import BankSnackBar from '../Alerts/SnackBar';
+import LoadingProgress from '../Alerts/LoadingProgress';
 
 // const USERS = gql`
 // query {
@@ -36,6 +39,7 @@ query
           id
         statement
         type
+        options
         category
         level
         answer
@@ -58,6 +62,7 @@ query
             category
             answer
             type
+            options
             author {
                 username
             }        
@@ -85,10 +90,15 @@ const useStyles = makeStyles(theme => ({
         backgroundRepeat: 'noRepeat',
         backgroundAttachment: 'fixed',
     },
-    shortIndicator: {
-        maxWidth: 60,
-        marginLeft: theme.spacing(6),
-    }
+    box: {
+        background: 'none',
+        fontSize: 'calc(2vw + 16px)',
+        margin: 'auto',
+        textAlign: 'center',
+        paddingTop: 40,
+        marginTop: theme.spacing(10),
+    },
+
 }));
 
 function TabPanel(props) {
@@ -108,15 +118,18 @@ function TabPanel(props) {
 }
 
 const Exam = (props) => {
-    // console.log(props.exams);
+    console.log(props.snackBarMessage);
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [val, setVal] = React.useState(false);
     function handleChange(event, newValue) {
         setValue(newValue);
     }
-    if(!props.bank.loading){
-        (async () => {
+
+    (async () => {
+        if (props.bank.loading) {
+
+        } else {
             await props.client
                 .query({ query: QUESTIONS })
                 .then(({ data }) => {
@@ -125,37 +138,42 @@ const Exam = (props) => {
                     if (!props.bank.loading) {
                         props.loadQuestions(data.questions.page);
                     }
-    
+
                     // questions = [...questions, ...data.questions.page];
-    
+
                 })
                 .catch(err => { throw err });
-    
-        })();
-    }
-    
+        }
+
+    })();
+
+
+
 
     let { loading, error, data } = useQuery(QUESTION_BOOK_BY_NAME, {
         variables: { name: "javascript" },
-        fetchPolicy: 'network-and-cache',
+        fetchPolicy: "cache-first",
     });
-    if (loading || !props.bank.loading) return <div>loading</div>;
+    if (loading) return <LoadingProgress />;
     if (error) console.log(error);
     if (!props.bank.bookLoading) {
         // console.log(data);
         props.loadBook(data.questionBookByName);
     }
-  
-        // let { loading, error, data } = useQuery(EXAMS);
-        // if (loading) return null;
-        // if (error) console.log(error);
-        // if (!props.examLoaded) {
-        //     // console.log(data);
-        //     props.loadExams({ data });
-        // }
+
+
+
+
+    // let { loading, error, data } = useQuery(EXAMS);
+    // if (loading) return null;
+    // if (error) console.log(error);
+    // if (!props.examLoaded) {
+    //     // console.log(data);
+    //     props.loadExams({ data });
+    // }
     (async () => {
         await props.client
-            .query({ query:EXAMS })
+            .query({ query: EXAMS })
             .then(({ data }) => {
                 // console.log(data) 
                 //console.log(props.bank.questions);
@@ -169,15 +187,7 @@ const Exam = (props) => {
             .catch(err => { throw err });
 
     })();
-    
 
-
-
-
-    // function handleAdd() {
-    //     // setVal(newVal = true)
-    //     props.showExamSearch(true)
-    // }
     let result = [];
     if (props.exam) {
         console.log(props)
@@ -192,27 +202,36 @@ const Exam = (props) => {
 
     return (
         <div value={value} className={classes.root}>
-            <AppBar position="sticky" color="secondary" style={{ marginBottom: 5 }}>
-                <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.shortIndicator }} indicatorColor="primary">
+            <AppBar position="sticky" color="secondary">
+                <Tabs value={value} onChange={handleChange} indicatorColor="primary" style={{ marginLeft: '8%' }}>
                     <Tab label="CREATE EXAM" />
                     <Tab label="All EXAMS" />
-                    <Tab label="GROUP MEMBERS" />
+                    {/* <Tab label="GROUP MEMBERS" /> */}
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >
                 <CreateExam />
+                {(() => {
+                    if (props.exam) {
+                        return <div>
+                            <ExamSummary exam={props.exam} btn={true} remove={true} />
+                            <SearchQuestion cas={false} />
+                        </div>
+                    } else {
+                        return <Box className={classes.box}>CREATE A NEW EXAM HERE !</Box>
+                    }
+                })()}
 
-                {props.exam ? <ExamSummary exam={props.exam} /> : null}
-                {/* {props.exam ? <Button variant="contained" color="primary" onClick={handleAdd} style={{ margin: 'auto' }}>Add Question</Button> : null} */}
-                {props.exam ? <SearchQuestion cas={false} /> : null}
-                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} />)}
+                {result.map((question) => <QuestionSummary marks={true} question={question} key={question.id} remove={false} />)}
             </TabPanel>
             <TabPanel value={value} index={1}>
+                <ExamsList exams={props.exams} remove={false} />
 
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <h2>students list here!</h2>
             </TabPanel>
+            {props.snackBarMessage ? <BankSnackBar message={props.snackBarMessage} /> : null}
         </div>
     )
 }
@@ -220,8 +239,10 @@ const Exam = (props) => {
 const mapStateToProps = state => {
    // console.log(state)
     return {
+        snackBarMessage: state.rootReducer.snackBar.snackBarMessage,
         bank: state.rootReducer.bank,
         exam: state.rootReducer.exam.exam,
+        exams: state.rootReducer.exam.exams,
         searchActive: state.rootReducer.exam.isSearchActive,
         examSearch: state.rootReducer.exam.showExamSearch,
         searchResult: state.rootReducer.exam.searchResult,

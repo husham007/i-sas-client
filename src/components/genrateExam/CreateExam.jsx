@@ -106,7 +106,7 @@ class CreateExam extends Component {
         const { open, hasError, type, name, instructions, startTime, duration } = this.state;
         const { classes } = this.props;
         const types = ['Exam', 'Quiz', 'Assignment'];
-        //console.log(this.state)
+        // console.log(this.state)
         // const { levels, types, categories } = this.props.bank;
         // const { auth } = this.props
         // if (!auth.uid) return <Redirect to="/" />
@@ -174,7 +174,8 @@ class CreateExam extends Component {
                                     <TextField
                                         onChange={this.handleChange}
                                         name="startTime"
-                                        value={startTime}
+                                        defaultValue={startTime}
+                                        // value={startTime}
                                         id="datetime-local"
                                         label="start time"
                                         type="datetime-local"

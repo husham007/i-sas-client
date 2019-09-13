@@ -1,4 +1,4 @@
-import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM, LOAD_EXAMS } from '../actions/actionTypes';
+import { CREATE_SOFT_EXAM, SEARCH_QUESTION_FOR_EXAM, SHOW_EXAM_SEARCH, ADD_QUESTION_TO_EXAM, REMOVE_EXAM, REMOVE_EXAM_ERRORMSG, CREATE_EXAM, LOAD_EXAMS, DELETE_EXAM, RESET_SNACKBAR, SNACKBAR_MSG, SELECT_EXAM, RESET_SELECT_EXAM } from '../actions/actionTypes';
 
 export const createSoftExam = exam => {
     return {
@@ -82,10 +82,15 @@ export const createExam = (exam,QUERY,client) => {
                 dispatch({
                     type: CREATE_EXAM,
                     payload: {
-                        data: data
+                        data: data.createExam
                     }
                 })
-
+                dispatch({
+                    type: SNACKBAR_MSG,
+                    payload: {
+                        message: 'This Exam is Created!'
+                    }
+                })
 
 
             })
@@ -119,3 +124,44 @@ export const loadExams = exams =>{
     }
 }
 
+export const deleteExam = index =>{
+    return async (dispatch) => {
+        dispatch({
+            type: RESET_SELECT_EXAM,
+            payload: {
+                
+            }
+        })
+        dispatch({
+                    type: DELETE_EXAM,
+                    payload: {
+                        index
+                    }
+                })
+        dispatch({
+            type: SNACKBAR_MSG,
+            payload: {
+                 message: 'This Exam is Deleted!'
+            }
+        })
+        
+        
+    }
+}
+
+export const selectExam = selected =>{
+    return {
+        type: SELECT_EXAM,
+        payload: {
+            selected
+        }
+    }
+}
+export const resetSelectExam = selected =>{
+    return {
+        type: RESET_SELECT_EXAM,
+        payload: {
+            selected
+        }
+    }
+}

@@ -61,8 +61,10 @@ const Styles = theme => ({
 const SEARCH_QUESTION = gql`
 query searchQuestion($searchInput: SearchInput!) {
     searchQuestion(searchInput: $searchInput) {
+        id
         statement
         type
+        options
         category
         level
         answer

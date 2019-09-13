@@ -41,8 +41,7 @@ const styles = theme => ({
         justifyContent: 'space-between'
     },
     textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+        margin: theme.spacing(0,1),
     },
     dense: {
         marginTop: 19,
@@ -99,10 +98,11 @@ class EditExam extends Component {
         const { classes } = this.props;
         const { name, type, startTime, duration, instructions } = this.state
         const types = ['Exam', 'Quiz', 'Assignment'];
+        console.log(startTime)
         // const { levels, types, categories } = this.props.bank;
         return (
             <form className={classes.root}>
-                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" fullWidth>
+                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" style={{paddingLeft: 20,width:110 }}>
                     <div className={classes.edit}>Edit</div>
                     <Edit className={classes.editBtn} />
                 </Button>
@@ -164,7 +164,8 @@ class EditExam extends Component {
                                 <TextField
                                     onChange={this.handleChange}
                                     name="startTime"
-                                    value={startTime}
+                                    defaultValue={startTime}
+                                    // value={startTime}
                                     id="datetime-local"
                                     label="start time"
                                     type="datetime-local"
@@ -207,7 +208,7 @@ class EditExam extends Component {
 
 const mapStateToProps = state => {
     return {
-        exam: state.rootReducer.exam.exam,
+        // exam: state.rootReducer.exam,
     }
 }
 

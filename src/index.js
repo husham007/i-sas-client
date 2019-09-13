@@ -155,40 +155,12 @@ const theme = createMuiTheme({
     }
 });
 
-/*
-const store = createStore(rootReducer, compose(
-    applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
-    reduxFirestore(fbConfig),
-    reactReduxFirebase(fbConfig, { useFirestoreForProfile: true, userProfile: 'users', attachAuthIsReady: true }),
-)
-);
-*/
-/*
-const store = createStore(rootReducer, applyMiddleware(thunk));
-
-/*
-store.firebaseAuthIsReady.then(() => {
-ReactDOM.render(<Provider store={store}><MuiThemeProvider theme={theme}><App /></MuiThemeProvider></Provider>, document.getElementById('root'));
-})
-
-*/
-
-
-
-
 ReactDOM.render(
 <ApolloProvider  client={client}>
 <Provider store = {store}>
 <MuiThemeProvider theme={theme}>
-
-     
       <App />
-
 </MuiThemeProvider>
 </Provider>
 </ApolloProvider> , document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 

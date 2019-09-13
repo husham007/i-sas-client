@@ -21,5 +21,12 @@ export const REMOVE_EXAM = 'REMOVE_EXAM';
 export const REMOVE_EXAM_ERRORMSG = 'REMOVE_EXAM_ERRORMSG';
 export const CREATE_EXAM = 'CREATE_EXAM';
 export const LOAD_EXAMS = 'LOAD_EXAMS';
+export const DELETE_EXAM = 'DELETE_EXAM';
+export const SELECT_EXAM = 'SELECT_EXAM';
+export const RESET_SELECT_EXAM = 'RESET_SELECT_EXAM';
 
-export const BANK_SNACKBAR = 'BANK_SNACKBAR';
+export const LOAD_STATISTICS = 'LOAD_STATISTICS';
+
+
+export const RESET_SNACKBAR = 'RESET_SNACKBAR';
+export const SNACKBAR_MSG = 'SNACKBAR_MSG';

@@ -7,6 +7,8 @@ import Slide from '@material-ui/core/Slide';
 import { withApollo } from 'react-apollo';
 import { compose } from 'redux';
 import gql from 'graphql-tag';
+import { deleteExam } from '../../store/actions/examAction';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -27,9 +29,9 @@ const styles = theme => ({
     }
 });
 
-const DELETE_QUESTION = gql`
-mutation deleteQuestion($id: ID!){
-    deleteQuestion (id: $id) 
+const DELETE_EXAM = gql`
+mutation deleteExam($id: ID!){
+    deleteExam (id: $id) 
 }    
 `;
 
@@ -44,17 +46,23 @@ class DeleteExam extends Component {
         })
     }
     handleDelete = () => {
-        // this.props.client
-        //     .mutate({ mutation: DELETE_QUESTION, variables: { id: this.props.question.id } })
-        //     .then((result) => {
+        console.log(this.props.exam);
+        this.props.client
+            .mutate({ mutation: DELETE_EXAM, variables: { id: this.props.exam.id } })
+            .then((result) => {
+                console.log(result)
+                if (result.data.deleteExam) {
+                    this.props.deleteExam(this.props.exam.id);
+                    this.handleToggle()
+                } else {
 
-        //         this.props.deleteQuestion(this.props.question.id);
-        //         this.handleToggle()
+                }
 
-        //     })
-        //     .catch(err => { console.log(err); this.props.signInErr(JSON.parse(JSON.stringify(err))) });
-        // // this.props.deleteQuestion(this.props.question.id)
-        // // this.handleToggle()
+
+            })
+            .catch(err => { console.log(err); this.props.signInErr(JSON.parse(JSON.stringify(err))) });
+        // this.props.deleteExam(this.props.exam.id)
+        this.handleToggle()
 
     }
 
@@ -63,11 +71,10 @@ class DeleteExam extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <Button size="small" variant="outlined" onClick={this.handleToggle} style={{ color: '#d32f2f', paddingLeft:20}} >
+                <Button size="small" variant="outlined" onClick={this.handleToggle} style={{ color: '#d32f2f', paddingLeft: 20, width: 110 }} >
                     <div className={classes.delete}>Delete</div>
                     <Delete className={classes.deleteBtn} />
                 </Button>
-                {/* {!this.state.del ? <DeleteSnackbar open={this.state.open} Toggle={this.handleToggle} /> : null} */}
                 <Dialog
                     open={this.state.open}
                     TransitionComponent={Transition}
@@ -96,10 +103,9 @@ class DeleteExam extends Component {
     }
 }
 
-//export default connect(null, { deleteQuestion })(DeleteAlert);
 export default compose(
     withStyles(styles),
-    // connect(null, { deleteQuestion }),
+    connect(null, { deleteExam }),
     withApollo,
 )(DeleteExam)
 

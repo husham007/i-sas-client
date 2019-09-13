@@ -30,7 +30,7 @@ class App extends Component {
             <Route path="/signin" component={LogIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/aboutUS" component={AboutUS} />
-            <Route path="/contacts" component={Contacts} />
+            {/* <Route path="/contacts" component={Contacts} /> */}
             <Route path="/questionBank" exact component={QuestionBank} />
             <Route path="/questionBank/question/:id" component={QuestionDetails} />
             <Route path="/questionBank/create" component={CreateQuestion} />

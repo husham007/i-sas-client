@@ -100,7 +100,7 @@ class AddToExam extends Component {
                 >
                     <DialogTitle id="alert-dialog-slide-title">{"Points: "}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description">
+                        <DialogContentText id="alert-dialog-slide-description" style={{ color: '#c62828' }}>
                             {this.props.errorMessage.get(question.id)}
                         </DialogContentText>
                         <TextField

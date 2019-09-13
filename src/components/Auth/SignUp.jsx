@@ -149,7 +149,7 @@ class SignUp extends Component {
                     </Link>
                     <DialogActions className={classes.actions}>
                         <Button variant="contained" color="secondary" onClick={this.handleSubmit} fullWidth>
-                            <NavLink to="/logedin" style={{ color: 'white', textDecoration: 'none' }}>GET REGISTERED</NavLink>
+                            <NavLink to="/" style={{ color: 'white', textDecoration: 'none' }}>GET REGISTERED</NavLink>
                         </Button>
                         <Typography color="error" variant="subtitle1">
                             {authError ? <p> {authError} </p> : null}

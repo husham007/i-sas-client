@@ -1,6 +1,6 @@
 import React from 'react'
 // import QuestionList from '../questionBank/QuestionList'
-import { AppBar, Tabs, Tab, Typography, Box, makeStyles } from '@material-ui/core'
+import { AppBar, Tabs, Tab, Typography, Box, makeStyles, Paper } from '@material-ui/core'
 import CreateQuestion from '../questionBank/CreateQuestion';
 import { connect } from 'react-redux'
 import qM from '../../assets/images/qM.jpg'
@@ -76,7 +76,15 @@ const useStyles = makeStyles(theme => ({
         backgroundRepeat: 'noRepeat',
         backgroundAttachment: 'fixed',
     },
-
+    questionPaper: {
+        background: 'none',
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: 10,
+        },
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 30,
+        }
+    }
 }));
 
 function TabPanel(props) {
@@ -100,7 +108,7 @@ function TabPanel(props) {
 
 const QuestionBank = (props) => {
     //console.log(props);
-const statistics = useQuery(GET_STATISTICS, {
+    const statistics = useQuery(GET_STATISTICS, {
         variables: { book: "javascript" },
         fetchPolicy: "cache-first",
     });
@@ -137,22 +145,22 @@ const statistics = useQuery(GET_STATISTICS, {
 
     })();
 
-    
 
-    if(statistics.loading){
-       return <LoadingProgress />
+
+    if (statistics.loading) {
+        return <LoadingProgress />
     };
     if (!props.bank.statisticsLoading) {
         // console.log(statistics);
         props.loadStatistics(statistics.data.getStatistics);
-    }else{
+    } else {
 
     }
 
 
 
 
-    
+
 
     if (loading) return <LoadingProgress />;
     if (error) console.log(error);
@@ -172,7 +180,10 @@ const statistics = useQuery(GET_STATISTICS, {
             </AppBar>
             <TabPanel value={value} index={0} >
                 <CreateQuestion />
-                {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
+                <Paper className={classes.questionPaper}>
+                    {props.bank && props.bank.questions.map((question) => <QuestionSummary question={question} key={question.id} remove={false} />)}
+                </Paper>
+
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SearchQuestion cas={true} />

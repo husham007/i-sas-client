@@ -26,12 +26,17 @@ const styles = theme => ({
     },
     addIcon: {
         position: "fixed",
+        [theme.breakpoints.down('xs')]: {
+            position: 'relative',
+        }
     },
     title: {
         display: 'flex',
         justifyContent: 'space-between'
     },
-
+icon:{
+    marginLeft:10
+}
 });
 
 const CREATE_QUESTION = gql`
@@ -70,6 +75,16 @@ class CreateQuestion extends Component {
         this.setState({
             [name]: value
         })
+        if (name === 'type') {
+            this.setState({
+                options: [],
+                currentOption: '',
+                statement: '',
+                category: '',
+                level: '',
+                answer: '',
+            })
+        }
     }
     handleChangeOption = e => {
         // console.log(this.state)
@@ -156,18 +171,6 @@ class CreateQuestion extends Component {
                                 {hasError && <FormHelperText>This is required!</FormHelperText>}
                             </FormControl>
                             <br />
-                            {type === 'MCQ' ? <FormControl style={{ display: 'flex' }} className={classes.formControl}>
-                                <div >
-                                    <InputLabel htmlFor="option">Option : </InputLabel>
-                                    <Input name="option" value={this.state.currentOption} onChange={this.handleChangeOption} />
-                                    <Fab size="small" color="primary" onClick={this.handleOption} disabled={!currentOption}><Add /></Fab>
-                                </div>
-                                <div>
-                                    {options.map((option, i) => <div><Typography>{option}</Typography><Icon className={clsx(classes.icon, 'fa fa-minus-circle')} style={{ color: 'red' }} name={option} id={option} onClick={this.handleRemoveOption} /></div>)}
-                                </div>
-                            </FormControl>
-                                : null}
-                            <br />
                             <FormControl className={classes.formControl} error={hasError} fullWidth>
                                 <TextField
                                     id="outlined-dense-multiline"
@@ -184,6 +187,18 @@ class CreateQuestion extends Component {
                                 />
                                 {hasError && <FormHelperText>This is required!</FormHelperText>}
                             </FormControl>
+                            <br />
+                            {type === 'MCQ' ? <FormControl style={{ display: 'flex' }} className={classes.formControl}>
+                                <div >
+                                    <InputLabel htmlFor="option">Option : </InputLabel>
+                                    <Input name="option" value={this.state.currentOption} onChange={this.handleChangeOption} />
+                                    <Fab size="small" color="primary" onClick={this.handleOption} disabled={!currentOption}><Add /></Fab>
+                                </div>
+                                <div>
+                                    {options.map((option, i) => <div style={{display:'flex',minWidth:'120px'}}><Typography>{option}</Typography><Icon className={clsx(classes.icon, 'fa fa-minus-circle')} style={{ color: 'red' }} name={option} id={option} onClick={this.handleRemoveOption} /></div>)}
+                                </div>
+                            </FormControl>
+                                : null}
                             <br />
                             <FormControl fullWidth className={classes.formControl} error={hasError} >
                                 <InputLabel htmlFor="category">Question Category : </InputLabel>
@@ -214,11 +229,43 @@ class CreateQuestion extends Component {
                                 {hasError && <FormHelperText>This is required!</FormHelperText>}
                             </FormControl>
                             <br />
-                            <FormControl className={classes.formControl} error={hasError} fullWidth>
-                                <InputLabel htmlFor="answer">Answer : </InputLabel>
-                                <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
-                                {hasError && <FormHelperText>This is required!</FormHelperText>}
-                            </FormControl>
+
+                            {(() => {
+                                if (type === 'MCQ') {
+                                    return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                        <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                        <Select
+                                            name="answer"
+                                            value={answer}
+                                            onChange={this.handleChange}
+                                            input={<Input id="answer" />}
+                                        >
+                                            {options.map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                        </Select>
+                                        {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                    </FormControl>
+                                } else if (type === 'True/False') {
+                                    return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                        <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                        <Select
+                                            name="answer"
+                                            value={answer}
+                                            onChange={this.handleChange}
+                                            input={<Input id="answer" />}
+                                        >
+                                            {['true', 'false'].map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                        </Select>
+                                        {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                    </FormControl>
+                                } else {
+                                    return <FormControl className={classes.formControl} error={hasError} fullWidth>
+                                        <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                        <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
+                                        {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                    </FormControl>
+                                }
+                            })()}
+
                             <br />
                         </DialogContent>
                         <DialogActions>

@@ -14,8 +14,8 @@ import { withApollo } from 'react-apollo';
 
 const Styles = theme => ({
     root: {
-        width: '70%',
-        backgroundColor: '#0c0f0f',
+        width: '80%',
+        backgroundColor: 'none',
         margin: 'auto',
         marginTop: theme.spacing(10),
         display: 'flex',

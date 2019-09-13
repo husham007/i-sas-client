@@ -32,7 +32,7 @@ const examReducer = (state = initState, { type, payload }) => {
             newState.errorMessage.set(payload.id, payload.msg)
             return { ...newState }
         case CREATE_EXAM:
-            return { ...state, exam: null, exams: [], examLoaded:false }
+            return { ...state, errorMessage: new Map(), exam: null, exams: [], examQuestions: [], examLoaded:false, selected: null }
         case LOAD_EXAMS:
             return { ...state, examLoaded: true, exams: [...payload.exams.exams] }
         case DELETE_EXAM:

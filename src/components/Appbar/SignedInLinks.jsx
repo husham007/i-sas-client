@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
         width: drawerWidth,
-        backgroundColor: '#001',
+        backgroundColor: '#000',
     },
     menuButton: {
         color: 'white',
@@ -114,12 +114,12 @@ const SignedInLinks = (props) => {
                     <Button onClick={handleToggle} component={Link} to="/questionBank" className={classes.menuBtns}><Archive className={classes.menuIcons} />question bank</Button>
                 </ListItem>
                 <ListItem>
-                    <Button onClick={handleToggle} component={Link} to="/exams" className={classes.menuBtns}><PersonPin className={classes.menuIcons} />exam</Button>
+                    <Button onClick={handleToggle} component={Link} to="/exam" className={classes.menuBtns}><PersonPin className={classes.menuIcons} />exam</Button>
                 </ListItem>
                 <ListItem>
                     <Button onClick={handleToggle} component={Link} to="/aboutUs" className={classes.menuBtns}><PersonPin className={classes.menuIcons} />about us</Button>
                 </ListItem>
-                
+
                 {/* <ListItem>
                     <Button onClick={handleToggle} component={Link} to="/contacts" className={classes.menuBtns}><Contacts className={classes.menuIcons} />contacts</Button>
                 </ListItem> */}

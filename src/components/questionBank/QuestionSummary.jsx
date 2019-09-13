@@ -26,14 +26,11 @@ const styles = theme => ({
     },
     head: {
         width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
         background: 'none'
     },
     questionItem: {
-        fontSize: 'calc(0.2rem + 12px)',
+        fontSize: 'calc(0.2vw + 14px)',
         textAlign: 'left',
-        // borderCollapse:'collapse'
     },
     textField: {
         marginLeft: theme.spacing(1),
@@ -73,12 +70,12 @@ class QuestionSummary extends Component {
         const { question, classes } = this.props;
         return (
             <Card className={classes.card}>
-                <ExpansionPanel style={{ width: '100%', background: 'none' }}>
+                <ExpansionPanel className={classes.head}>
                     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
                         <Table>
                             <TableBody>
                                 <TableRow>
-                                    <TableCell>
+                                    <TableCell style={{ width: '20%' }}>
                                         <Typography variant="overline" color="textSecondary" gutterBottom>
                                             question:
                                         </Typography>
@@ -93,12 +90,11 @@ class QuestionSummary extends Component {
                         </Table>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                        <CardContent style={{ width: '100%' }}>
-                            <Table>
+                        <CardContent style={{ minWidth: '100%' }}>
+                            <Table style={{ minWidth: '100%' }}>
                                 <TableBody>
-
                                     <TableRow>
-                                        <TableCell>
+                                        <TableCell style={{ width: '20%' }}>
                                             <Typography variant="overline" color="textSecondary" gutterBottom>
                                                 Type :
                                             </Typography>
@@ -117,7 +113,7 @@ class QuestionSummary extends Component {
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">
-                                                {question.options.map((option, index) => <span key={index}>{option}</span>)}
+                                                {question.options.map((option, index) => <div key={index}>{index + 1}  : {option}</div>)}
                                             </Typography>
                                         </TableCell>
                                     </TableRow> : null}

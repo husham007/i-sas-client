@@ -193,11 +193,41 @@ class EditQuestion extends Component {
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
-                        <FormControl className={classes.formControl} error={hasError} fullWidth>
-                            <InputLabel htmlFor="answer">Answer : </InputLabel>
-                            <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
-                            {hasError && <FormHelperText>This is required!</FormHelperText>}
-                        </FormControl>
+                        {(() => {
+                            if (type === 'MCQ') {
+                                return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                    <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                    <Select
+                                        name="answer"
+                                        value={answer}
+                                        onChange={this.handleChange}
+                                        input={<Input id="answer" />}
+                                    >
+                                        {options.map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                    </Select>
+                                    {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                </FormControl>
+                            } else if (type === 'True/False') {
+                                return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                    <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                    <Select
+                                        name="answer"
+                                        value={answer}
+                                        onChange={this.handleChange}
+                                        input={<Input id="answer" />}
+                                    >
+                                        {['true', 'false'].map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                    </Select>
+                                    {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                </FormControl>
+                            } else {
+                                return <FormControl className={classes.formControl} error={hasError} fullWidth>
+                                    <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                    <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
+                                    {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                </FormControl>
+                            }
+                        })()}
                         <br />
                     </DialogContent>
                     <DialogActions>

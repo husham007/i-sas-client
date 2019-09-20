@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-// import uuidv4 from 'uuid/v4'
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Radio, MenuItem, FormHelperText } from '@material-ui/core'
+import clsx from 'clsx';
+import { Icon, Typography, Fab, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, InputLabel, Input, Select, Radio, MenuItem, FormHelperText } from '@material-ui/core'
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { editQuestion } from '../../store/actions/bankAction'
-import { Edit } from '@material-ui/icons'
+import { Edit, Close, Add } from '@material-ui/icons'
 // import { Redirect } from 'react-router-dom'
 import Slide from '@material-ui/core/Slide';
+import { withApollo } from 'react-apollo';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -30,11 +32,15 @@ const styles = theme => ({
             marginLeft: 0,
         }
     },
-    edit:{
+    edit: {
         [theme.breakpoints.down('xs')]: {
             display: 'none'
         }
-    }
+    },
+    title: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
 });
 
 class EditQuestion extends Component {
@@ -45,11 +51,14 @@ class EditQuestion extends Component {
             selected: null,
             hasError: false,
             id: this.props.question.id,
-            question: this.props.question.question,
-            questionType: this.props.question.questionType,
-            questionCategory: this.props.question.questionCategory,
-            questionLevel: this.props.question.questionLevel,
-            answer: this.props.question.answer
+            statement: this.props.question.statement,
+            type: this.props.question.type,
+            category: this.props.question.category,
+            level: this.props.question.level,
+            answer: this.props.question.answer,
+            book: 'javascript',
+            options: this.props.question.options,
+            currentOption: ''
         }
     }
     handleToggle = () => {
@@ -64,6 +73,29 @@ class EditQuestion extends Component {
             [name]: value
         })
     }
+    handleChangeOption = e => {
+        // console.log(this.state)
+        const { value } = e.target
+        this.setState({
+            currentOption: value,
+
+        })
+    }
+    handleOption = (e) => {
+        e.preventDefault()
+        this.setState({
+            options: [...this.state.options, this.state.currentOption],
+            currentOption: ''
+        })
+    }
+    handleRemoveOption = e => {
+        e.preventDefault()
+        const { name, id } = e.target;
+        this.setState({
+            options: this.state.options.filter(option => option !== id)
+        })
+
+    }
     handleRadios = name => ({ target: { value } }) => {
         this.setState({
             [name]: value
@@ -71,14 +103,11 @@ class EditQuestion extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
-        console.log(this.props.question.id)
-        console.log(this.state)
-        const { id, question, questionType, questionCategory, questionLevel, answer } = this.state
-        const q = { id, question, questionType, questionCategory, questionLevel, answer }
-        this.props.editQuestion(q);
+        const { statement, type, category, level, answer, options } = this.state
+        this.props.editQuestion(this.props.client, this.state);
 
         this.setState({ hasError: false });
-        if (!question || !questionType || !questionCategory || !questionLevel || !answer) {
+        if (!statement || !type || !category || !level || !answer || !options) {
             this.setState({ hasError: true });
         } else {
             this.handleToggle()
@@ -87,96 +116,122 @@ class EditQuestion extends Component {
     render() {
         const { open, hasError } = this.state;
         const { classes } = this.props;
-        const { question, questionType, questionCategory, questionLevel, answer } = this.state;
-        // const { auth } = this.props
-        // if (!auth.uid) return <Redirect to="/" />
+        const { statement, type, category, level, answer, currentOption, options } = this.state;
+        const { levels, types, categories } = this.props.bank;
         return (
             <form className={classes.root}>
-                <Button size="small" onClick={this.handleToggle} variant="outlined" color="primary" >
+                <Button size="small" onClick={this.handleToggle} color="primary" >
                     <div className={classes.edit}>Edit</div>
                     <Edit className={classes.editBtn} />
                 </Button>
-                <Dialog open={open} onClose={this.handleToggle} TransitionComponent={Transition}
-                    keepMounted fullWidth>
-                    <DialogTitle id="form-dialog-title" style={{ paddingBottom: 0 }} >Edit Question</DialogTitle>
+                <Dialog open={open} onClose={this.handleToggle} TransitionComponent={Transition} keepMounted fullWidth>
+                    <div className={classes.title}>
+                        <DialogTitle id="form-dialog-title" style={{ paddingBottom: 0 }} >Edit Question</DialogTitle>
+                        <div onClick={this.handleToggle} style={{ padding: '15px', cursor: 'pointer' }}><Close /></div>
+                    </div>
                     <DialogContent>
                         <DialogContentText>
                             To edit this question.
                         </DialogContentText>
                         <FormControl fullWidth className={classes.formControl} error={hasError} >
-                            <InputLabel htmlFor="questionType">Question Type : </InputLabel>
+                            <InputLabel htmlFor="type">Question Type : </InputLabel>
                             <Select
-                                name="questionType"
-                                value={questionType}
+                                name="type"
+                                value={type}
                                 onChange={this.handleChange}
-                                input={<Input id="questionType" />}
+                                input={<Input id="type" />}
                             >
-                                <MenuItem value="singleChoice">Single Choice</MenuItem>
-                                <MenuItem value="multipleChoice">Multiple Choice</MenuItem>
-                                <MenuItem value="matching">Matching</MenuItem>
-                                <MenuItem value="fillBlank">Fill the Blank</MenuItem>
+                                {types.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                             </Select>
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
+                        {type === 'MCQ' ? <FormControl style={{ display: 'flex' }} className={classes.formControl}>
+                            <div >
+                                <InputLabel htmlFor="option">Option : </InputLabel>
+                                <Input name="option" value={this.state.currentOption} onChange={this.handleChangeOption} />
+                                <Fab size="small" color="primary" onClick={this.handleOption} disabled={!currentOption}><Add /></Fab>
+                            </div>
+                            <div>
+                                {options.map((option, i) => <div key={i}><Typography>{option}</Typography><Icon className={clsx(classes.icon, 'fa fa-minus-circle')} style={{ color: 'red' }} name={option} id={option} onClick={this.handleRemoveOption} /></div>)}
+                            </div>
+                        </FormControl>
+                            : null}
+                        <br />
                         <FormControl className={classes.formControl} error={hasError} fullWidth>
-                            <InputLabel htmlFor="question">Question : </InputLabel>
-                            <Input id="question" name="question" value={question} onChange={this.handleChange} />
+                            <InputLabel htmlFor="statement">Question : </InputLabel>
+                            <Input id="statement" name="statement" value={statement} onChange={this.handleChange} />
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
                         <FormControl fullWidth className={classes.formControl} error={hasError} >
-                            <InputLabel htmlFor="questionCategory">Question Category : </InputLabel>
+                            <InputLabel htmlFor="category">Question Category : </InputLabel>
                             <Select
-                                name="questionCategory"
-                                value={questionCategory}
+                                name="category"
+                                value={category}
                                 onChange={this.handleChange}
-                                input={<Input id="questionCategory" />}
+                                input={<Input id="category" />}
                             >
-                                <MenuItem value="midterm">midTerm</MenuItem>
-                                <MenuItem value="weeklyTest">weekly test</MenuItem>
-                                <MenuItem value="finalExam">Final Exam</MenuItem>
+                                {categories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)}
                             </Select>
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
                         <FormControl component="fieldset" className={classes.formControl} error={hasError} fullWidth>
                             <FormLabel>Question Level : </FormLabel>
-                            <RadioGroup name="questionLevel" value={questionLevel} onChange={this.handleRadios('questionLevel')} style={{ display: 'inline-block' }}>
-                                <FormControlLabel
-                                    value="easy"
-                                    id="easy"
-                                    name="easy"
+                            <RadioGroup name="level" value={level} onChange={this.handleRadios('level')} style={{ display: 'inline-block' }}>
+                                {levels.map(level => <FormControlLabel
+                                    value={level}
+                                    key={level}
+                                    id={level}
+                                    name={level}
                                     control={<Radio color="primary" />}
-                                    label="Easy"
+                                    label={level}
                                 />
-                                <FormControlLabel
-                                    value="medium"
-                                    id="medium"
-                                    name="medium"
-                                    control={<Radio color="primary" />}
-                                    label="Medium"
-                                />
-                                <FormControlLabel
-                                    value="hard"
-                                    id="hard"
-                                    name="hard"
-                                    control={<Radio color="primary" />}
-                                    label="Hard"
-                                />
+                                )}
                             </RadioGroup>
                             {hasError && <FormHelperText>This is required!</FormHelperText>}
                         </FormControl>
                         <br />
-                        <FormControl className={classes.formControl} error={hasError} fullWidth>
-                            <InputLabel htmlFor="answer">Answer : </InputLabel>
-                            <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
-                            {hasError && <FormHelperText>This is required!</FormHelperText>}
-                        </FormControl>
+                        {(() => {
+                            if (type === 'MCQ') {
+                                return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                    <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                    <Select
+                                        name="answer"
+                                        value={answer}
+                                        onChange={this.handleChange}
+                                        input={<Input id="answer" />}
+                                    >
+                                        {options.map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                    </Select>
+                                    {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                </FormControl>
+                            } else if (type === 'True/False') {
+                                return <FormControl fullWidth className={classes.formControl} error={hasError} >
+                                    <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                    <Select
+                                        name="answer"
+                                        value={answer}
+                                        onChange={this.handleChange}
+                                        input={<Input id="answer" />}
+                                    >
+                                        {['true', 'false'].map(option => <MenuItem value={option} key={option}>{option}</MenuItem>)}
+                                    </Select>
+                                    {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                </FormControl>
+                            } else {
+                                return <FormControl className={classes.formControl} error={hasError} fullWidth>
+                                    <InputLabel htmlFor="answer">Answer : </InputLabel>
+                                    <Input id="answer" name="answer" value={answer} onChange={this.handleChange} />
+                                    {hasError && <FormHelperText>This is required!</FormHelperText>}
+                                </FormControl>
+                            }
+                        })()}
                         <br />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!question || !questionType || !questionCategory || !questionLevel || !answer}>
+                        <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!statement || !type || !category || !level || !answer}>
                             EDIT
                         </Button>
                         <Button variant="contained" onClick={this.handleToggle} color="secondary">
@@ -189,23 +244,20 @@ class EditQuestion extends Component {
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         auth: state.firebase.auth
-//     }
-// }
-
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
     return {
-        editQuestion: (question) => dispatch(editQuestion(question))
+        bank: state.rootReducer.bank
     }
 }
 
-// export default compose(
-//     withStyles(styles),
-//     connect(mapStateToProps,mapDispatchToProps)
-// )(CreateQuestion);
+const mapDispatchToProps = dispatch => {
+    return {
+        editQuestion: (client, question) => dispatch(editQuestion(client, question))
+    }
+}
+
 export default compose(
     withStyles(styles),
-    connect(null, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withApollo
 )(EditQuestion)

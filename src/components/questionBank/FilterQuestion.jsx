@@ -3,15 +3,15 @@ import { FormControl, InputLabel, Input, MenuItem, Select } from '@material-ui/c
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { searchANYQuestion } from '../../store/actions/bankAction'
+import { setSearchParameters } from '../../store/actions/bankAction'
 
 
 const styles = theme => ({
     root: {
         display: "flex",
         justifyContent: 'space-between',
-        maxWidth:'60%',
-        margin:'auto',
+        maxWidth: '60%',
+        margin: 'auto',
         [theme.breakpoints.down('sm')]: {
             maxWidth: '80%',
         },
@@ -23,8 +23,8 @@ const styles = theme => ({
     formControl: {
         flex: 1,
         maxWidth: '25%',
-        [theme.breakpoints.down('sm')]:{
-            maxWidth:'30%'
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '30%'
         }
     },
 
@@ -42,10 +42,10 @@ class FilterQuestion extends Component {
             // questionLevel: this.props.question.questionLevel,
             // answer: this.props.question.answer
 
-            questionType: '',
-            questionCategory: '',
-            questionLevel: '',
-            search: this.props.search
+            type: null,
+            category: null,
+            level: null,
+            // search: this.props.search
         }
     }
     handleChange = e => {
@@ -54,59 +54,50 @@ class FilterQuestion extends Component {
         this.setState({
             [name]: value
         })
-        this.props.searchANYQuestion(this.state.search)
+        this.props.setSearchParameters(name,value)
     }
     handleClick = () => {
 
     }
     render() {
         const { classes } = this.props,
-            { questionType, questionCategory, questionLevel } = this.state;
+            { type, category, level } = this.state,
+            { levels, types, categories } = this.props.bank;
         console.log(this.state)
         console.log(this.props)
         return (
             <div className={classes.root}>
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="questionType">by Type : </InputLabel>
+                    <InputLabel htmlFor="type">Question Type : </InputLabel>
                     <Select
-                        name="questionType"
-                        value={questionType}
+                        name="type"
+                        value={type}
                         onChange={this.handleChange}
-                        input={<Input id="questionType" />}
+                        input={<Input id="type" />}
                     >
-                        <MenuItem value=""><em>None</em></MenuItem>
-                        <MenuItem value="singleChoice">Single Choice</MenuItem>
-                        <MenuItem value="multipleChoice">Multiple Choice</MenuItem>
-                        <MenuItem value="matching">Matching</MenuItem>
-                        <MenuItem value="fillBlank">Fill the Blank</MenuItem>
+                        <MenuItem value={null}><em>None</em></MenuItem> && {types.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="questionType">by Level : </InputLabel>
                     <Select
-                        name="questionLevel"
-                        value={questionLevel}
+                        name="level"
+                        value={level}
                         onChange={this.handleChange}
-                        input={<Input id="questionLevel" />}
+                        input={<Input id="level" />}
                     >
-                        <MenuItem value=""><em>None</em></MenuItem>
-                        <MenuItem value="Easy">Easy</MenuItem>
-                        <MenuItem value="Medium">Medium</MenuItem>
-                        <MenuItem value="Hard">Hard</MenuItem>
+                        <MenuItem value={null}><em>None</em></MenuItem> && {levels.map(level => <MenuItem value={level} key={level}>{level}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="questionCategory">by Category : </InputLabel>
+                    <InputLabel htmlFor="category">Question Category : </InputLabel>
                     <Select
-                        name="questionCategory"
-                        value={questionCategory}
+                        name="category"
+                        value={category}
                         onChange={this.handleChange}
-                        input={<Input id="questionCategory" />}
+                        input={<Input id="category" />}
                     >
-                        <MenuItem value=""><em>None</em></MenuItem>
-                        <MenuItem value="midterm">midTerm</MenuItem>
-                        <MenuItem value="weeklyTest">weekly test</MenuItem>
-                        <MenuItem value="finalExam">Final Exam</MenuItem>
+                        <MenuItem value={null}><em>None</em></MenuItem> && {categories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)}
                     </Select>
                 </FormControl>
             </div>
@@ -116,14 +107,15 @@ class FilterQuestion extends Component {
 
 const mapStateToProps = state => {
     return {
-        text: state.rootReducer.bank.questions
+        bank: state.rootReducer.bank
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        searchANYQuestion: (text) => dispatch(searchANYQuestion(text))
+        setSearchParameters: (name, value) => dispatch(setSearchParameters(name,value))
     }
 }
+
 export default compose(
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)

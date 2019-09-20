@@ -28,15 +28,15 @@ const authReducer = (state = initState, action) => {
             };
 
         case 'GET_TOKEN':
-            console.log('TOKEN, Payload', action.payload);
+            // console.log('TOKEN, Payload', action.payload);
             return {
                 ...state,
                 authError: null,
                 token: action.payload.token ? action.payload.token : null,
                 username: action.payload.token ? action.payload.decodedToken.username : null,
-                email: action.payload.token? action.payload.decodedToken.email : null,
-                id: action.payload.token ? action.payload.decodedToken.id: null,
-                role: action.payload.token ? action.payload.decodedToken.role: null,
+                email: action.payload.token ? action.payload.decodedToken.email : null,
+                id: action.payload.token ? action.payload.decodedToken.id : null,
+                role: action.payload.token ? action.payload.decodedToken.role : null,
             };
 
         case 'AUTH_ERR':
@@ -49,17 +49,18 @@ const authReducer = (state = initState, action) => {
             console.log('login successed');
             return {
                 ...state,
-                authError: null 
+                authError: null
             };
         case 'SIGNOUT_SUCCESS':
             console.log('sign out success');
-            return { ...state,
-                 token: null,
-                 username: null,
-                 email: null,
-                 role: null,
-                 id: null
-                 };
+            return {
+                ...state,
+                token: null,
+                username: null,
+                email: null,
+                role: null,
+                id: null
+            };
         case 'SIGNUP_SUCCESS':
             console.log('sign up success');
             return {

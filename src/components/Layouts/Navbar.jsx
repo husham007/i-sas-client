@@ -13,8 +13,9 @@ const useStyles = makeStyles(theme => ({
     root: {
         // display: 'flex',
         paddingTop: 15,
-        backgroundColor: '#001',
-        width: 'auto'
+        backgroundColor: '#000',
+        maxWidth: '85%',
+        margin:'auto'
     }
 }));
 

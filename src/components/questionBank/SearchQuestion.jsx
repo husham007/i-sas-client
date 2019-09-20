@@ -3,13 +3,17 @@ import { InputBase, FormControlLabel, Switch } from '@material-ui/core'
 import { fade, withStyles } from "@material-ui/core/styles";
 import SearchIcon from '@material-ui/icons/Search';
 import FilterQuestion from './FilterQuestion';
-
-
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { searchQuestion } from '../../store/actions/bankAction'
+import {searchExamQuestion} from '../../store/actions/examAction';
+import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
 
 const Styles = theme => ({
     root: {
         padding: theme.spacing(4),
-        height:'150px'
+        height: '150px'
     },
     search: {
         display: 'flex',
@@ -54,10 +58,26 @@ const Styles = theme => ({
 
 })
 
+const SEARCH_QUESTION = gql`
+query searchQuestion($searchInput: SearchInput!) {
+    searchQuestion(searchInput: $searchInput) {
+        id
+        statement
+        type
+        options
+        category
+        level
+        answer
+        author{
+            username
+        }
+    }
+  }`;
+
 class SearchQuestion extends Component {
     state = {
         filter: false,
-        search: '',
+        statement: null,
 
     }
     handleChange = name => e => {
@@ -66,23 +86,34 @@ class SearchQuestion extends Component {
         })
     }
     handleOnChange = e => {
-        const { value } = e.target;
+        const { name, value } = e.target;
         this.setState({
-            search: value
+            [name]: value
         })
+        // this.props.searchANYQuestion(this.state.search)
+    }
+    handleSubmit = (e) => {
+        e.preventDefault();
+        let search = {};
+        search.statement = this.state.statement
+        search.type = this.props.bank.type
+        search.level = this.props.bank.level
+        search.category = this.props.bank.category;
+        console.log(this.props)
+        this.props.cas ? this.props.searchQuestion(this.props.client, search, SEARCH_QUESTION) : this.props.searchExamQuestion(this.props.client, search, SEARCH_QUESTION)
     }
     render() {
         const { classes } = this.props;
-       
         return (
             <div className={classes.root}>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={classes.search}>
-                        <div className={classes.searchIcon}>
+                        <div className={classes.searchIcon} onClick={this.handleSubmit}>
                             <SearchIcon />
                         </div>
                         <div >
                             <InputBase
+                                name="statement"
                                 onChange={this.handleOnChange}
                                 placeholder="Search for Questions  …"
                                 classes={{
@@ -105,4 +136,20 @@ class SearchQuestion extends Component {
     }
 }
 
-export default withStyles(Styles)(SearchQuestion);
+const mapStateToProps = state => {
+    return {
+        bank: state.rootReducer.bank
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        searchQuestion: (client, search, query) => dispatch(searchQuestion(client, search, query)),
+        searchExamQuestion: (client, search, query) => dispatch(searchExamQuestion(client, search, query))
+    }
+}
+
+export default compose(
+    withStyles(Styles),
+    connect(mapStateToProps, mapDispatchToProps),
+    withApollo
+)(SearchQuestion);
